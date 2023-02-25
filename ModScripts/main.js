@@ -238,248 +238,248 @@ class AbstractCard {
     }
 
     get baseDamage() {
-        return this.#rawPtr.add(0x7c).readU32();
+        return this.#rawPtr.add(0x74).readU32();
     }
     set baseDamage(baseDamage) {
-        this.#rawPtr.add(0x7c).writeS32(baseDamage);
+        this.#rawPtr.add(0x74).writeS32(baseDamage);
     }
 
     get baseBlock() {
-        return this.#rawPtr.add(0x80).readS32();
+        return this.#rawPtr.add(0x78).readS32();
     }
     set baseBlock(baseBlock) {
-        this.#rawPtr.add(0x80).writeS32(baseBlock);
+        this.#rawPtr.add(0x78).writeS32(baseBlock);
     }
 
     get baseMagicNumber() {
-        return this.#rawPtr.add(0x84).readS32();
+        return this.#rawPtr.add(0x7c).readS32();
     }
     set baseMagicNumber(baseMagicNumber) {
-        this.#rawPtr.add(0x84).writeS32(baseMagicNumber);
+        this.#rawPtr.add(0x7c).writeS32(baseMagicNumber);
     }
 
     get baseHeal() {
-        return this.#rawPtr.add(0x88).readS32();
+        return this.#rawPtr.add(0x80).readS32();
     }
     set baseHeal(baseHeal) {
-        this.#rawPtr.add(0x88).writeS32(baseHeal);
+        this.#rawPtr.add(0x80).writeS32(baseHeal);
     }
 
     get baseDraw() {
-        return this.#rawPtr.add(0x8c).readS32();
+        return this.#rawPtr.add(0x84).readS32();
     }
     set baseDraw(baseDraw) {
-        this.#rawPtr.add(0x8c).writeS32(baseDraw);
+        this.#rawPtr.add(0x84).writeS32(baseDraw);
     }
 
     get baseDiscard() {
-        return this.#rawPtr.add(0x90).readS32();
+        return this.#rawPtr.add(0x88).readS32();
     }
     set baseDiscard(baseDiscard) {
-        this.#rawPtr.add(0x90).writeS32(baseDiscard);
+        this.#rawPtr.add(0x88).writeS32(baseDiscard);
     }
 
     get damage() {
-        return this.#rawPtr.add(0x94).readS32();
+        return this.#rawPtr.add(0x8c).readS32();
     }
     set damage(damage) {
-        this.#rawPtr.add(0x94).writeS32(damage);
+        this.#rawPtr.add(0x8c).writeS32(damage);
     }
 
     get block() {
-        return this.#rawPtr.add(0x98).readS32();
+        return this.#rawPtr.add(0x90).readS32();
     }
     set block(block) {
-        this.#rawPtr.add(0x98).writeS32(block);
+        this.#rawPtr.add(0x90).writeS32(block);
     }
 
     get magicNumber() {
-        return this.#rawPtr.add(0x9c).readS32();
+        return this.#rawPtr.add(0x94).readS32();
     }
     set magicNumber(magicNumber) {
-        this.#rawPtr.add(0x9c).writeS32(magicNumber);
+        this.#rawPtr.add(0x94).writeS32(magicNumber);
     }
 
     get heal() {
-        return this.#rawPtr.add(0xa0).readS32();
+        return this.#rawPtr.add(0x98).readS32();
     }
     set heal(heal) {
-        this.#rawPtr.add(0xa0).writeS32(heal);
+        this.#rawPtr.add(0x98).writeS32(heal);
     }
 
     get draw() {
-        return this.#rawPtr.add(0xa4).readS32();
+        return this.#rawPtr.add(0x9c).readS32();
     }
     set draw(draw) {
-        this.#rawPtr.add(0xa4).writeS32(draw);
+        this.#rawPtr.add(0x9c).writeS32(draw);
     }
 
     get discard() {
-        return this.#rawPtr.add(0xa8).readS32();
+        return this.#rawPtr.add(0xa0).readS32();
     }
     set discard(discard) {
-        this.#rawPtr.add(0xa8).writeS32(discard);
+        this.#rawPtr.add(0xa0).writeS32(discard);
     }
 
     get isDamageModified() {
-        return this.#rawPtr.add(0xac).readU8();
+        return this.#rawPtr.add(0xa4).readU8();
     }
     set isDamageModified(isDamageModified) {
-        this.#rawPtr.add(0xac).writeU8(isDamageModified);
+        this.#rawPtr.add(0xa4).writeU8(isDamageModified);
     }
 
     get isBlockModified() {
-        return this.#rawPtr.add(0xad).readU8();
+        return this.#rawPtr.add(0xa5).readU8();
     }
     set isBlockModified(isBlockModified) {
-        this.#rawPtr.add(0xad).writeU8(isBlockModified);
+        this.#rawPtr.add(0xa5).writeU8(isBlockModified);
     }
 
     get isMagicNumberModified() {
-        return this.#rawPtr.add(0xae).readU8();
+        return this.#rawPtr.add(0xa6).readU8();
     }
     set isMagicNumberModified(isMagicNumberModified) {
-        this.#rawPtr.add(0xae).writeU8(isMagicNumberModified);
+        this.#rawPtr.add(0xa6).writeU8(isMagicNumberModified);
     }
 
     get damageType() {
-        return this.#rawPtr.add(0xb0).readU32();
+        return this.#rawPtr.add(0xa8).readU32();
     }
     set damageType(damageType) {
-        this.#rawPtr.add(0xb0).writeU32(damageType);
+        this.#rawPtr.add(0xa8).writeU32(damageType);
     }
 
     get damageTypeForTurn() {
-        return this.#rawPtr.add(0xb4).readU32();
+        return this.#rawPtr.add(0xac).readU32();
     }
     set damageTypeForTurn(damageTypeForTurn) {
-        this.#rawPtr.add(0xb4).writeU32(damageTypeForTurn);
+        this.#rawPtr.add(0xac).writeU32(damageTypeForTurn);
     }
 
     get target() {
-        return this.#rawPtr.add(0xb8).readU32();
+        return this.#rawPtr.add(0xb0).readU32();
     }
     set target(target) {
-        this.#rawPtr.add(0xb8).writeU32(target);
+        this.#rawPtr.add(0xb0).writeU32(target);
     }
 
     get purgeOnUse() {
-        return this.#rawPtr.add(0xbc).readU8();
+        return this.#rawPtr.add(0xb4).readU8();
     }
     set purgeOnUse(purgeOnUse) {
-        this.#rawPtr.add(0xbc).writeU8(purgeOnUse);
+        this.#rawPtr.add(0xb4).writeU8(purgeOnUse);
     }
 
     get exhaustOnUseOnce() {
-        return this.#rawPtr.add(0xbd).readU8();
+        return this.#rawPtr.add(0xb5).readU8();
     }
     set exhaustOnUseOnce(exhaustOnUseOnce) {
-        this.#rawPtr.add(0xbd).writeU8(exhaustOnUseOnce);
+        this.#rawPtr.add(0xb5).writeU8(exhaustOnUseOnce);
     }
 
     get exhaustOnFire() {
-        return this.#rawPtr.add(0xbe).readU8();
+        return this.#rawPtr.add(0xb6).readU8();
     }
     set exhaustOnFire(exhaustOnFire) {
-        this.#rawPtr.add(0xbe).writeU8(exhaustOnFire);
+        this.#rawPtr.add(0xb6).writeU8(exhaustOnFire);
     }
 
     get freeToPlayOnce() {
-        return this.#rawPtr.add(0xbf).readU8();
+        return this.#rawPtr.add(0xb7).readU8();
     }
     set freeToPlayOnce(freeToPlayOnce) {
-        this.#rawPtr.add(0xbf).writeU8(freeToPlayOnce);
+        this.#rawPtr.add(0xb7).writeU8(freeToPlayOnce);
     }
 
     get isInAutoplay() {
-        return this.#rawPtr.add(0xc0).readU8();
+        return this.#rawPtr.add(0xb8).readU8();
     }
     set isInAutoplay(isInAutoplay) {
-        this.#rawPtr.add(0xc0).writeU8(isInAutoplay);
+        this.#rawPtr.add(0xb8).writeU8(isInAutoplay);
     }
 
     get assetUrl() {
-        return this.#rawPtr.add(0xd0).readUtf16String();
+        return this.#rawPtr.add(0xc8).readUtf16String();
     }
     set assetUrl(assetUrl) {
-        this.#rawPtr.add(0xd0).writeUtf16String(assetUrl);
+        this.#rawPtr.add(0xc8).writeUtf16String(assetUrl);
     }
 
     get transparency() {
-        return this.#rawPtr.add(0xd8).readFloat();
+        return this.#rawPtr.add(0xd0).readFloat();
     }
     set transparency(transparency) {
-        this.#rawPtr.add(0xd8).writeFloat(transparency);
+        this.#rawPtr.add(0xd0).writeFloat(transparency);
     }
 
     get targetTransparency() {
-        return this.#rawPtr.add(0xdc).readFloat();
+        return this.#rawPtr.add(0xd4).readFloat();
     }
     set targetTransparency(targetTransparency) {
-        this.#rawPtr.add(0xdc).writeFloat(targetTransparency);
+        this.#rawPtr.add(0xd4).writeFloat(targetTransparency);
     }
 
     get targetAngle() {
-        return this.#rawPtr.add(0xe0).readFloat();
+        return this.#rawPtr.add(0xd8).readFloat();
     }
     set targetAngle(targetAngle) {
-        this.#rawPtr.add(0xe0).writeFloat(targetAngle);
+        this.#rawPtr.add(0xd8).writeFloat(targetAngle);
     }
 
     get angle() {
-        return this.#rawPtr.add(0xe4).readFloat();
+        return this.#rawPtr.add(0xdc).readFloat();
     }
     set angle(angle) {
-        this.#rawPtr.add(0xe4).writeFloat(angle);
+        this.#rawPtr.add(0xdc).writeFloat(angle);
     }
 
     get glowTimer() {
-        return this.#rawPtr.add(0xfc).readFloat();
+        return this.#rawPtr.add(0xf4).readFloat();
     }
     set glowTimer(glowTimer) {
-        this.#rawPtr.add(0xfc).writeFloat(glowTimer);
+        this.#rawPtr.add(0xf4).writeFloat(glowTimer);
     }
 
     get drawScale() {
-        return this.#rawPtr.add(0x11c).readFloat();
+        return this.#rawPtr.add(0x114).readFloat();
     }
     set drawScale(drawScale) {
-        this.#rawPtr.add(0x11c).writeFloat(drawScale);
+        this.#rawPtr.add(0x114).writeFloat(drawScale);
     }
 
     get targetDrawScale() {
-        return this.#rawPtr.add(0x120).readFloat();
+        return this.#rawPtr.add(0x118).readFloat();
     }
     set targetDrawScale(targetDrawScale) {
-        this.#rawPtr.add(0x120).writeFloat(targetDrawScale);
+        this.#rawPtr.add(0x118).writeFloat(targetDrawScale);
     }
 
     get originalName() {
-        return this.#rawPtr.add(0x144).readUtf16String();
+        return this.#rawPtr.add(0x13c).readUtf16String();
     }
     set originalName(originalName) {
-        this.#rawPtr.add(0x144).writeUtf16String(originalName);
+        this.#rawPtr.add(0x13c).writeUtf16String(originalName);
     }
 
     get name() {
-        return this.#rawPtr.add(0x148).readUtf16String();
+        return this.#rawPtr.add(0x140).readUtf16String();
     }
     set name(name) {
-        this.#rawPtr.add(0x148).writeUtf16String(name);
+        this.#rawPtr.add(0x140).writeUtf16String(name);
     }
 
     get rawDescription() {
-        return this.#rawPtr.add(0x14c).readUtf16String();
+        return this.#rawPtr.add(0x144).readUtf16String();
     }
     set rawDescription(rawDescription) {
-        this.#rawPtr.add(0x14c).writeUtf16String(rawDescription);
+        this.#rawPtr.add(0x144).writeUtf16String(rawDescription);
     }
 
     get cardID() {
-        return this.#rawPtr.add(0x150).readUtf16String();
+        return this.#rawPtr.add(0x148).readUtf16String();
     }
     set cardID(cardID) {
-        this.#rawPtr.add(0x150).writeUtf16String(cardID);
+        this.#rawPtr.add(0x148).writeUtf16String(cardID);
     }
 }
 
