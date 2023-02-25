@@ -1,4 +1,5 @@
 //struct ../STSHeads/STSTypes.h  AbstractCard
+//only work in ARMV7a(point type size is 4*sizeof(char))
 
 class AbstractCard {
     #rawPtr = null;
