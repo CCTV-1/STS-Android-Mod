@@ -501,6 +501,8 @@ class PatchManager
     {
         //void AbstractPlayer::loseGold(AbstractPlayer * player, int gold)
         this.#patchFuncs.set("AbstractPlayer::loseGold", new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int']));
+        //void ConfusionPower::onCardDraw(AbstractPower * thisPtr, STS::AbstractCard * card)
+        this.#patchFuncs.set("ConfusionPower::onCardDraw", new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer']));
     }
 
     static getOrigFuncInfo(funcName)
@@ -522,10 +524,28 @@ function HookSTSFunction(funcName, fakeFunc)
 {
     let origFuncInfo = PatchManager.getOrigFuncInfo(funcName);
     let origFunc = new NativeFunction(STSCodeBasePtr.add(origFuncInfo.funcOffset), origFuncInfo.retType, origFuncInfo.argTypes);
-    let fakeLoseGoldFunc = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
-    Interceptor.replace(origFunc, fakeLoseGoldFunc);
+    let fakeCallback = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
+    Interceptor.replace(origFunc, fakeCallback);
 
     return origFunc;
 }
 
+function fakeRandom(min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 let origLoseGoldFunc = HookSTSFunction("AbstractPlayer::loseGold", (thisPtr, gold) => { origLoseGoldFunc(thisPtr, Math.ceil(gold*0.6)); });
+let origOnCardDraw = HookSTSFunction("ConfusionPower::onCardDraw", (thisPtr, cardPtr) => {
+//    origOnCardDraw(thisPtr, cardPtr)
+    let baseCard = new AbstractCard(cardPtr);
+    if (baseCard.cost >= 0) {
+        let newCost = fakeRandom(0, baseCard.cost);
+        if (baseCard.cost != newCost) {
+            baseCard.cost = newCost;
+            baseCard.costForTurn = baseCard.cost;
+            baseCard.isCostModified = true;
+        }
+        baseCard.freeToPlayOnce = false;
+    }
+});
