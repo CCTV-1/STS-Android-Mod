@@ -1,3 +1,5 @@
+'use strict';
+
 //struct ../STSHeads/STSTypes.h  AbstractCard
 //only work in ARMV7a(point type size is 4*sizeof(char))
 
@@ -480,3 +482,50 @@ class AbstractCard {
         this.#rawPtr.add(0x150).writeUtf16String(cardID);
     }
 }
+
+class NativeFunctionInfo {
+    constructor(funcOffset, retType, argTypes, callABI)
+    {
+        this.funcOffset = funcOffset
+        this.retType = retType
+        this.argTypes = argTypes
+        this.callABI = callABI
+    }
+}
+
+class PatchManager
+{
+    static #patchFuncs = new Map();
+
+    static initPatchInfo()
+    {
+        //void AbstractPlayer::loseGold(AbstractPlayer * player, int gold)
+        this.#patchFuncs.set("AbstractPlayer::loseGold", new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int']));
+    }
+
+    static getOrigFuncInfo(funcName)
+    {
+        return this.#patchFuncs.get(funcName);
+    }
+}
+
+let STSCodeBasePtr = Module.findBaseAddress("libSpire_ANDROID.so");
+PatchManager.initPatchInfo();
+
+//Java.perform(function () {
+//    var AndroidLog = Java.use("android.util.Log");
+//    AndroidLog.v("STS Mod", "code base address:" + STSCodeBasePtr);
+//    AndroidLog.v("STS Mod", "AbstractPlayer::loseGold address:" + STSCodeBasePtr.add(PatchManager.getOrigFuncInfo("AbstractPlayer::loseGold").funcOffset));
+//});
+
+function HookSTSFunction(funcName, fakeFunc)
+{
+    let origFuncInfo = PatchManager.getOrigFuncInfo(funcName);
+    let origFunc = new NativeFunction(STSCodeBasePtr.add(origFuncInfo.funcOffset), origFuncInfo.retType, origFuncInfo.argTypes);
+    let fakeLoseGoldFunc = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
+    Interceptor.replace(origFunc, fakeLoseGoldFunc);
+
+    return origFunc;
+}
+
+let origLoseGoldFunc = HookSTSFunction("AbstractPlayer::loseGold", (thisPtr, gold) => { origLoseGoldFunc(thisPtr, Math.ceil(gold*0.6)); });
