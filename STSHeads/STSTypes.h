@@ -160,7 +160,9 @@ namespace STS
         uint8_t gapF4[28];
         float drawScale;
         float targetDrawScale;
-        uint8_t gap11c[32];
+        uint8_t gap11c[24];
+        AbstractCard * cardsToPreview;
+        float newGlowTimer;
         JString *originalName;
         JString *name;
         JString *rawDescription;

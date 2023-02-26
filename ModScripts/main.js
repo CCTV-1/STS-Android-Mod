@@ -454,6 +454,13 @@ class AbstractCard {
         this.#rawPtr.add(0x118).writeFloat(targetDrawScale);
     }
 
+    get cardsToPreview() {
+        return this.#rawPtr.add(0x134).readPointer();
+    }
+    set cardsToPreview(cardsToPreview) {
+        return this.#rawPtr.add(0x134).writePointer(cardsToPreview);
+    }
+
     get originalName() {
         return this.#rawPtr.add(0x13c).readUtf16String();
     }
@@ -495,34 +502,46 @@ class NativeFunctionInfo {
 
 class PatchManager
 {
-    static #patchFuncs = new Map();
-
-    static initPatchInfo()
-    {
+    static AbstractPlayer = {
         //void AbstractPlayer::loseGold(AbstractPlayer * player, int gold)
-        this.#patchFuncs.set("AbstractPlayer::loseGold", new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int']));
+        loseGold:new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int'])
+    };
+    static ConfusionPower = {
         //void ConfusionPower::onCardDraw(AbstractPower * thisPtr, STS::AbstractCard * card)
-        this.#patchFuncs.set("ConfusionPower::onCardDraw", new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer']));
-    }
-
-    static getOrigFuncInfo(funcName)
-    {
-        return this.#patchFuncs.get(funcName);
+        onCardDraw:new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
+    };
+    static RedCards = {
+        //STS::AbstractCard * Cards::Red::Strike_Red::Ctor(STS::AbstractCard * this)
+        StrikeRedCtor : new NativeFunctionInfo(0x1747E89, 'pointer', ['pointer']),
+        //STS::AbstractCard * Cards::Red::Defend_Red::Ctor(STS::AbstractCard * this)
+        DefendRedCtor : new NativeFunctionInfo(0x173E7DD, 'pointer', ['pointer']),
+        //STS::AbstractCard * Cards::Red::Feed::Ctor(STS::AbstractCard * this)
+        FeedCtor : new NativeFunctionInfo(0x1740309, 'pointer', ['pointer']),
+        //STS::AbstractCard * Cards::Red::Bash::Ctor(STS::AbstractCard * this)
+        BashCtor : new NativeFunctionInfo(0x173AD4D, 'pointer', ['pointer']),
+    };
+    static PurpleCards = {
+        //STS::AbstractCard * Cards::Purple::Alpha::Ctor(STS::AbstractCard * this)
+        AlphaCtor : new NativeFunctionInfo(0x172AE45, 'pointer', ['pointer']),
+    };
+    static TempCards = {
+        //STS::AbstractCard * Cards::Temp::Omega::Ctor(STS::AbstractCard * this)
+        OmegaCtor : new NativeFunctionInfo(0x1750CE9, 'pointer', ['pointer']),
     }
 }
 
 let STSCodeBasePtr = Module.findBaseAddress("libSpire_ANDROID.so");
-PatchManager.initPatchInfo();
 
-//Java.perform(function () {
-//    var AndroidLog = Java.use("android.util.Log");
-//    AndroidLog.v("STS Mod", "code base address:" + STSCodeBasePtr);
-//    AndroidLog.v("STS Mod", "AbstractPlayer::loseGold address:" + STSCodeBasePtr.add(PatchManager.getOrigFuncInfo("AbstractPlayer::loseGold").funcOffset));
-//});
-
-function HookSTSFunction(funcName, fakeFunc)
+function AndroidLog(message)
 {
-    let origFuncInfo = PatchManager.getOrigFuncInfo(funcName);
+    Java.perform(function(message) {
+        let ALog = Java.use("android.util.Log");
+        ALog.v("STS Mod", message);
+    });
+}
+
+function HookSTSFunction(origFuncInfo, fakeFunc)
+{
     let origFunc = new NativeFunction(STSCodeBasePtr.add(origFuncInfo.funcOffset), origFuncInfo.retType, origFuncInfo.argTypes);
     let fakeCallback = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
     Interceptor.replace(origFunc, fakeCallback);
@@ -535,9 +554,9 @@ function fakeRandom(min, max)
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-let origLoseGoldFunc = HookSTSFunction("AbstractPlayer::loseGold", (thisPtr, gold) => { origLoseGoldFunc(thisPtr, Math.ceil(gold*0.6)); });
-let origOnCardDraw = HookSTSFunction("ConfusionPower::onCardDraw", (thisPtr, cardPtr) => {
-//    origOnCardDraw(thisPtr, cardPtr)
+let origLoseGoldFunc = HookSTSFunction(PatchManager.AbstractPlayer.loseGold, (thisPtr, gold) => { origLoseGoldFunc(thisPtr, Math.ceil(gold*0.6)); });
+let origOnCardDrawFunc = HookSTSFunction(PatchManager.ConfusionPower.onCardDraw, (thisPtr, cardPtr) => {
+//    origOnCardDrawFunc(thisPtr, cardPtr)
     let baseCard = new AbstractCard(cardPtr);
     if (baseCard.cost >= 0) {
         let newCost = fakeRandom(0, baseCard.cost);
@@ -548,4 +567,39 @@ let origOnCardDraw = HookSTSFunction("ConfusionPower::onCardDraw", (thisPtr, car
         }
         baseCard.freeToPlayOnce = false;
     }
+});
+let origStrikeRedCtorFunc = HookSTSFunction(PatchManager.RedCards.StrikeRedCtor, (thisPtr) => {
+    let ret = origStrikeRedCtorFunc(thisPtr);
+    let newCard = new AbstractCard(ret);
+    newCard.baseDamage++;
+    return ret;
+});
+let origDefendRedCtorFunc = HookSTSFunction(PatchManager.RedCards.DefendRedCtor, (thisPtr) => {
+    let ret = origDefendRedCtorFunc(thisPtr);
+    let newCard = new AbstractCard(ret);
+    newCard.baseBlock++;
+    return ret;
+});
+let origFeedCtor = HookSTSFunction(PatchManager.RedCards.FeedCtor, (thisPtr) => {
+    let ret = origFeedCtor(thisPtr);
+    let newCard = new AbstractCard(ret);
+    newCard.magicNumber = ++newCard.baseMagicNumber;
+    return ret;
+});
+let origBashCtor = HookSTSFunction(PatchManager.RedCards.BashCtor, (thisPtr) => {
+    let ret = origBashCtor(thisPtr);
+    let newCard = new AbstractCard(ret);
+    newCard.baseDamage = 12;
+    return ret;
+});
+let origAlphaCtor = HookSTSFunction(PatchManager.PurpleCards.AlphaCtor, (thisPtr) => {
+    let ret = origAlphaCtor(thisPtr);
+    let newCard = new AbstractCard(ret);
+    let fakePreview = origOmegaCtor(new NativePointer(0));
+    newCard.cardsToPreview = fakePreview;
+    return ret;
+});
+let origOmegaCtor = HookSTSFunction(PatchManager.TempCards.OmegaCtor, (thisPtr) => {
+    let ret = origOmegaCtor(thisPtr);
+    return ret;
 });
