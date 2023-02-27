@@ -1,11 +1,8 @@
 'use strict';
 
-//struct ../STSHeads/STSTypes.h  AbstractCard
-//only work in ARMV7a(point type size is 4*sizeof(char))
-
-class AbstractCard {
+class NativeClassWrapper {
     #rawPtr = null;
-    //NativePointer AbstractCard *
+    //NativePointer AbstractCreature *
     constructor(CthisPtr) {
         if (!(CthisPtr instanceof NativePointer)) {
             throw "need a NativePointer";
@@ -13,486 +10,642 @@ class AbstractCard {
         this.#rawPtr = CthisPtr;
     }
 
-    get type() {
-        return this.#rawPtr.add(0x8).readU32();
+    BaseClassPtr() {
+        return this.#rawPtr.readPointer();
     }
-    set type(type) {
-        this.#rawPtr.add(0x8).writeU32(type);
+
+    readOffsetPointer(offset) {
+        return this.#rawPtr.add(offset).readPointer();
+    }
+    writeOffsetPointer(offset, value) {
+        return this.#rawPtr.add(offset).writePointer(value);
+    }
+
+    readOffsetU8(offset) {
+        return this.#rawPtr.add(offset).readU8();
+    }
+
+    writeOffsetU8(offset, value) {
+        this.#rawPtr.add(offset).writeU8(value);
+    }
+
+    readOffsetU32(offset) {
+        return this.#rawPtr.add(offset).readU32();
+    }
+
+    writeOffsetU32(offset, value) {
+        this.#rawPtr.add(offset).writeU32(value);
+    }
+
+    readOffsetS32(offset) {
+        return this.#rawPtr.add(offset).readS32();
+    }
+
+    writeOffsetS32(offset, value) {
+        this.#rawPtr.add(offset).writeS32(value);
+    }
+
+    readOffsetFloat(offset) {
+        return this.#rawPtr.add(offset).readFloat();
+    }
+
+    writeOffsetFloat(offset, value) {
+        this.#rawPtr.add(offset).writeFloat(value);
+    }
+
+    readOffsetUtf16String(offset) {
+        return this.#rawPtr.add(offset).readUtf16String();
+    }
+
+    writeOffsetUtf16String(offset, value) {
+        this.#rawPtr.add(offset).writeUtf16String(value);
+    }
+}
+
+//struct ../STSHeads/STSTypes.h  AbstractCard
+//only work in ARMV7a(point type size is 4*sizeof(char))
+
+class AbstractCard extends NativeClassWrapper {
+    //NativePointer AbstractCard *
+    constructor(CthisPtr) {
+        super(CthisPtr);
+    }
+
+    get BaseClassPtr() {
+        return super.BaseClassPtr();
+    }
+
+    get type() {
+        return this.readOffsetU32(0x8);
+    }
+    set type(value) {
+        writeOffsetU32(0x8, value);
     }
 
     get cost() {
-        return this.#rawPtr.add(0xc).readS32();
+        return this.readOffsetS32(0xc);
     }
-    set cost(cost) {
-        this.#rawPtr.add(0xc).writeS32(cost);
+    set cost(value) {
+        this.writeOffsetS32(0xc, value);
     }
 
     get costForTurn() {
-        return this.#rawPtr.add(0x10).readS32();
+        return this.readOffsetS32(0x10);
     }
-    set costForTurn(costForTurn) {
-        this.#rawPtr.add(0x10).writeS32(costForTurn);
+    set costForTurn(value) {
+        this.writeOffsetS32(0x10, value);
     }
 
     get price() {
-        return this.#rawPtr.add(0x14).readS32();
+        return this.readOffsetS32(0x14);
     }
-    set price(price) {
-        this.#rawPtr.add(0x14).writeS32(price);
+    set price(value) {
+        this.writeOffsetS32(0x14, value);
     }
 
     get chargeCost() {
-        return this.#rawPtr.add(0x18).readS32();
+        return this.readOffsetS32(0x18);
     }
-    set chargeCost(chargeCost) {
-        this.#rawPtr.add(0x18).writeS32(chargeCost);
+    set chargeCost(value) {
+        this.writeOffsetS32(0x18, value);
     }
 
     get isCostModified() {
-        return this.#rawPtr.add(0x1c).readU8();
+        return this.readOffsetU8(0x1c);
     }
-    set isCostModified(isCostModified) {
-        this.#rawPtr.add(0x1c).writeU8(isCostModified);
+    set isCostModified(value) {
+        this.writeOffsetU8(0x1c, value);
     }
 
     get isCostModifiedForTurn() {
-        return this.#rawPtr.add(0x1d).readU8();
+        return this.readOffsetU8(0x1d);
     }
-    set isCostModifiedForTurn(isCostModifiedForTurn) {
-        this.#rawPtr.add(0x1d).writeU8(isCostModifiedForTurn);
+    set isCostModifiedForTurn(value) {
+        this.writeOffsetU8(0x1d, value);
     }
 
     get retain() {
-        return this.#rawPtr.add(0x1e).readU8();
+        return this.readOffsetU8(0x1e);
     }
-    set retain(retain) {
-        this.#rawPtr.add(0x1e).writeU8(retain);
+    set retain(value) {
+        this.writeOffsetU8(0x1e, value);
     }
 
     get selfRetain() {
-        return this.#rawPtr.add(0x1f).readU8();
+        return this.readOffsetU8(0x1f);
     }
-    set selfRetain(selfRetain) {
-        this.#rawPtr.add(0x1f).writeU8(selfRetain);
+    set selfRetain(value) {
+        this.writeOffsetU8(0x1f, value);
     }
 
     get dontTriggerOnUseCard() {
-        return this.#rawPtr.add(0x20).readU8();
+        return this.readOffsetU8(0x20);
     }
-    set dontTriggerOnUseCard(dontTriggerOnUseCard) {
-        this.#rawPtr.add(0x20).writeU8(dontTriggerOnUseCard);
+    set dontTriggerOnUseCard(value) {
+        this.writeOffsetU8(0x20, value);
     }
 
     get rarity() {
-        return this.#rawPtr.add(0x24).readU32();
+        return this.readOffsetU32(0x24);
     }
-    set rarity(rarity) {
-        this.#rawPtr.add(0x24).writeU32(rarity);
+    set rarity(value) {
+        this.writeOffsetU32(0x24, value);
     }
 
     get color() {
-        return this.#rawPtr.add(0x28).readU32();
+        return this.readOffsetU32(0x28);
     }
-    set color(color) {
-        this.#rawPtr.add(0x28).writeU32(color);
+    set color(value) {
+        this.writeOffsetU32(0x28, value);
     }
 
     get isInnate() {
-        return this.#rawPtr.add(0x2c).readU8();
+        return this.readOffsetU8(0x2c);
     }
-    set isInnate(isInnate) {
-        this.#rawPtr.add(0x2c).writeU8(isInnate);
+    set isInnate(value) {
+        this.writeOffsetU8(0x2c, value);
     }
 
     get isLocked() {
-        return this.#rawPtr.add(0x2d).readU8();
+        return this.readOffsetU8(0x2d);
     }
-    set isLocked(isLocked) {
-        this.#rawPtr.add(0x2d).writeU8(isLocked);
+    set isLocked(value) {
+        this.writeOffsetU8(0x2d, value);
     }
 
     get showEvokeValue() {
-        return this.#rawPtr.add(0x2e).readU8();
+        return this.readOffsetU8(0x2e);
     }
-    set showEvokeValue(showEvokeValue) {
-        this.#rawPtr.add(0x2e).writeU8(showEvokeValue);
+    set showEvokeValue(value) {
+        this.writeOffsetU8(0x2e, value);
     }
 
     get showEvokeOrbCount() {
-        return this.#rawPtr.add(0x30).readS32();
+        return this.readOffsetS32(0x30);
     }
-    set showEvokeOrbCount(showEvokeOrbCount) {
-        this.#rawPtr.add(0x30).writeS32(showEvokeOrbCount);
+    set showEvokeOrbCount(value) {
+        this.writeOffsetS32(0x30, value);
     }
 
     get isUsed() {
-        return this.#rawPtr.add(0x38).readU8();
+        return this.readOffsetU8(0x38);
     }
-    set isUsed(isUsed) {
-        this.#rawPtr.add(0x38).writeU8(isUsed);
+    set isUsed(value) {
+        this.writeOffsetU8(0x38, value);
     }
 
     get upgraded() {
-        return this.#rawPtr.add(0x39).readU8();
+        return this.readOffsetU8(0x39);
     }
-    set upgraded(upgraded) {
-        this.#rawPtr.add(0x39).writeU8(upgraded);
+    set upgraded(value) {
+        this.writeOffsetU8(0x39, value);
     }
 
     get timesUpgraded() {
-        return this.#rawPtr.add(0x3c).readS32();
+        return this.readOffsetS32(0x3c);
     }
-    set timesUpgraded(timesUpgraded) {
-        this.#rawPtr.add(0x3c).writeS32(timesUpgraded);
+    set timesUpgraded(value) {
+        this.writeOffsetS32(0x3c, value);
     }
 
     get misc() {
-        return this.#rawPtr.add(0x40).readS32();
+        return this.readOffsetS32(0x40);
     }
-    set misc(misc) {
-        this.#rawPtr.add(0x40).writeS32(misc);
+    set misc(value) {
+        this.writeOffsetS32(0x40, value);
     }
 
     get energyOnUse() {
-        return this.#rawPtr.add(0x44).readS32();
+        return this.readOffsetS32(0x44);
     }
-    set energyOnUse(energyOnUse) {
-        this.#rawPtr.add(0x44).writeS32(energyOnUse);
+    set energyOnUse(value) {
+        this.writeOffsetS32(0x44, value);
     }
 
     get ignoreEnergyOnUse() {
-        return this.#rawPtr.add(0x48).readU32();
+        return this.readOffsetU32(0x48);
     }
-    set ignoreEnergyOnUse(ignoreEnergyOnUse) {
-        this.#rawPtr.add(0x48).writeU8(ignoreEnergyOnUse);
+    set ignoreEnergyOnUse(value) {
+        this.writeOffsetU8(0x48, value);
     }
 
     get isSeen() {
-        return this.#rawPtr.add(0x49).readU8();
+        return this.readOffsetU8(0x49);
     }
-    set isSeen(isSeen) {
-        this.#rawPtr.add(0x49).writeU8(isSeen);
+    set isSeen(value) {
+        this.writeOffsetU8(0x49, value);
     }
 
     get upgradedCost() {
-        return this.#rawPtr.add(0x4a).readU8();
+        return this.readOffsetU8(0x4a);
     }
-    set upgradedCost(upgradedCost) {
-        this.#rawPtr.add(0x4a).writeU8(upgradedCost);
+    set upgradedCost(value) {
+        this.writeOffsetU8(0x4a, value);
     }
 
     get upgradedDamage() {
-        return this.#rawPtr.add(0x4b).readU8();
+        return this.readOffsetU8(0x4b);
     }
-    set upgradedDamage(upgradedDamage) {
-        this.#rawPtr.add(0x4b).writeU8(upgradedDamage);
+    set upgradedDamage(value) {
+        this.writeOffsetU8(0x4b, value);
     }
 
     get upgradedBlock() {
-        return this.#rawPtr.add(0x4c).readU8();
+        return this.readOffsetU8(0x4c);
     }
-    set upgradedBlock(upgradedBlock) {
-        this.#rawPtr.add(0x4c).writeU8(upgradedBlock);
+    set upgradedBlock(value) {
+        this.writeOffsetU8(0x4c, value);
     }
 
     get upgradedMagicNumber() {
-        return this.#rawPtr.add(0x4d).readU8();
+        return this.readOffsetU8(0x4d);
     }
-    set upgradedMagicNumber(upgradedMagicNumber) {
-        this.#rawPtr.add(0x4d).writeU8(upgradedMagicNumber);
+    set upgradedMagicNumber(value) {
+        this.writeOffsetU8(0x4d, value);
     }
 
     get isSelected() {
-        return this.#rawPtr.add(0x60).readU8();
+        return this.readOffsetU8(0x60);
     }
-    set isSelected(isSelected) {
-        this.#rawPtr.add(0x60).writeU8(isSelected);
+    set isSelected(value) {
+        this.writeOffsetU8(0x60, value);
     }
 
     get exhaust() {
-        return this.#rawPtr.add(0x61).readU8();
+        return this.readOffsetU8(0x61);
     }
-    set exhaust(exhaust) {
-        this.#rawPtr.add(0x61).writeU8(exhaust);
+    set exhaust(value) {
+        this.writeOffsetU8(0x61, value);
     }
 
     get returnToHand() {
-        return this.#rawPtr.add(0x62).readU8();
+        return this.readOffsetU8(0x62);
     }
-    set returnToHand(returnToHand) {
-        this.#rawPtr.add(0x62).writeU8(returnToHand);
+    set returnToHand(value) {
+        this.writeOffsetU8(0x62, value);
     }
 
     get shuffleBackIntoDrawPile() {
-        return this.#rawPtr.add(0x63).readU8();
+        return this.readOffsetU8(0x63);
     }
-    set shuffleBackIntoDrawPile(shuffleBackIntoDrawPile) {
-        this.#rawPtr.add(0x63).writeU8(shuffleBackIntoDrawPile);
+    set shuffleBackIntoDrawPile(value) {
+        this.writeOffsetU8(0x63, value);
     }
 
     get isEthereal() {
-        return this.#rawPtr.add(0x64).readU8();
+        return this.readOffsetU8(0x64);
     }
-    set isEthereal(isEthereal) {
-        this.#rawPtr.add(0x64).writeU8(isEthereal);
+    set isEthereal(value) {
+        this.writeOffsetU8(0x64, value);
     }
 
     get baseDamage() {
-        return this.#rawPtr.add(0x74).readU32();
+        return this.readOffsetU32(0x74);
     }
-    set baseDamage(baseDamage) {
-        this.#rawPtr.add(0x74).writeS32(baseDamage);
+    set baseDamage(value) {
+        this.writeOffsetS32(0x74, value);
     }
 
     get baseBlock() {
-        return this.#rawPtr.add(0x78).readS32();
+        return this.readOffsetS32(0x78);
     }
-    set baseBlock(baseBlock) {
-        this.#rawPtr.add(0x78).writeS32(baseBlock);
+    set baseBlock(value) {
+        this.writeOffsetS32(0x78, value);
     }
 
     get baseMagicNumber() {
-        return this.#rawPtr.add(0x7c).readS32();
+        return this.readOffsetS32(0x7c);
     }
-    set baseMagicNumber(baseMagicNumber) {
-        this.#rawPtr.add(0x7c).writeS32(baseMagicNumber);
+    set baseMagicNumber(value) {
+        this.writeOffsetS32(0x7c, value);
     }
 
     get baseHeal() {
-        return this.#rawPtr.add(0x80).readS32();
+        return this.readOffsetS32(0x80);
     }
-    set baseHeal(baseHeal) {
-        this.#rawPtr.add(0x80).writeS32(baseHeal);
+    set baseHeal(value) {
+        this.writeOffsetS32(0x80, value);
     }
 
     get baseDraw() {
-        return this.#rawPtr.add(0x84).readS32();
+        return this.readOffsetS32(0x84);
     }
-    set baseDraw(baseDraw) {
-        this.#rawPtr.add(0x84).writeS32(baseDraw);
+    set baseDraw(value) {
+        this.writeOffsetS32(0x84, value);
     }
 
     get baseDiscard() {
-        return this.#rawPtr.add(0x88).readS32();
+        return this.readOffsetS32(0x88);
     }
-    set baseDiscard(baseDiscard) {
-        this.#rawPtr.add(0x88).writeS32(baseDiscard);
+    set baseDiscard(value) {
+        this.writeOffsetS32(0x88, value);
     }
 
     get damage() {
-        return this.#rawPtr.add(0x8c).readS32();
+        return this.readOffsetS32(0x8c);
     }
-    set damage(damage) {
-        this.#rawPtr.add(0x8c).writeS32(damage);
+    set damage(value) {
+        this.writeOffsetS32(0x8c, value);
     }
 
     get block() {
-        return this.#rawPtr.add(0x90).readS32();
+        return this.readOffsetS32(0x90);
     }
-    set block(block) {
-        this.#rawPtr.add(0x90).writeS32(block);
+    set block(value) {
+        this.writeOffsetS32(0x90, value);
     }
 
     get magicNumber() {
-        return this.#rawPtr.add(0x94).readS32();
+        return this.readOffsetS32(0x94);
     }
-    set magicNumber(magicNumber) {
-        this.#rawPtr.add(0x94).writeS32(magicNumber);
+    set magicNumber(value) {
+        this.writeOffsetS32(0x94, value);
     }
 
     get heal() {
-        return this.#rawPtr.add(0x98).readS32();
+        return this.readOffsetS32(0x98);
     }
-    set heal(heal) {
-        this.#rawPtr.add(0x98).writeS32(heal);
+    set heal(value) {
+        this.writeOffsetS32(0x98, value);
     }
 
     get draw() {
-        return this.#rawPtr.add(0x9c).readS32();
+        return this.readOffsetS32(0x9c);
     }
-    set draw(draw) {
-        this.#rawPtr.add(0x9c).writeS32(draw);
+    set draw(value) {
+        this.writeOffsetS32(0x9c, value);
     }
 
     get discard() {
-        return this.#rawPtr.add(0xa0).readS32();
+        return this.readOffsetS32(0xa0);
     }
-    set discard(discard) {
-        this.#rawPtr.add(0xa0).writeS32(discard);
+    set discard(value) {
+        this.writeOffsetS32(0xa0, value);
     }
 
     get isDamageModified() {
-        return this.#rawPtr.add(0xa4).readU8();
+        return this.readOffsetU8(0xa4);
     }
-    set isDamageModified(isDamageModified) {
-        this.#rawPtr.add(0xa4).writeU8(isDamageModified);
+    set isDamageModified(value) {
+        this.writeOffsetU8(0xa4, value);
     }
 
     get isBlockModified() {
-        return this.#rawPtr.add(0xa5).readU8();
+        return this.readOffsetU8(0xa5);
     }
-    set isBlockModified(isBlockModified) {
-        this.#rawPtr.add(0xa5).writeU8(isBlockModified);
+    set isBlockModified(value) {
+        this.writeOffsetU8(0xa5, value);
     }
 
     get isMagicNumberModified() {
-        return this.#rawPtr.add(0xa6).readU8();
+        return this.readOffsetU8(0xa6);
     }
-    set isMagicNumberModified(isMagicNumberModified) {
-        this.#rawPtr.add(0xa6).writeU8(isMagicNumberModified);
+    set isMagicNumberModified(value) {
+        this.writeOffsetU8(0xa6, value);
     }
 
     get damageType() {
-        return this.#rawPtr.add(0xa8).readU32();
+        return this.readOffsetU32(0xa8);
     }
-    set damageType(damageType) {
-        this.#rawPtr.add(0xa8).writeU32(damageType);
+    set damageType(value) {
+        this.writeOffsetU32(0xa8, value);
     }
 
     get damageTypeForTurn() {
-        return this.#rawPtr.add(0xac).readU32();
+        return this.readOffsetU32(0xac);
     }
-    set damageTypeForTurn(damageTypeForTurn) {
-        this.#rawPtr.add(0xac).writeU32(damageTypeForTurn);
+    set damageTypeForTurn(value) {
+        this.writeOffsetU32(0xac, value);
     }
 
     get target() {
-        return this.#rawPtr.add(0xb0).readU32();
+        return this.readOffsetU32(0xb0);
     }
-    set target(target) {
-        this.#rawPtr.add(0xb0).writeU32(target);
+    set target(value) {
+        this.writeOffsetU32(0xb0, value);
     }
 
     get purgeOnUse() {
-        return this.#rawPtr.add(0xb4).readU8();
+        return this.readOffsetU8(0xb4);
     }
-    set purgeOnUse(purgeOnUse) {
-        this.#rawPtr.add(0xb4).writeU8(purgeOnUse);
+    set purgeOnUse(value) {
+        this.writeOffsetU8(0xb4, value);
     }
 
     get exhaustOnUseOnce() {
-        return this.#rawPtr.add(0xb5).readU8();
+        return this.readOffsetU8(0xb5);
     }
-    set exhaustOnUseOnce(exhaustOnUseOnce) {
-        this.#rawPtr.add(0xb5).writeU8(exhaustOnUseOnce);
+    set exhaustOnUseOnce(value) {
+        this.writeOffsetU8(0xb5, value);
     }
 
     get exhaustOnFire() {
-        return this.#rawPtr.add(0xb6).readU8();
+        return this.readOffsetU8(0xb6);
     }
-    set exhaustOnFire(exhaustOnFire) {
-        this.#rawPtr.add(0xb6).writeU8(exhaustOnFire);
+    set exhaustOnFire(value) {
+        this.writeOffsetU8(0xb6, value);
     }
 
     get freeToPlayOnce() {
-        return this.#rawPtr.add(0xb7).readU8();
+        return this.readOffsetU8(0xb7);
     }
     set freeToPlayOnce(freeToPlayOnce) {
-        this.#rawPtr.add(0xb7).writeU8(freeToPlayOnce);
+        this.writeOffsetU8(0xb7, value);
     }
 
     get isInAutoplay() {
-        return this.#rawPtr.add(0xb8).readU8();
+        return this.readOffsetU8(0xb8);
     }
-    set isInAutoplay(isInAutoplay) {
-        this.#rawPtr.add(0xb8).writeU8(isInAutoplay);
+    set isInAutoplay(value) {
+        this.writeOffsetU8(0xb8, value);
     }
 
     get assetUrl() {
-        return this.#rawPtr.add(0xc8).readUtf16String();
+        return this.readOffsetUtf16String(0xc8);
     }
-    set assetUrl(assetUrl) {
-        this.#rawPtr.add(0xc8).writeUtf16String(assetUrl);
+    set assetUrl(value) {
+        this.writeOffsetUtf16String(0xc8, value);
     }
 
     get transparency() {
-        return this.#rawPtr.add(0xd0).readFloat();
+        return this.readOffsetFloat(0xd0);
     }
-    set transparency(transparency) {
-        this.#rawPtr.add(0xd0).writeFloat(transparency);
+    set transparency(value) {
+        this.writeOffsetFloat(0xd0, value);
     }
 
     get targetTransparency() {
-        return this.#rawPtr.add(0xd4).readFloat();
+        return this.readOffsetFloat(0xd4);
     }
-    set targetTransparency(targetTransparency) {
-        this.#rawPtr.add(0xd4).writeFloat(targetTransparency);
+    set targetTransparency(value) {
+        this.writeOffsetFloat(0xd4, value);
     }
 
     get targetAngle() {
-        return this.#rawPtr.add(0xd8).readFloat();
+        return this.readOffsetFloat(0xd8);
     }
-    set targetAngle(targetAngle) {
-        this.#rawPtr.add(0xd8).writeFloat(targetAngle);
+    set targetAngle(value) {
+        this.writeOffsetFloat(0xd8, value);
     }
 
     get angle() {
-        return this.#rawPtr.add(0xdc).readFloat();
+        return this.readOffsetFloat(0xdc);
     }
-    set angle(angle) {
-        this.#rawPtr.add(0xdc).writeFloat(angle);
+    set angle(value) {
+        this.writeOffsetFloat(0xdc, value);
     }
 
     get glowTimer() {
-        return this.#rawPtr.add(0xf4).readFloat();
+        return this.readOffsetFloat(0xf4);
     }
-    set glowTimer(glowTimer) {
-        this.#rawPtr.add(0xf4).writeFloat(glowTimer);
+    set glowTimer(value) {
+        this.writeOffsetFloat(0xf4, value);
     }
 
     get drawScale() {
-        return this.#rawPtr.add(0x114).readFloat();
+        return this.readOffsetFloat(0x114);
     }
-    set drawScale(drawScale) {
-        this.#rawPtr.add(0x114).writeFloat(drawScale);
+    set drawScale(value) {
+        this.writeOffsetFloat(0x114, value);
     }
 
     get targetDrawScale() {
-        return this.#rawPtr.add(0x118).readFloat();
+        return this.readOffsetFloat(0x118);
     }
-    set targetDrawScale(targetDrawScale) {
-        this.#rawPtr.add(0x118).writeFloat(targetDrawScale);
+    set targetDrawScale(value) {
+        this.writeOffsetFloat(0x118, value);
     }
 
     get cardsToPreview() {
-        return this.#rawPtr.add(0x134).readPointer();
+        return this.readoffsetPoint(0x134);
     }
-    set cardsToPreview(cardsToPreview) {
-        return this.#rawPtr.add(0x134).writePointer(cardsToPreview);
+    set cardsToPreview(value) {
+        this.writeOffsetPointer(0x134, value);
     }
 
     get originalName() {
-        return this.#rawPtr.add(0x13c).readUtf16String();
+        return this.readOffsetUtf16String(0x13c);
     }
-    set originalName(originalName) {
-        this.#rawPtr.add(0x13c).writeUtf16String(originalName);
+    set originalName(value) {
+        this.writeOffsetUtf16String(0x13c, value);
     }
 
     get name() {
-        return this.#rawPtr.add(0x140).readUtf16String();
+        return this.readOffsetUtf16String(0x140);
     }
-    set name(name) {
-        this.#rawPtr.add(0x140).writeUtf16String(name);
+    set name(value) {
+        this.writeOffsetUtf16String(0x140, value);
     }
 
     get rawDescription() {
-        return this.#rawPtr.add(0x144).readUtf16String();
+        return this.readOffsetUtf16String(0x144);
     }
-    set rawDescription(rawDescription) {
-        this.#rawPtr.add(0x144).writeUtf16String(rawDescription);
+    set rawDescription(value) {
+        this.writeOffsetUtf16String(0x144, value);
     }
 
     get cardID() {
-        return this.#rawPtr.add(0x148).readUtf16String();
+        return this.readOffsetUtf16String(0x148);
     }
-    set cardID(cardID) {
-        this.#rawPtr.add(0x148).writeUtf16String(cardID);
+    set cardID(value) {
+        this.writeOffsetUtf16String(0x148, value);
+    }
+}
+
+class AbstractCreature extends NativeClassWrapper {
+    //NativePointer AbstractCreature *
+    constructor(CthisPtr) {
+        super(CthisPtr);
+    }
+
+    get BaseClassPtr() {
+        return super.BaseClassPtr()
+    }
+}
+
+class AbstractPlayer extends AbstractCreature {
+    //NativePointer AbstractPlayer *
+    constructor(CthisPtr) {
+        super(CthisPtr)
+    }
+
+    get BaseClassPtr() {
+        return super.BaseClassPtr()
+    }
+}
+
+class AbstractGameAction extends NativeClassWrapper {
+    //NativePointer AbstractGameAction *
+    constructor(CthisPtr) {
+        super(CthisPtr);
+    }
+
+    get duration() {
+        return this.readOffsetFloat(0x8);
+    }
+    set duration(value) {
+        return this.writeOffsetFloat(0x8, value);
+    }
+
+    get startDuration() {
+        return this.readOffsetFloat(0xc);
+    }
+    set startDuration(value) {
+        this.writeOffsetFloat(0xc, value);
+    }
+
+    get actionType() {
+        return this.readOffsetU32(0x10);
+    }
+    set actionType(value) {
+        this.writeOffsetU32(0x10, value);
+    }
+
+    get attackEffect() {
+        return this.readOffsetU32(0x14);
+    }
+    set attackEffect(value) {
+        this.writeOffsetU32(0x14, value);
+    }
+
+    get damageType() {
+        return this.readOffsetU32(0x18);
+    }
+    set damageType(value) {
+        this.writeOffsetU32(0x18, value);
+    }
+
+    get isDone() {
+        return this.readOffsetU8(0x1C);
+    }
+    set isDone(value) {
+        this.writeOffsetU8(0x1C, value);
+    }
+
+    get amount() {
+        return this.readOffsetS32(0x20);
+    }
+    set amount(value) {
+        this.writeOffsetS32(0x20, value);
+    }
+
+    get target() {
+        return this.readOffsetPointer(0x20);
+    }
+    set target(value) {
+        this.writeOffsetPointer(0x20, value);
+    }
+
+    get source() {
+        return this.readOffsetPointer(0x24);
+    }
+    set source(value) {
+        this.writeOffsetPointer(0x24, value);
     }
 }
 
 class NativeFunctionInfo {
-    constructor(funcOffset, retType, argTypes, callABI)
-    {
+    constructor(funcOffset, retType, argTypes, callABI) {
         this.funcOffset = funcOffset
         this.retType = retType
         this.argTypes = argTypes
@@ -500,63 +653,73 @@ class NativeFunctionInfo {
     }
 }
 
-class PatchManager
-{
+class PatchManager {
     static AbstractPlayer = {
-        //void AbstractPlayer::loseGold(AbstractPlayer * player, int gold)
-        loseGold:new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int'])
+        //void AbstractPlayer::loseGold(STS::AbstractPlayer * player, int gold)
+        loseGold: new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int'])
     };
     static ConfusionPower = {
-        //void ConfusionPower::onCardDraw(AbstractPower * thisPtr, STS::AbstractCard * card)
-        onCardDraw:new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
+        //void ConfusionPower::onCardDraw(STS::AbstractPower * thisPtr, STS::AbstractCard * card)
+        onCardDraw: new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
     };
+    static AbstractCard = {
+        //void AbstractCard::addToBot(STS::AbstractCard * thisPtr, STS::AbstractGameAction * action)
+        addToBot: new NativeFunctionInfo(0x16E5DB5, 'void', ['pointer', 'pointer'])
+    }
     static RedCards = {
         //STS::AbstractCard * Cards::Red::Strike_Red::Ctor(STS::AbstractCard * this)
-        StrikeRedCtor : new NativeFunctionInfo(0x1747E89, 'pointer', ['pointer']),
+        StrikeRedCtor: new NativeFunctionInfo(0x1747E89, 'pointer', ['pointer']),
         //STS::AbstractCard * Cards::Red::Defend_Red::Ctor(STS::AbstractCard * this)
-        DefendRedCtor : new NativeFunctionInfo(0x173E7DD, 'pointer', ['pointer']),
+        DefendRedCtor: new NativeFunctionInfo(0x173E7DD, 'pointer', ['pointer']),
         //STS::AbstractCard * Cards::Red::Feed::Ctor(STS::AbstractCard * this)
-        FeedCtor : new NativeFunctionInfo(0x1740309, 'pointer', ['pointer']),
+        FeedCtor: new NativeFunctionInfo(0x1740309, 'pointer', ['pointer']),
         //STS::AbstractCard * Cards::Red::Bash::Ctor(STS::AbstractCard * this)
-        BashCtor : new NativeFunctionInfo(0x173AD4D, 'pointer', ['pointer']),
+        BashCtor: new NativeFunctionInfo(0x173AD4D, 'pointer', ['pointer']),
+        //void Cards::Red::SearingBlow::Use(STS::AbstractCard * this, STS::AbstractPlayer* castPlayer, STS::AbstractMonster* targetMonster)
+        SearingBlowUse: new NativeFunctionInfo(0x174666D, 'void', ['pointer', 'pointer', 'pointer']),
     };
     static PurpleCards = {
         //STS::AbstractCard * Cards::Purple::Alpha::Ctor(STS::AbstractCard * this)
-        AlphaCtor : new NativeFunctionInfo(0x172AE45, 'pointer', ['pointer']),
+        AlphaCtor: new NativeFunctionInfo(0x172AE45, 'pointer', ['pointer']),
     };
     static TempCards = {
         //STS::AbstractCard * Cards::Temp::Omega::Ctor(STS::AbstractCard * this)
-        OmegaCtor : new NativeFunctionInfo(0x1750CE9, 'pointer', ['pointer']),
+        OmegaCtor: new NativeFunctionInfo(0x1750CE9, 'pointer', ['pointer']),
+    };
+    static CommonActions = {
+        //AbstractGameAction* HealAction(AbstractGameAction* this, STS::AbstractCreature* target, STS::AbstractCreature* source, int amount)
+        HealActionCtor: new NativeFunctionInfo(0x1682A11, 'pointer', ['pointer', 'pointer', 'pointer', 'int']),
     }
 }
 
 let STSCodeBasePtr = Module.findBaseAddress("libSpire_ANDROID.so");
 
-function AndroidLog(message)
-{
-    Java.perform(function(message) {
-        let ALog = Java.use("android.util.Log");
-        ALog.v("STS Mod", message);
+function STSLogV(message) {
+    Java.perform(function (message) {
+        let STSLogger = Java.use("android.util.Log");
+        STSLogger.v("STS Mod", message);
     });
 }
 
-function HookSTSFunction(origFuncInfo, fakeFunc)
-{
-    let origFunc = new NativeFunction(STSCodeBasePtr.add(origFuncInfo.funcOffset), origFuncInfo.retType, origFuncInfo.argTypes);
+function CreateNativeFunction(origFuncInfo) {
+    return new NativeFunction(STSCodeBasePtr.add(origFuncInfo.funcOffset), origFuncInfo.retType, origFuncInfo.argTypes);
+}
+
+function HookSTSFunction(origFuncInfo, fakeFunc) {
+    let origFunc = CreateNativeFunction(origFuncInfo)
     let fakeCallback = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
     Interceptor.replace(origFunc, fakeCallback);
 
     return origFunc;
 }
 
-function fakeRandom(min, max)
-{
+function fakeRandom(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-let origLoseGoldFunc = HookSTSFunction(PatchManager.AbstractPlayer.loseGold, (thisPtr, gold) => { origLoseGoldFunc(thisPtr, Math.ceil(gold*0.6)); });
+let origLoseGoldFunc = HookSTSFunction(PatchManager.AbstractPlayer.loseGold, (thisPtr, gold) => { origLoseGoldFunc(thisPtr, Math.ceil(gold * 0.6)); });
 let origOnCardDrawFunc = HookSTSFunction(PatchManager.ConfusionPower.onCardDraw, (thisPtr, cardPtr) => {
-//    origOnCardDrawFunc(thisPtr, cardPtr)
+    //    origOnCardDrawFunc(thisPtr, cardPtr)
     let baseCard = new AbstractCard(cardPtr);
     if (baseCard.cost >= 0) {
         let newCost = fakeRandom(0, baseCard.cost);
@@ -591,6 +754,15 @@ let origBashCtor = HookSTSFunction(PatchManager.RedCards.BashCtor, (thisPtr) => 
     let newCard = new AbstractCard(ret);
     newCard.baseDamage = 12;
     return ret;
+});
+let origSearingBlowUse = HookSTSFunction(PatchManager.RedCards.SearingBlowUse, (thisPtr, playerPtr, monsterPtr) => {
+    origSearingBlowUse(thisPtr, playerPtr, monsterPtr);
+    let baseCard = new AbstractCard(thisPtr);
+    let cardLevel = baseCard.timesUpgraded;
+    let HealActionCtor = CreateNativeFunction(PatchManager.CommonActions.HealActionCtor)
+    let newHealAction = HealActionCtor(new NativePointer(0), playerPtr, playerPtr, cardLevel)
+    let addToBotFunc = CreateNativeFunction(PatchManager.AbstractCard.addToBot);
+    addToBotFunc(thisPtr, newHealAction);
 });
 let origAlphaCtor = HookSTSFunction(PatchManager.PurpleCards.AlphaCtor, (thisPtr) => {
     let ret = origAlphaCtor(thisPtr);

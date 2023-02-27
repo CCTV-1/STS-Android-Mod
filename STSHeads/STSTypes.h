@@ -52,6 +52,44 @@ namespace STS
         CURSE,
     };
 
+    enum class ActionType:uint32_t
+    {
+        BLOCK = 0, 
+        POWER, 
+        CARD_MANIPULATION, 
+        DAMAGE, 
+        DEBUFF, 
+        DISCARD, 
+        DRAW, 
+        EXHAUST, 
+        HEAL, 
+        ENERGY, 
+        TEXT, 
+        USE, 
+        CLEAR_CARD_QUEUE, 
+        DIALOG, 
+        SPECIAL, 
+        WAIT, 
+        SHUFFLE, 
+        REDUCE_POWER
+    };
+
+    enum class AttackEffect:uint32_t
+    {
+        BLUNT_LIGHT = 0, 
+        BLUNT_HEAVY, 
+        SLASH_DIAGONAL, 
+        SMASH, 
+        SLASH_HEAVY, 
+        SLASH_HORIZONTAL, 
+        SLASH_VERTICAL, 
+        NONE, 
+        FIRE, 
+        POISON, 
+        SHIELD, 
+        LIGHTNING
+    };
+
     struct JString
     {
         uint32_t unk;
@@ -72,6 +110,53 @@ namespace STS
         float g;
         float b;
         float a;
+    };
+
+    struct DamageInfo
+    {
+        void *basePtr;
+        void *vfuncMap;
+        AbstractCreature *owner;
+        JString *name;
+        DamageType type;
+        int32_t base;
+        int32_t output;
+        bool isModified;
+        uint8_t pad1D[3];
+    } __attribute__((aligned(4)));
+
+
+    struct AbstractCreature
+    {
+        void *baseClassPtr;
+        void *vFuncMap;
+        uint8_t unk[0];
+    } __attribute__((aligned(4)));
+
+    struct AbstractPlayer : public AbstractCreature
+    {
+    };
+    
+
+    struct AbstractGameAction
+    {
+        void *basePtr;
+        void *vfuncMap;
+        float duration;
+        float startDuration;
+        ActionType actionType;
+        AttackEffect attackEffect;
+        DamageType damageType;
+        bool isDone;
+        uint8_t pad1D[3];
+        int32_t amount;
+        AbstractCreature* target;
+        AbstractCreature* source;
+    }__attribute__((aligned(4)));
+
+    struct DeriveGameAction : public AbstractGameAction
+    {
+
     };
 
     struct AbstractCard
@@ -169,8 +254,12 @@ namespace STS
         JString *cardID;
         uint8_t gap140[48];
         Color glowColor;
-        uint8_t unk[];
+        uint8_t unk[0];
     } __attribute__((aligned(4)));
+
+    struct DeriveCard : public AbstractCard
+    {
+    };
 }
 
 
