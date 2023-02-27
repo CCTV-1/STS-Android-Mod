@@ -676,7 +676,7 @@ class PatchManager {
         //STS::AbstractCard * Cards::Red::Bash::Ctor(STS::AbstractCard * this)
         BashCtor: new NativeFunctionInfo(0x173AD4D, 'pointer', ['pointer']),
         //void Cards::Red::SearingBlow::Use(STS::AbstractCard * this, STS::AbstractPlayer* castPlayer, STS::AbstractMonster* targetMonster)
-        SearingBlowUse: new NativeFunctionInfo(0x174666D, 'void', ['pointer', 'pointer', 'pointer']),
+        SearingBlowUse: new NativeFunctionInfo(0x17467A5, 'void', ['pointer', 'pointer', 'pointer']),
     };
     static PurpleCards = {
         //STS::AbstractCard * Cards::Purple::Alpha::Ctor(STS::AbstractCard * this)
