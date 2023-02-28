@@ -654,10 +654,38 @@ class NativeFunctionInfo {
 }
 
 class PatchManager {
+    static STSGlobalVars = {
+        SearingBlowStr: 0x3493DC4,
+        StrikeRedStr: 0x3494654,
+    };
+    static STSNativeLib = {
+        //System::String* AllocConstString(const char * str, int len);
+        AllocConstString: new NativeFunctionInfo(0x0, 'pointer', ['pointer', 'int']),
+        //System::List * System::List::add(System::List * thisPtr)
+        ArrayList_StringCtor: new NativeFunctionInfo(0x1386D19, 'pointer', ['pointer']),
+        //bool System::List::add(System::List * thisPtr, jobject * objPtr)
+        ArrayList_StringAdd: new NativeFunctionInfo(0x1386F7D, 'bool', ['pointer', 'pointer'])
+    };
     static AbstractPlayer = {
         //void AbstractPlayer::loseGold(STS::AbstractPlayer * player, int gold)
         loseGold: new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int'])
     };
+    static Ironclad = {
+        //System::List* Ironclad::getStartingDeck(STS::Ironclad * thisPtr)
+        getStartingDeck: new NativeFunctionInfo(0x1777921, 'pointer', ['pointer'])
+    };
+    static TheSilent = {
+        //System::List* TheSilent::getStartingDeck(STS::TheSilent * thisPtr)
+        getStartingDeck: new NativeFunctionInfo(0x1778D71, 'pointer', ['pointer'])
+    };
+    static Defect = {
+        //System::List* Defect::getStartingDeck(STS::Defect * thisPtr)
+        getStartingDeck: new NativeFunctionInfo(0x1776289, 'pointer', ['pointer'])
+    };
+    static Watcher = {
+        //System::List* Watcher::getStartingDeck(STS::Watcher * thisPtr)
+        getStartingDeck: new NativeFunctionInfo(0x177A7DD, 'pointer', ['pointer'])
+    }
     static ConfusionPower = {
         //void ConfusionPower::onCardDraw(STS::AbstractPower * thisPtr, STS::AbstractCard * card)
         onCardDraw: new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
@@ -665,7 +693,7 @@ class PatchManager {
     static AbstractCard = {
         //void AbstractCard::addToBot(STS::AbstractCard * thisPtr, STS::AbstractGameAction * action)
         addToBot: new NativeFunctionInfo(0x16E5DB5, 'void', ['pointer', 'pointer'])
-    }
+    };
     static RedCards = {
         //STS::AbstractCard * Cards::Red::Strike_Red::Ctor(STS::AbstractCard * this)
         StrikeRedCtor: new NativeFunctionInfo(0x1747E89, 'pointer', ['pointer']),
@@ -689,13 +717,13 @@ class PatchManager {
     static CommonActions = {
         //AbstractGameAction* HealAction(AbstractGameAction* this, STS::AbstractCreature* target, STS::AbstractCreature* source, int amount)
         HealActionCtor: new NativeFunctionInfo(0x1682A11, 'pointer', ['pointer', 'pointer', 'pointer', 'int']),
-    }
+    };
 }
 
 let STSCodeBasePtr = Module.findBaseAddress("libSpire_ANDROID.so");
 
 function STSLogV(message) {
-    Java.perform(function (message) {
+    Java.perform(function () {
         let STSLogger = Java.use("android.util.Log");
         STSLogger.v("STS Mod", message);
     });
@@ -705,11 +733,14 @@ function CreateNativeFunction(origFuncInfo) {
     return new NativeFunction(STSCodeBasePtr.add(origFuncInfo.funcOffset), origFuncInfo.retType, origFuncInfo.argTypes);
 }
 
+function GetGlobalVarPtr(offset) {
+    return STSCodeBasePtr.add(offset);
+}
+
 function HookSTSFunction(origFuncInfo, fakeFunc) {
     let origFunc = CreateNativeFunction(origFuncInfo)
     let fakeCallback = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
     Interceptor.replace(origFunc, fakeCallback);
-
     return origFunc;
 }
 
@@ -717,61 +748,87 @@ function fakeRandom(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-let origLoseGoldFunc = HookSTSFunction(PatchManager.AbstractPlayer.loseGold, (thisPtr, gold) => { origLoseGoldFunc(thisPtr, Math.ceil(gold * 0.6)); });
-let origOnCardDrawFunc = HookSTSFunction(PatchManager.ConfusionPower.onCardDraw, (thisPtr, cardPtr) => {
-    //    origOnCardDrawFunc(thisPtr, cardPtr)
-    let baseCard = new AbstractCard(cardPtr);
-    if (baseCard.cost >= 0) {
-        let newCost = fakeRandom(0, baseCard.cost);
-        if (baseCard.cost != newCost) {
-            baseCard.cost = newCost;
-            baseCard.costForTurn = baseCard.cost;
-            baseCard.isCostModified = true;
+function PatchRedCards() {
+    let origStrikeRedCtorFunc = HookSTSFunction(PatchManager.RedCards.StrikeRedCtor, (thisPtr) => {
+        let ret = origStrikeRedCtorFunc(thisPtr);
+        let newCard = new AbstractCard(ret);
+        newCard.baseDamage++;
+        return ret;
+    });
+    let origDefendRedCtorFunc = HookSTSFunction(PatchManager.RedCards.DefendRedCtor, (thisPtr) => {
+        let ret = origDefendRedCtorFunc(thisPtr);
+        let newCard = new AbstractCard(ret);
+        newCard.baseBlock++;
+        return ret;
+    });
+    let origFeedCtor = HookSTSFunction(PatchManager.RedCards.FeedCtor, (thisPtr) => {
+        let ret = origFeedCtor(thisPtr);
+        let newCard = new AbstractCard(ret);
+        newCard.magicNumber = ++newCard.baseMagicNumber;
+        return ret;
+    });
+    let origBashCtor = HookSTSFunction(PatchManager.RedCards.BashCtor, (thisPtr) => {
+        let ret = origBashCtor(thisPtr);
+        let newCard = new AbstractCard(ret);
+        newCard.baseDamage = 12;
+        return ret;
+    });
+    let origSearingBlowUse = HookSTSFunction(PatchManager.RedCards.SearingBlowUse, (thisPtr, playerPtr, monsterPtr) => {
+        origSearingBlowUse(thisPtr, playerPtr, monsterPtr);
+        let baseCard = new AbstractCard(thisPtr);
+        let cardLevel = baseCard.timesUpgraded;
+        let HealActionCtor = CreateNativeFunction(PatchManager.CommonActions.HealActionCtor)
+        let newHealAction = HealActionCtor(new NativePointer(0), playerPtr, playerPtr, cardLevel)
+        let addToBotFunc = CreateNativeFunction(PatchManager.AbstractCard.addToBot);
+        addToBotFunc(thisPtr, newHealAction);
+    });
+}
+
+function PatchPurpleCards() {
+    let origAlphaCtor = HookSTSFunction(PatchManager.PurpleCards.AlphaCtor, (thisPtr) => {
+        let ret = origAlphaCtor(thisPtr);
+        let OmegaCtor = CreateNativeFunction(PatchManager.TempCards.OmegaCtor);
+        let newCard = new AbstractCard(ret);
+        let fakePreview = OmegaCtor(new NativePointer(0));
+        newCard.cardsToPreview = fakePreview;
+        return ret;
+    });
+}
+
+function Patchcharacters() {
+    let origIroncladGetStartingDeck = HookSTSFunction(PatchManager.Ironclad.getStartingDeck, (thisPtr) => {
+        let origDeck = origIroncladGetStartingDeck(thisPtr);
+        let addStrFunc = CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
+        //"Searing Blow"
+        addStrFunc(origDeck, GetGlobalVarPtr(PatchManager.STSGlobalVars.StrikeRedStr).readPointer());
+        addStrFunc(origDeck, GetGlobalVarPtr(PatchManager.STSGlobalVars.SearingBlowStr).readPointer());
+        return origDeck;
+    });
+    let origLoseGoldFunc = HookSTSFunction(PatchManager.AbstractPlayer.loseGold, (thisPtr, gold) => { origLoseGoldFunc(thisPtr, Math.ceil(gold * 0.6)); });
+}
+
+function PatchPowers() {
+    //let origOnCardDrawFunc = 
+    HookSTSFunction(PatchManager.ConfusionPower.onCardDraw, (thisPtr, cardPtr) => {
+        //    origOnCardDrawFunc(thisPtr, cardPtr)
+        let baseCard = new AbstractCard(cardPtr);
+        if (baseCard.cost >= 0) {
+            let newCost = fakeRandom(0, baseCard.cost);
+            if (baseCard.cost != newCost) {
+                baseCard.cost = newCost;
+                baseCard.costForTurn = baseCard.cost;
+                baseCard.isCostModified = true;
+            }
+            baseCard.freeToPlayOnce = false;
         }
-        baseCard.freeToPlayOnce = false;
-    }
-});
-let origStrikeRedCtorFunc = HookSTSFunction(PatchManager.RedCards.StrikeRedCtor, (thisPtr) => {
-    let ret = origStrikeRedCtorFunc(thisPtr);
-    let newCard = new AbstractCard(ret);
-    newCard.baseDamage++;
-    return ret;
-});
-let origDefendRedCtorFunc = HookSTSFunction(PatchManager.RedCards.DefendRedCtor, (thisPtr) => {
-    let ret = origDefendRedCtorFunc(thisPtr);
-    let newCard = new AbstractCard(ret);
-    newCard.baseBlock++;
-    return ret;
-});
-let origFeedCtor = HookSTSFunction(PatchManager.RedCards.FeedCtor, (thisPtr) => {
-    let ret = origFeedCtor(thisPtr);
-    let newCard = new AbstractCard(ret);
-    newCard.magicNumber = ++newCard.baseMagicNumber;
-    return ret;
-});
-let origBashCtor = HookSTSFunction(PatchManager.RedCards.BashCtor, (thisPtr) => {
-    let ret = origBashCtor(thisPtr);
-    let newCard = new AbstractCard(ret);
-    newCard.baseDamage = 12;
-    return ret;
-});
-let origSearingBlowUse = HookSTSFunction(PatchManager.RedCards.SearingBlowUse, (thisPtr, playerPtr, monsterPtr) => {
-    origSearingBlowUse(thisPtr, playerPtr, monsterPtr);
-    let baseCard = new AbstractCard(thisPtr);
-    let cardLevel = baseCard.timesUpgraded;
-    let HealActionCtor = CreateNativeFunction(PatchManager.CommonActions.HealActionCtor)
-    let newHealAction = HealActionCtor(new NativePointer(0), playerPtr, playerPtr, cardLevel)
-    let addToBotFunc = CreateNativeFunction(PatchManager.AbstractCard.addToBot);
-    addToBotFunc(thisPtr, newHealAction);
-});
-let origAlphaCtor = HookSTSFunction(PatchManager.PurpleCards.AlphaCtor, (thisPtr) => {
-    let ret = origAlphaCtor(thisPtr);
-    let newCard = new AbstractCard(ret);
-    let fakePreview = origOmegaCtor(new NativePointer(0));
-    newCard.cardsToPreview = fakePreview;
-    return ret;
-});
-let origOmegaCtor = HookSTSFunction(PatchManager.TempCards.OmegaCtor, (thisPtr) => {
-    let ret = origOmegaCtor(thisPtr);
-    return ret;
-});
+    });
+}
+
+function main() {
+    PatchRedCards();
+    Patchcharacters();
+    PatchPurpleCards();
+    PatchPowers();
+}
+
+main();
