@@ -656,15 +656,12 @@ class NativeFunctionInfo {
 class PatchManager {
     static STSModuleBaseAddress = Module.findBaseAddress("libSpire_ANDROID.so");
     static #NativeFuncCache = new Map();
-    static STSGlobalVars = {
-        SearingBlowStr: 0x3493DC4,
-        StrikeRedStr: 0x3494654,
-    };
+    static #GlobalVarCache = new Map();
     static STSNativeLib = {
         //System::String* AllocConstString(const char * str, int len);
-        AllocConstString: new NativeFunctionInfo(0x0, 'pointer', ['pointer', 'int']),
+        //AllocConstString: new NativeFunctionInfo(0x0, 'pointer', ['pointer', 'int']),
         //System::List * System::List::add(System::List * thisPtr)
-        ArrayList_StringCtor: new NativeFunctionInfo(0x1386D19, 'pointer', ['pointer']),
+        //ArrayList_StringCtor: new NativeFunctionInfo(0x1386D19, 'pointer', ['pointer']),
         //bool System::List::add(System::List * thisPtr, jobject * objPtr)
         ArrayList_StringAdd: new NativeFunctionInfo(0x1386F7D, 'bool', ['pointer', 'pointer'])
     };
@@ -722,13 +719,38 @@ class PatchManager {
         //System::List* Watcher::getStartingDeck(STS::Watcher * thisPtr)
         getStartingDeck: new NativeFunctionInfo(0x177A7DD, 'pointer', ['pointer'])
     };
+    static AbstractDungeon = {
+        //System::List* AbstractDungeon::getRewardCards(AbstractDungeon * thisPtr)
+        getRewardCards: new NativeFunctionInfo(0x17BE7F1, 'pointer', ['pointer'])
+    }
     static ConfusionPower = {
         //void ConfusionPower::onCardDraw(STS::AbstractPower * thisPtr, STS::AbstractCard * card)
         onCardDraw: new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
     };
+    
+    static STSGlobalVars = {
+        //AbstractDungeon::getRewardCards origin Instruction 017BE846 05 25 MOVS R5, #3
+        get numCardsInstPtr()
+        {
+            return PatchManager.GetOffsetPtr(0x17BE846);
+        },
+        get SearingBlowStr()
+        {
+            return PatchManager.GetOffsetPtr(0x3493DC4).readPointer();
+        },
+        get StrikeRedStr()
+        {
+            return PatchManager.GetOffsetPtr(0x3494654).readPointer();
+        },
+    };
 
-    static GetGlobalVarPtr(offset) {
-        return PatchManager.STSModuleBaseAddress.add(offset);
+    static GetOffsetPtr(offset)
+    {
+        if (!PatchManager.#GlobalVarCache.has(offset))
+        {
+            PatchManager.#GlobalVarCache.set(offset, PatchManager.STSModuleBaseAddress.add(offset));
+        }
+        return PatchManager.#GlobalVarCache.get(offset);
     }
 
     static CreateNativeFunction(origFuncInfo) {
@@ -832,11 +854,19 @@ function Patchcharacters() {
         let origDeck = origIroncladGetStartingDeck(thisPtr);
         let addStrFunc = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
         //"Searing Blow"
-        addStrFunc(origDeck, PatchManager.GetGlobalVarPtr(PatchManager.STSGlobalVars.StrikeRedStr).readPointer());
-        addStrFunc(origDeck, PatchManager.GetGlobalVarPtr(PatchManager.STSGlobalVars.SearingBlowStr).readPointer());
+        addStrFunc(origDeck, PatchManager.STSGlobalVars.StrikeRedStr);
+        addStrFunc(origDeck, PatchManager.STSGlobalVars.SearingBlowStr);
         return origDeck;
     });
+
     //let origLoseGoldFunc = PatchManager.HookSTSFunction(PatchManager.AbstractPlayer.loseGold, (thisPtr, gold) => { origLoseGoldFunc(thisPtr, Math.ceil(gold * 0.6)); });
+
+    Memory.patchCode(PatchManager.STSGlobalVars.numCardsInstPtr, 64, function(code) {
+        let numCardsModifyer = new ThumbWriter(code);
+        //modify to 017BE846 04 25 MOVS R5, #5  ;set numCards = 4
+        numCardsModifyer.putBytes([0x4, 0x25]);
+        numCardsModifyer.flush();
+    });
 }
 
 function PatchPowers() {
