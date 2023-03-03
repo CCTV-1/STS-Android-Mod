@@ -21,6 +21,14 @@ class NativeClassWrapper {
         return this.#rawPtr.add(offset).writePointer(value);
     }
 
+    readOffsetBool(offset) {
+        return Boolean(this.#rawPtr.add(offset).readU8());
+    }
+
+    writeOffsetBool(offset, value) {
+        this.#rawPtr.add(offset).writeU8(Number(value));
+    }
+
     readOffsetU8(offset) {
         return this.#rawPtr.add(offset).readU8();
     }
@@ -111,38 +119,38 @@ class AbstractCard extends NativeClassWrapper {
     }
 
     get isCostModified() {
-        return this.readOffsetU8(0x1c);
+        return this.readOffsetBool(0x1c);
     }
     set isCostModified(value) {
-        this.writeOffsetU8(0x1c, value);
+        this.writeOffsetBool(0x1c, value);
     }
 
     get isCostModifiedForTurn() {
-        return this.readOffsetU8(0x1d);
+        return this.readOffsetBool(0x1d);
     }
     set isCostModifiedForTurn(value) {
-        this.writeOffsetU8(0x1d, value);
+        this.writeOffsetBool(0x1d, value);
     }
 
     get retain() {
-        return this.readOffsetU8(0x1e);
+        return this.readOffsetBool(0x1e);
     }
     set retain(value) {
-        this.writeOffsetU8(0x1e, value);
+        this.writeOffsetBool(0x1e, value);
     }
 
     get selfRetain() {
-        return this.readOffsetU8(0x1f);
+        return this.readOffsetBool(0x1f);
     }
     set selfRetain(value) {
-        this.writeOffsetU8(0x1f, value);
+        this.writeOffsetBool(0x1f, value);
     }
 
     get dontTriggerOnUseCard() {
-        return this.readOffsetU8(0x20);
+        return this.readOffsetBool(0x20);
     }
     set dontTriggerOnUseCard(value) {
-        this.writeOffsetU8(0x20, value);
+        this.writeOffsetBool(0x20, value);
     }
 
     get rarity() {
@@ -160,24 +168,24 @@ class AbstractCard extends NativeClassWrapper {
     }
 
     get isInnate() {
-        return this.readOffsetU8(0x2c);
+        return this.readOffsetBool(0x2c);
     }
     set isInnate(value) {
-        this.writeOffsetU8(0x2c, value);
+        this.writeOffsetBool(0x2c, value);
     }
 
     get isLocked() {
-        return this.readOffsetU8(0x2d);
+        return this.readOffsetBool(0x2d);
     }
     set isLocked(value) {
-        this.writeOffsetU8(0x2d, value);
+        this.writeOffsetBool(0x2d, value);
     }
 
     get showEvokeValue() {
-        return this.readOffsetU8(0x2e);
+        return this.readOffsetBool(0x2e);
     }
     set showEvokeValue(value) {
-        this.writeOffsetU8(0x2e, value);
+        this.writeOffsetBool(0x2e, value);
     }
 
     get showEvokeOrbCount() {
@@ -188,17 +196,17 @@ class AbstractCard extends NativeClassWrapper {
     }
 
     get isUsed() {
-        return this.readOffsetU8(0x38);
+        return this.readOffsetBool(0x38);
     }
     set isUsed(value) {
-        this.writeOffsetU8(0x38, value);
+        this.writeOffsetBool(0x38, value);
     }
 
     get upgraded() {
-        return this.readOffsetU8(0x39);
+        return this.readOffsetBool(0x39);
     }
     set upgraded(value) {
-        this.writeOffsetU8(0x39, value);
+        this.writeOffsetBool(0x39, value);
     }
 
     get timesUpgraded() {
@@ -226,77 +234,77 @@ class AbstractCard extends NativeClassWrapper {
         return this.readOffsetU32(0x48);
     }
     set ignoreEnergyOnUse(value) {
-        this.writeOffsetU8(0x48, value);
+        this.writeOffsetBool(0x48, value);
     }
 
     get isSeen() {
-        return this.readOffsetU8(0x49);
+        return this.readOffsetBool(0x49);
     }
     set isSeen(value) {
-        this.writeOffsetU8(0x49, value);
+        this.writeOffsetBool(0x49, value);
     }
 
     get upgradedCost() {
-        return this.readOffsetU8(0x4a);
+        return this.readOffsetBool(0x4a);
     }
     set upgradedCost(value) {
-        this.writeOffsetU8(0x4a, value);
+        this.writeOffsetBool(0x4a, value);
     }
 
     get upgradedDamage() {
-        return this.readOffsetU8(0x4b);
+        return this.readOffsetBool(0x4b);
     }
     set upgradedDamage(value) {
-        this.writeOffsetU8(0x4b, value);
+        this.writeOffsetBool(0x4b, value);
     }
 
     get upgradedBlock() {
-        return this.readOffsetU8(0x4c);
+        return this.readOffsetBool(0x4c);
     }
     set upgradedBlock(value) {
-        this.writeOffsetU8(0x4c, value);
+        this.writeOffsetBool(0x4c, value);
     }
 
     get upgradedMagicNumber() {
-        return this.readOffsetU8(0x4d);
+        return this.readOffsetBool(0x4d);
     }
     set upgradedMagicNumber(value) {
-        this.writeOffsetU8(0x4d, value);
+        this.writeOffsetBool(0x4d, value);
     }
 
     get isSelected() {
-        return this.readOffsetU8(0x60);
+        return this.readOffsetBool(0x60);
     }
     set isSelected(value) {
-        this.writeOffsetU8(0x60, value);
+        this.writeOffsetBool(0x60, value);
     }
 
     get exhaust() {
-        return this.readOffsetU8(0x61);
+        return this.readOffsetBool(0x61);
     }
     set exhaust(value) {
-        this.writeOffsetU8(0x61, value);
+        this.writeOffsetBool(0x61, value);
     }
 
     get returnToHand() {
-        return this.readOffsetU8(0x62);
+        return this.readOffsetBool(0x62);
     }
     set returnToHand(value) {
-        this.writeOffsetU8(0x62, value);
+        this.writeOffsetBool(0x62, value);
     }
 
     get shuffleBackIntoDrawPile() {
-        return this.readOffsetU8(0x63);
+        return this.readOffsetBool(0x63);
     }
     set shuffleBackIntoDrawPile(value) {
-        this.writeOffsetU8(0x63, value);
+        this.writeOffsetBool(0x63, value);
     }
 
     get isEthereal() {
-        return this.readOffsetU8(0x64);
+        return this.readOffsetBool(0x64);
     }
     set isEthereal(value) {
-        this.writeOffsetU8(0x64, value);
+        this.writeOffsetBool(0x64, value);
     }
 
     get baseDamage() {
@@ -384,24 +392,24 @@ class AbstractCard extends NativeClassWrapper {
     }
 
     get isDamageModified() {
-        return this.readOffsetU8(0xa4);
+        return this.readOffsetBool(0xa4);
     }
     set isDamageModified(value) {
-        this.writeOffsetU8(0xa4, value);
+        this.writeOffsetBool(0xa4, value);
     }
 
     get isBlockModified() {
-        return this.readOffsetU8(0xa5);
+        return this.readOffsetBool(0xa5);
     }
     set isBlockModified(value) {
-        this.writeOffsetU8(0xa5, value);
+        this.writeOffsetBool(0xa5, value);
     }
 
     get isMagicNumberModified() {
-        return this.readOffsetU8(0xa6);
+        return this.readOffsetBool(0xa6);
     }
     set isMagicNumberModified(value) {
-        this.writeOffsetU8(0xa6, value);
+        this.writeOffsetBool(0xa6, value);
     }
 
     get damageType() {
@@ -426,38 +434,38 @@ class AbstractCard extends NativeClassWrapper {
     }
 
     get purgeOnUse() {
-        return this.readOffsetU8(0xb4);
+        return this.readOffsetBool(0xb4);
     }
     set purgeOnUse(value) {
-        this.writeOffsetU8(0xb4, value);
+        this.writeOffsetBool(0xb4, value);
     }
 
     get exhaustOnUseOnce() {
-        return this.readOffsetU8(0xb5);
+        return this.readOffsetBool(0xb5);
     }
     set exhaustOnUseOnce(value) {
-        this.writeOffsetU8(0xb5, value);
+        this.writeOffsetBool(0xb5, value);
     }
 
     get exhaustOnFire() {
-        return this.readOffsetU8(0xb6);
+        return this.readOffsetBool(0xb6);
     }
     set exhaustOnFire(value) {
-        this.writeOffsetU8(0xb6, value);
+        this.writeOffsetBool(0xb6, value);
     }
 
     get freeToPlayOnce() {
-        return this.readOffsetU8(0xb7);
+        return this.readOffsetBool(0xb7);
     }
     set freeToPlayOnce(freeToPlayOnce) {
-        this.writeOffsetU8(0xb7, value);
+        this.writeOffsetBool(0xb7, value);
     }
 
     get isInAutoplay() {
-        return this.readOffsetU8(0xb8);
+        return this.readOffsetBool(0xb8);
     }
     set isInAutoplay(value) {
-        this.writeOffsetU8(0xb8, value);
+        this.writeOffsetBool(0xb8, value);
     }
 
     get assetUrl() {
@@ -616,10 +624,10 @@ class AbstractGameAction extends NativeClassWrapper {
     }
 
     get isDone() {
-        return this.readOffsetU8(0x1C);
+        return this.readOffsetBool(0x1C);
     }
     set isDone(value) {
-        this.writeOffsetU8(0x1C, value);
+        this.writeOffsetBool(0x1C, value);
     }
 
     get amount() {
