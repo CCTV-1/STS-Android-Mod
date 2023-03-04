@@ -1,82 +1,306 @@
 'use strict';
 
+class NativeFunctionInfo {
+    constructor(funcOffset, retType, argTypes, callABI) {
+        this.funcOffset = funcOffset
+        this.retType = retType
+        this.argTypes = argTypes
+        this.callABI = callABI
+    }
+}
+
+class PatchManager {
+    static STSModuleBaseAddress = Module.findBaseAddress("libSpire_ANDROID.so");
+    static STSLogger = Java.use("android.util.Log");
+    static #NativeFuncCache = new Map();
+    static #GlobalVarCache = new Map();
+    static STSNativeLib = {
+        //System::List * System::List<String>::Ctor(System::List * thisPtr)
+        ArrayList_StringCtor: new NativeFunctionInfo(0x1386D19, 'pointer', ['pointer']),
+        //bool System::List::add(System::List * thisPtr, jobject * objPtr)
+        ArrayList_StringAdd: new NativeFunctionInfo(0x1386F7D, 'bool', ['pointer', 'pointer']),
+        //System::List * System::List<AbstractCard>::Ctor(System::List * thisPtr)
+        ArrayList_AbstractCardCtor: new NativeFunctionInfo(0x1678CA9, 'pointer', ['pointer']),
+        //STS::AbstractCard* System::List<AbstractCard>::Ctor(System::List * thisPtr, int index)
+        ArrayList_AbstractCardUnsafeLoad: new NativeFunctionInfo(0x167E58D, 'pointer', ['pointer', 'uint32']),
+    };
+    static CommonActions = {
+        //AbstractGameAction* HealAction(AbstractGameAction* this, STS::AbstractCreature* target, STS::AbstractCreature* source, int amount)
+        HealActionCtor: new NativeFunctionInfo(0x1682A11, 'pointer', ['pointer', 'pointer', 'pointer', 'int32']),
+    };
+    static AbstractCard = {
+        //void AbstractCard::addToBot(STS::AbstractCard * thisPtr, STS::AbstractGameAction * action)
+        addToBot: new NativeFunctionInfo(0x16E5DB5, 'void', ['pointer', 'pointer'])
+    };
+    static CardGroup = {
+        //STS::AbstractCard* getRandomCard(STS::CardGroup * thisPtr, int useRng)
+        getRandomCardBool: new NativeFunctionInfo(0x1701DA9, 'pointer', ['pointer', 'int32'])
+    }
+    static PurpleCards = {
+        //STS::AbstractCard * Cards::Purple::Alpha::Ctor(STS::AbstractCard * this)
+        AlphaCtor: new NativeFunctionInfo(0x172AE45, 'pointer', ['pointer']),
+    };
+    static RedCards = {
+        //STS::AbstractCard * Cards::Red::Bash::Ctor(STS::AbstractCard * this)
+        BashCtor: new NativeFunctionInfo(0x173AD4D, 'pointer', ['pointer']),
+        //STS::AbstractCard * Cards::Red::Clothesline::Ctor(STS::AbstractCard * this)
+        ClotheslineCtor: new NativeFunctionInfo(0x173DA49, 'pointer', ['pointer']),
+        //STS::AbstractCard * Cards::Red::Defend_Red::Ctor(STS::AbstractCard * this)
+        DefendRedCtor: new NativeFunctionInfo(0x173E7DD, 'pointer', ['pointer']),
+        //STS::AbstractCard * Cards::Red::Feed::Ctor(STS::AbstractCard * this)
+        FeedCtor: new NativeFunctionInfo(0x1740309, 'pointer', ['pointer']),
+        //STS::AbstractCard * Cards::Red::HeavyBlade::Ctor(STS::AbstractCard * this)
+        HeavyBladeCtor: new NativeFunctionInfo(0x1741E25, 'pointer', ['pointer']),
+        //STS::AbstractCard * Cards::Red::PerfectedStrike::Ctor(STS::AbstractCard * this)
+        PerfectedStrikeCtor: new NativeFunctionInfo(0x17445DD, 'pointer', ['pointer']),
+        //void Cards::Red::SearingBlow::Use(STS::AbstractCard * this, STS::AbstractPlayer* castPlayer, STS::AbstractMonster* targetMonster)
+        SearingBlowUse: new NativeFunctionInfo(0x17467A5, 'void', ['pointer', 'pointer', 'pointer']),
+        //STS::AbstractCard * Cards::Red::Strike_Red::Ctor(STS::AbstractCard * this)
+        StrikeRedCtor: new NativeFunctionInfo(0x1747E89, 'pointer', ['pointer']),
+    };
+    static TempCards = {
+        //STS::AbstractCard * Cards::Temp::Omega::Ctor(STS::AbstractCard * this)
+        OmegaCtor: new NativeFunctionInfo(0x1750CE9, 'pointer', ['pointer']),
+    };
+    static AbstractPlayer = {
+        //void AbstractPlayer::loseGold(STS::AbstractPlayer * player, int gold)
+        loseGold: new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int32'])
+    };
+    static Ironclad = {
+        //System::List* Ironclad::getStartingDeck(STS::Ironclad * thisPtr)
+        getStartingDeck: new NativeFunctionInfo(0x1777921, 'pointer', ['pointer'])
+    };
+    static TheSilent = {
+        //System::List* TheSilent::getStartingDeck(STS::TheSilent * thisPtr)
+        getStartingDeck: new NativeFunctionInfo(0x1778D71, 'pointer', ['pointer'])
+    };
+    static Defect = {
+        //System::List* Defect::getStartingDeck(STS::Defect * thisPtr)
+        getStartingDeck: new NativeFunctionInfo(0x1776289, 'pointer', ['pointer'])
+    };
+    static Watcher = {
+        //System::List* Watcher::getStartingDeck(STS::Watcher * thisPtr)
+        getStartingDeck: new NativeFunctionInfo(0x177A7DD, 'pointer', ['pointer'])
+    };
+    static AbstractDungeon = {
+        //System::List* AbstractDungeon::getRewardCards(AbstractDungeon * thisPtr)
+        getRewardCards: new NativeFunctionInfo(0x17BE7F1, 'pointer', ['pointer'])
+    }
+    static ConfusionPower = {
+        //void ConfusionPower::onCardDraw(STS::AbstractPower * thisPtr, STS::AbstractCard * card)
+        onCardDraw: new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
+    };
+    static BurningBlood = {
+        //void Relics::BurningBlood::onVictory(STS::AbstractRelic * thisPtr)
+        onVictory: new NativeFunctionInfo(0x198F901, 'void', ['pointer'])
+    }
+
+    static BlackBlood = {
+        //void Relics::BlackBlood::onVictory(STS::AbstractRelic * thisPtr)
+        onVictory: new NativeFunctionInfo(0x198BF31, 'void', ['pointer'])
+    }
+
+    static STSGlobalVars = {
+        //AbstractDungeon::getRewardCards origin Instruction 017BE846 05 25 MOVS R5, #3
+        get numCardsInstPtr() {
+            return PatchManager.GetOffsetPtr(0x17BE846);
+        },
+        get SearingBlowStr() {
+            return PatchManager.GetOffsetPtr(0x3493DC4).readPointer();
+        },
+        get StrikeRedStr() {
+            return PatchManager.GetOffsetPtr(0x3494654).readPointer();
+        },
+        get AbstractDungeon_player() {
+            return new AbstractPlayer(PatchManager.GetOffsetPtr(0x3498EDC).readPointer());
+        },
+    };
+
+    static GetOffsetPtr(offset) {
+        if (!PatchManager.#GlobalVarCache.has(offset)) {
+            PatchManager.#GlobalVarCache.set(offset, PatchManager.STSModuleBaseAddress.add(offset));
+        }
+        return PatchManager.#GlobalVarCache.get(offset);
+    }
+
+    static CreateNativeFunction(origFuncInfo) {
+        let funcAddressPtr = PatchManager.STSModuleBaseAddress.add(origFuncInfo.funcOffset);
+        let funcAddress = funcAddressPtr.toString();
+        if (!PatchManager.#NativeFuncCache.has(funcAddress)) {
+            PatchManager.#NativeFuncCache.set(funcAddress, new NativeFunction(funcAddressPtr, origFuncInfo.retType, origFuncInfo.argTypes));
+        }
+        return PatchManager.#NativeFuncCache.get(funcAddress);
+    }
+
+    static CreateNativeFunctionFromPtr(funcPtr, origFuncInfo) {
+        let funcAddress = funcPtr.toString();
+        if (!PatchManager.#NativeFuncCache.has(funcAddress)) {
+            PatchManager.#NativeFuncCache.set(funcAddress, new NativeFunction(funcPtr, origFuncInfo.retType, origFuncInfo.argTypes));
+        }
+        return PatchManager.#NativeFuncCache.get(funcAddress);
+    }
+
+    static HookSTSFunction(origFuncInfo, fakeFunc) {
+        let origFunc = PatchManager.CreateNativeFunction(origFuncInfo)
+        let fakeCallback = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
+        Interceptor.replace(origFunc, fakeCallback);
+        return origFunc;
+    }
+
+    static LogV(message) {
+        PatchManager.STSLogger.v("STS Mod", message);
+    }
+}
+
 class NativeClassWrapper {
-    #rawPtr = null;
+    rawPtr = null;
     //NativePointer AbstractCreature *
     constructor(CthisPtr) {
         if (!(CthisPtr instanceof NativePointer)) {
             throw "need a NativePointer";
         }
-        this.#rawPtr = CthisPtr;
+        if (CthisPtr.isNull()) {
+            throw "need a non-nullptr";
+        }
+        this.rawPtr = CthisPtr;
     }
 
     BaseClassPtr() {
-        return this.#rawPtr.readPointer();
+        return this.rawPtr.readPointer();
     }
 
     readOffsetPointer(offset) {
-        return this.#rawPtr.add(offset).readPointer();
+        return this.rawPtr.add(offset).readPointer();
     }
     writeOffsetPointer(offset, value) {
-        return this.#rawPtr.add(offset).writePointer(value);
+        return this.rawPtr.add(offset).writePointer(value);
     }
 
     readOffsetBool(offset) {
-        return Boolean(this.#rawPtr.add(offset).readU8());
+        return Boolean(this.rawPtr.add(offset).readU8());
     }
 
     writeOffsetBool(offset, value) {
-        this.#rawPtr.add(offset).writeU8(Number(value));
+        this.rawPtr.add(offset).writeU8(Number(value));
     }
 
     readOffsetU8(offset) {
-        return this.#rawPtr.add(offset).readU8();
+        return this.rawPtr.add(offset).readU8();
     }
 
     writeOffsetU8(offset, value) {
-        this.#rawPtr.add(offset).writeU8(value);
+        this.rawPtr.add(offset).writeU8(value);
     }
 
     readOffsetU32(offset) {
-        return this.#rawPtr.add(offset).readU32();
+        return this.rawPtr.add(offset).readU32();
     }
 
     writeOffsetU32(offset, value) {
-        this.#rawPtr.add(offset).writeU32(value);
+        this.rawPtr.add(offset).writeU32(value);
     }
 
     readOffsetS32(offset) {
-        return this.#rawPtr.add(offset).readS32();
+        return this.rawPtr.add(offset).readS32();
     }
 
     writeOffsetS32(offset, value) {
-        this.#rawPtr.add(offset).writeS32(value);
+        this.rawPtr.add(offset).writeS32(value);
     }
 
     readOffsetFloat(offset) {
-        return this.#rawPtr.add(offset).readFloat();
+        return this.rawPtr.add(offset).readFloat();
     }
 
     writeOffsetFloat(offset, value) {
-        this.#rawPtr.add(offset).writeFloat(value);
+        this.rawPtr.add(offset).writeFloat(value);
+    }
+
+    readOffsetJString(offset) {
+        return this.rawPtr.add(offset).readPointer().add(0xc).readUtf16String();
+    }
+
+    writeOffsetJString(offset, value) {
+        this.rawPtr.add(offset).readPointer().add(0x8).writeS32(value.length);
+        this.rawPtr.add(offset).readPointer().add(0xc).writeUtf16String(value);
     }
 
     readOffsetUtf16String(offset) {
-        return this.#rawPtr.add(offset).readUtf16String();
+        return this.rawPtr.add(offset).readUtf16String();
     }
 
     writeOffsetUtf16String(offset, value) {
-        this.#rawPtr.add(offset).writeUtf16String(value);
+        this.rawPtr.add(offset).writeUtf16String(value);
+    }
+}
+
+class ArrayList extends NativeClassWrapper {
+    //NativePointer ArrayList<T> *
+    constructor(CthisPtr) {
+        super(CthisPtr)
+    }
+
+    get BaseClassPtr() {
+        return super.BaseClassPtr()
+    }
+
+    get data() {
+        return this.readOffsetPointer(0x8);
+    }
+
+    get size() {
+        return this.readOffsetU32(0xc);
+    }
+
+}
+
+class CardGroup extends NativeClassWrapper {
+    //NativePointer CardGroup *
+    constructor(CthisPtr) {
+        super(CthisPtr)
+    }
+
+    get BaseClassPtr() {
+        return super.BaseClassPtr()
+    }
+
+    //ArrayList<AbstractCard>
+    get group() {
+        return new ArrayList(this.readOffsetPointer(0x8));
+    }
+
+    get type() {
+        return this.readOffsetU32(0x14);
     }
 }
 
 //struct ../STSHeads/STSTypes.h  AbstractCard
 //only work in ARMV7a(point type size is 4*sizeof(char))
-
 class AbstractCard extends NativeClassWrapper {
+    #vfuncMapPtr
     //NativePointer AbstractCard *
     constructor(CthisPtr) {
         super(CthisPtr);
+        this.#vfuncMapPtr = CthisPtr.readPointer().add(0x4).readPointer();
+    }
+
+    static #vfunctionMap = {
+        canUpgrade: new NativeFunctionInfo(0x50, 'bool', ['pointer']),
+        upgrade: new NativeFunctionInfo(0x58, 'void', ['pointer']),
+    }
+
+    #getVisualFunction(funcInfo) {
+        let vFuncPtr = this.#vfuncMapPtr.add(funcInfo.funcOffset).readPointer();
+        return PatchManager.CreateNativeFunctionFromPtr(vFuncPtr, funcInfo);
+    }
+
+    canUpgrade() {
+        let canUpgradeFunc = this.#getVisualFunction(AbstractCard.#vfunctionMap.canUpgrade);
+        return canUpgradeFunc(this.rawPtr);
+    }
+
+    upgrade() {
+        this.#getVisualFunction(AbstractCard.#vfunctionMap.upgrade)(this.rawPtr);
     }
 
     get BaseClassPtr() {
@@ -469,10 +693,10 @@ class AbstractCard extends NativeClassWrapper {
     }
 
     get assetUrl() {
-        return this.readOffsetUtf16String(0xc8);
+        return this.readOffsetJString(0xc8);
     }
     set assetUrl(value) {
-        this.writeOffsetUtf16String(0xc8, value);
+        this.writeOffsetJString(0xc8, value);
     }
 
     get transparency() {
@@ -532,31 +756,31 @@ class AbstractCard extends NativeClassWrapper {
     }
 
     get originalName() {
-        return this.readOffsetUtf16String(0x13c);
+        return this.readOffsetJString(0x13c);
     }
     set originalName(value) {
-        this.writeOffsetUtf16String(0x13c, value);
+        this.writeOffsetJString(0x13c, value);
     }
 
     get name() {
-        return this.readOffsetUtf16String(0x140);
+        return this.readOffsetJString(0x140);
     }
     set name(value) {
-        this.writeOffsetUtf16String(0x140, value);
+        this.writeOffsetJString(0x140, value);
     }
 
     get rawDescription() {
-        return this.readOffsetUtf16String(0x144);
+        return this.readOffsetJString(0x144);
     }
     set rawDescription(value) {
-        this.writeOffsetUtf16String(0x144, value);
+        this.writeOffsetJString(0x144, value);
     }
 
     get cardID() {
-        return this.readOffsetUtf16String(0x148);
+        return this.readOffsetJString(0x148);
     }
     set cardID(value) {
-        this.writeOffsetUtf16String(0x148, value);
+        this.writeOffsetJString(0x148, value);
     }
 }
 
@@ -569,6 +793,20 @@ class AbstractCreature extends NativeClassWrapper {
     get BaseClassPtr() {
         return super.BaseClassPtr()
     }
+
+    get currentHealth() {
+        return this.readOffsetS32(0x64);
+    }
+    set currentHealth(value) {
+        this.writeOffsetS32(0x64, value);
+    }
+
+    get maxHealth() {
+        return this.readOffsetS32(0x68);
+    }
+    set maxHealth(value) {
+        this.writeOffsetS32(0x68, value);
+    }
 }
 
 class AbstractPlayer extends AbstractCreature {
@@ -579,6 +817,10 @@ class AbstractPlayer extends AbstractCreature {
 
     get BaseClassPtr() {
         return super.BaseClassPtr()
+    }
+
+    get masterDeck() {
+        return new CardGroup(this.readOffsetPointer(0x114));
     }
 }
 
@@ -650,138 +892,6 @@ class AbstractGameAction extends NativeClassWrapper {
     set source(value) {
         this.writeOffsetPointer(0x24, value);
     }
-}
-
-class NativeFunctionInfo {
-    constructor(funcOffset, retType, argTypes, callABI) {
-        this.funcOffset = funcOffset
-        this.retType = retType
-        this.argTypes = argTypes
-        this.callABI = callABI
-    }
-}
-
-class PatchManager {
-    static STSModuleBaseAddress = Module.findBaseAddress("libSpire_ANDROID.so");
-    static #NativeFuncCache = new Map();
-    static #GlobalVarCache = new Map();
-    static STSNativeLib = {
-        //System::String* AllocConstString(const char * str, int len);
-        //AllocConstString: new NativeFunctionInfo(0x0, 'pointer', ['pointer', 'int']),
-        //System::List * System::List::add(System::List * thisPtr)
-        //ArrayList_StringCtor: new NativeFunctionInfo(0x1386D19, 'pointer', ['pointer']),
-        //bool System::List::add(System::List * thisPtr, jobject * objPtr)
-        ArrayList_StringAdd: new NativeFunctionInfo(0x1386F7D, 'bool', ['pointer', 'pointer'])
-    };
-    static CommonActions = {
-        //AbstractGameAction* HealAction(AbstractGameAction* this, STS::AbstractCreature* target, STS::AbstractCreature* source, int amount)
-        HealActionCtor: new NativeFunctionInfo(0x1682A11, 'pointer', ['pointer', 'pointer', 'pointer', 'int']),
-    };
-    static AbstractCard = {
-        //void AbstractCard::addToBot(STS::AbstractCard * thisPtr, STS::AbstractGameAction * action)
-        addToBot: new NativeFunctionInfo(0x16E5DB5, 'void', ['pointer', 'pointer'])
-    };
-    static PurpleCards = {
-        //STS::AbstractCard * Cards::Purple::Alpha::Ctor(STS::AbstractCard * this)
-        AlphaCtor: new NativeFunctionInfo(0x172AE45, 'pointer', ['pointer']),
-    };
-    static RedCards = {
-        //STS::AbstractCard * Cards::Red::Bash::Ctor(STS::AbstractCard * this)
-        BashCtor: new NativeFunctionInfo(0x173AD4D, 'pointer', ['pointer']),
-        //STS::AbstractCard * Cards::Red::Clothesline::Ctor(STS::AbstractCard * this)
-        ClotheslineCtor: new NativeFunctionInfo(0x173DA49, 'pointer', ['pointer']),
-        //STS::AbstractCard * Cards::Red::Defend_Red::Ctor(STS::AbstractCard * this)
-        DefendRedCtor: new NativeFunctionInfo(0x173E7DD, 'pointer', ['pointer']),
-        //STS::AbstractCard * Cards::Red::Feed::Ctor(STS::AbstractCard * this)
-        FeedCtor: new NativeFunctionInfo(0x1740309, 'pointer', ['pointer']),
-        //STS::AbstractCard * Cards::Red::HeavyBlade::Ctor(STS::AbstractCard * this)
-        HeavyBladeCtor : new NativeFunctionInfo(0x1741E25, 'pointer', ['pointer']),
-        //STS::AbstractCard * Cards::Red::PerfectedStrike::Ctor(STS::AbstractCard * this)
-        PerfectedStrikeCtor : new NativeFunctionInfo(0x17445DD, 'pointer', ['pointer']),
-        //void Cards::Red::SearingBlow::Use(STS::AbstractCard * this, STS::AbstractPlayer* castPlayer, STS::AbstractMonster* targetMonster)
-        SearingBlowUse: new NativeFunctionInfo(0x17467A5, 'void', ['pointer', 'pointer', 'pointer']),
-        //STS::AbstractCard * Cards::Red::Strike_Red::Ctor(STS::AbstractCard * this)
-        StrikeRedCtor: new NativeFunctionInfo(0x1747E89, 'pointer', ['pointer']),
-    };
-    static TempCards = {
-        //STS::AbstractCard * Cards::Temp::Omega::Ctor(STS::AbstractCard * this)
-        OmegaCtor: new NativeFunctionInfo(0x1750CE9, 'pointer', ['pointer']),
-    };
-    static AbstractPlayer = {
-        //void AbstractPlayer::loseGold(STS::AbstractPlayer * player, int gold)
-        loseGold: new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int'])
-    };
-    static Ironclad = {
-        //System::List* Ironclad::getStartingDeck(STS::Ironclad * thisPtr)
-        getStartingDeck: new NativeFunctionInfo(0x1777921, 'pointer', ['pointer'])
-    };
-    static TheSilent = {
-        //System::List* TheSilent::getStartingDeck(STS::TheSilent * thisPtr)
-        getStartingDeck: new NativeFunctionInfo(0x1778D71, 'pointer', ['pointer'])
-    };
-    static Defect = {
-        //System::List* Defect::getStartingDeck(STS::Defect * thisPtr)
-        getStartingDeck: new NativeFunctionInfo(0x1776289, 'pointer', ['pointer'])
-    };
-    static Watcher = {
-        //System::List* Watcher::getStartingDeck(STS::Watcher * thisPtr)
-        getStartingDeck: new NativeFunctionInfo(0x177A7DD, 'pointer', ['pointer'])
-    };
-    static AbstractDungeon = {
-        //System::List* AbstractDungeon::getRewardCards(AbstractDungeon * thisPtr)
-        getRewardCards: new NativeFunctionInfo(0x17BE7F1, 'pointer', ['pointer'])
-    }
-    static ConfusionPower = {
-        //void ConfusionPower::onCardDraw(STS::AbstractPower * thisPtr, STS::AbstractCard * card)
-        onCardDraw: new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
-    };
-    
-    static STSGlobalVars = {
-        //AbstractDungeon::getRewardCards origin Instruction 017BE846 05 25 MOVS R5, #3
-        get numCardsInstPtr()
-        {
-            return PatchManager.GetOffsetPtr(0x17BE846);
-        },
-        get SearingBlowStr()
-        {
-            return PatchManager.GetOffsetPtr(0x3493DC4).readPointer();
-        },
-        get StrikeRedStr()
-        {
-            return PatchManager.GetOffsetPtr(0x3494654).readPointer();
-        },
-    };
-
-    static GetOffsetPtr(offset)
-    {
-        if (!PatchManager.#GlobalVarCache.has(offset))
-        {
-            PatchManager.#GlobalVarCache.set(offset, PatchManager.STSModuleBaseAddress.add(offset));
-        }
-        return PatchManager.#GlobalVarCache.get(offset);
-    }
-
-    static CreateNativeFunction(origFuncInfo) {
-        if (!PatchManager.#NativeFuncCache.has(origFuncInfo.funcOffset))
-        {
-            PatchManager.#NativeFuncCache.set(origFuncInfo.funcOffset, new NativeFunction(PatchManager.STSModuleBaseAddress.add(origFuncInfo.funcOffset), origFuncInfo.retType, origFuncInfo.argTypes));
-        }
-        return PatchManager.#NativeFuncCache.get(origFuncInfo.funcOffset);
-    }
-
-    static HookSTSFunction(origFuncInfo, fakeFunc) {
-        let origFunc = PatchManager.CreateNativeFunction(origFuncInfo)
-        let fakeCallback = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
-        Interceptor.replace(origFunc, fakeCallback);
-        return origFunc;
-    }
-}
-
-function STSLogV(message) {
-    Java.perform(function () {
-        let STSLogger = Java.use("android.util.Log");
-        STSLogger.v("STS Mod", message);
-    });
 }
 
 function fakeRandom(min, max) {
@@ -869,7 +979,7 @@ function Patchcharacters() {
 
     //let origLoseGoldFunc = PatchManager.HookSTSFunction(PatchManager.AbstractPlayer.loseGold, (thisPtr, gold) => { origLoseGoldFunc(thisPtr, Math.ceil(gold * 0.6)); });
 
-    Memory.patchCode(PatchManager.STSGlobalVars.numCardsInstPtr, 64, function(code) {
+    Memory.patchCode(PatchManager.STSGlobalVars.numCardsInstPtr, 64, function (code) {
         let numCardsModifyer = new ThumbWriter(code);
         //modify to 017BE846 04 25 MOVS R5, #5  ;set numCards = 4
         numCardsModifyer.putBytes([0x4, 0x25]);
@@ -894,11 +1004,46 @@ function PatchPowers() {
     });
 }
 
+function PatchRelics() {
+    let origBurningBloodOnVictory = PatchManager.HookSTSFunction(PatchManager.BurningBlood.onVictory, (thisPtr) => {
+        origBurningBloodOnVictory(thisPtr);
+        let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+        if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.3) {
+            let masterDeckGroup = currentPlayer.masterDeck.group;
+            let deckSize = masterDeckGroup.size;
+            let index = fakeRandom(0, deckSize - 1);
+            let ArrayListOperatorGet = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractCardUnsafeLoad);
+            let randCard = ArrayListOperatorGet(masterDeckGroup.data, index);
+            let wrapCard = new AbstractCard(randCard);
+            if (wrapCard.canUpgrade()) {
+                wrapCard.upgrade();
+            }
+        }
+    });
+
+    let origBlackBloodBloodOnVictory = PatchManager.HookSTSFunction(PatchManager.BlackBlood.onVictory, (thisPtr) => {
+        origBlackBloodBloodOnVictory(thisPtr);
+        let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+        if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.4) {
+            let masterDeckGroup = currentPlayer.masterDeck.group;
+            let deckSize = masterDeckGroup.size;
+            let index = fakeRandom(0, deckSize - 1);
+            let ArrayListOperatorGet = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractCardUnsafeLoad);
+            let randCard = ArrayListOperatorGet(masterDeckGroup.data, index);
+            let wrapCard = new AbstractCard(randCard);
+            if (wrapCard.canUpgrade()) {
+                wrapCard.upgrade();
+            }
+        }
+    });
+}
+
 function main() {
     PatchRedCards();
     Patchcharacters();
     PatchPurpleCards();
     PatchPowers();
+    PatchRelics();
 }
 
 main();
