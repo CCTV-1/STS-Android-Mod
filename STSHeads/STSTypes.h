@@ -6,6 +6,8 @@
 
 namespace STS
 {
+    typedef void* (*dummyFunc_t)(void *);
+
     enum class CardTarget:uint32_t
     {
         ENEMY = 0x0,
@@ -90,6 +92,25 @@ namespace STS
         LIGHTNING
     };
 
+    enum class CardGroupType:uint32_t
+    {
+        DRAW_PILE = 0, 
+        MASTER_DECK, 
+        HAND, 
+        DISCARD_PILE, 
+        EXHAUST_PILE, 
+        CARD_POOL, 
+        UNSPECIFIED
+    };
+
+    enum class PlayerClass:uint32_t
+    {
+        IRONCLAD = 0, 
+        THE_SILENT, 
+        DEFECT, 
+        WATCHER
+    };
+
     struct JString
     {
         uint32_t unk;
@@ -125,16 +146,47 @@ namespace STS
         uint8_t pad1D[3];
     } __attribute__((aligned(4)));
 
+    template<typename obj_t>
+    struct ArrayList
+    {
+        void *basePtr;
+        void *vfuncMap;
+        obj_t * data;
+        int32_t size;
+    } __attribute__((aligned(4)));
+
+    struct CardGroup
+    {
+        void *basePtr;
+        void *vfuncMap;
+        ArrayList<AbstractCard *> * group;
+        float HAND_START_X;
+        float HAND_OFFSET_X;
+        CardGroupType type;
+        void * handPositioningMap;
+        ArrayList<AbstractCard *> * queued;
+        ArrayList<AbstractCard *> * inHand;
+    } __attribute__((aligned(4)));
 
     struct AbstractCreature
     {
         void *baseClassPtr;
         void *vFuncMap;
+        uint8_t gap08[92];
+        int32_t currentHealth;
+        int32_t maxHealth;
+        uint8_t gap6C[148];
+        float reticleAnimTimer;
         uint8_t unk[0];
     } __attribute__((aligned(4)));
 
     struct AbstractPlayer : public AbstractCreature
     {
+        void *basePtr;
+        void *vfuncMap;
+        uint8_t gap0D[8];
+        CardGroup *masterDeck;
+        uint8_t unk[];
     };
     
 
@@ -157,7 +209,87 @@ namespace STS
     struct DeriveGameAction : public AbstractGameAction
     {
 
-    };
+    } __attribute__((aligned(4)));
+
+    //see System::Internal::__CreateRuntimeType<AbstractCard *>()
+    //offset 0x25EA5C0
+    struct AbstractCardVFuncs
+    {
+        uint8_t gap1[24];
+        dummyFunc_t ToString;
+        uint8_t gap18[20];
+        dummyFunc_t initializeTitle;
+        bool gap34;
+        dummyFunc_t initializeDescription;
+        bool gap3c;
+        dummyFunc_t initializeDescriptionCN;
+        bool gap44;
+        dummyFunc_t hasTag;
+        bool gap4c;
+        dummyFunc_t canUpgrade;
+        bool gap54;
+        dummyFunc_t upgrade;
+        uint8_t byte5C;
+        uint8_t gap5d[3];
+        dummyFunc_t displayUpgrades;
+        bool gap64;
+        dummyFunc_t upgradeDamage;
+        bool gap6c;
+        dummyFunc_t upgradeBlock;
+        bool gap74;
+        dummyFunc_t upgradeMagicNumber;
+        bool gap7c;
+        dummyFunc_t upgradeName;
+        bool IupgradeBaseCost;
+        dummyFunc_t upgradeBaseCost;
+        bool g2;
+        dummyFunc_t makeSameInstanceOf;
+        bool g3;
+        dummyFunc_t makeStatEquivalentCopy;
+        bool g4;
+        dummyFunc_t onRemoveFromMasterDeck;
+        bool g5;
+        dummyFunc_t cardPlayable;
+        bool g6;
+        dummyFunc_t hasEnoughEnergy;
+        bool g7;
+        dummyFunc_t tookDamage;
+        bool g8;
+        dummyFunc_t didDiscard;
+        bool g9;
+        dummyFunc_t switchedStance;
+        uint8_t gapcc[20];
+        dummyFunc_t canPlay;
+        bool IcanUse;
+        dummyFunc_t canUse;
+        bool IuseFunc;
+        dummyFunc_t useFunc;
+        bool If1;
+        dummyFunc_t update;
+        bool If2;
+        dummyFunc_t isHoveredInHand;
+        bool If3;
+        dummyFunc_t render;
+        bool If4;
+        dummyFunc_t renderHoverShadow;
+        bool If5;
+        dummyFunc_t renderInLibrary;
+        bool If6;
+        dummyFunc_t render2;
+        bool If7;
+        dummyFunc_t f7;
+        bool If8;
+        dummyFunc_t f8;
+        bool If9;
+        dummyFunc_t renderOuterGlow;
+        bool If10;
+        dummyFunc_t getCardBgTexture;
+        uint8_t gapF8[498];
+        dummyFunc_t makeCopyFunc;
+        uint8_t byte33C;
+        uint8_t unk[11];
+    } __attribute__((aligned(4)));
+
 
     struct AbstractCard
     {
