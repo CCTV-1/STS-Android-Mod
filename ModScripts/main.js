@@ -132,10 +132,10 @@ class PatchManager {
         return PatchManager.#NativeFuncCache.get(funcAddress);
     }
 
-    static CreateNativeFunctionFromPtr(funcPtr, origFuncInfo) {
+    static CreateNativeVFunction(funcPtr, returnType, argTypes) {
         let funcAddress = funcPtr.toString();
         if (!PatchManager.#NativeFuncCache.has(funcAddress)) {
-            PatchManager.#NativeFuncCache.set(funcAddress, new NativeFunction(funcPtr, origFuncInfo.retType, origFuncInfo.argTypes));
+            PatchManager.#NativeFuncCache.set(funcAddress, new NativeFunction(funcPtr, returnType, argTypes));
         }
         return PatchManager.#NativeFuncCache.get(funcAddress);
     }
@@ -154,6 +154,7 @@ class PatchManager {
 
 class NativeClassWrapper {
     rawPtr = null;
+    #vfuncMapPtr
     //NativePointer AbstractCreature *
     constructor(CthisPtr) {
         if (!(CthisPtr instanceof NativePointer)) {
@@ -163,10 +164,11 @@ class NativeClassWrapper {
             throw "need a non-nullptr";
         }
         this.rawPtr = CthisPtr;
+        this.#vfuncMapPtr = CthisPtr.readPointer().add(0x4).readPointer();
     }
-
-    BaseClassPtr() {
-        return this.rawPtr.readPointer();
+    getVirtualFunction(funcInfo) {
+        let vFuncPtr = this.#vfuncMapPtr.add(funcInfo.funcOffset).readPointer();
+        return PatchManager.CreateNativeVFunction(vFuncPtr, funcInfo.retType, funcInfo.argTypes);
     }
 
     readOffsetPointer(offset) {
@@ -240,10 +242,6 @@ class ArrayList extends NativeClassWrapper {
         super(CthisPtr)
     }
 
-    get BaseClassPtr() {
-        return super.BaseClassPtr()
-    }
-
     get data() {
         return this.readOffsetPointer(0x8);
     }
@@ -260,10 +258,6 @@ class CardGroup extends NativeClassWrapper {
         super(CthisPtr)
     }
 
-    get BaseClassPtr() {
-        return super.BaseClassPtr()
-    }
-
     //ArrayList<AbstractCard>
     get group() {
         return new ArrayList(this.readOffsetPointer(0x8));
@@ -277,11 +271,9 @@ class CardGroup extends NativeClassWrapper {
 //struct ../STSHeads/STSTypes.h  AbstractCard
 //only work in ARMV7a(point type size is 4*sizeof(char))
 class AbstractCard extends NativeClassWrapper {
-    #vfuncMapPtr
     //NativePointer AbstractCard *
     constructor(CthisPtr) {
         super(CthisPtr);
-        this.#vfuncMapPtr = CthisPtr.readPointer().add(0x4).readPointer();
     }
 
     static #vfunctionMap = {
@@ -289,22 +281,13 @@ class AbstractCard extends NativeClassWrapper {
         upgrade: new NativeFunctionInfo(0x58, 'void', ['pointer']),
     }
 
-    #getVisualFunction(funcInfo) {
-        let vFuncPtr = this.#vfuncMapPtr.add(funcInfo.funcOffset).readPointer();
-        return PatchManager.CreateNativeFunctionFromPtr(vFuncPtr, funcInfo);
-    }
-
     canUpgrade() {
-        let canUpgradeFunc = this.#getVisualFunction(AbstractCard.#vfunctionMap.canUpgrade);
+        let canUpgradeFunc = this.getVirtualFunction(AbstractCard.#vfunctionMap.canUpgrade);
         return canUpgradeFunc(this.rawPtr);
     }
 
     upgrade() {
-        this.#getVisualFunction(AbstractCard.#vfunctionMap.upgrade)(this.rawPtr);
-    }
-
-    get BaseClassPtr() {
-        return super.BaseClassPtr();
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgrade)(this.rawPtr);
     }
 
     get type() {
@@ -790,10 +773,6 @@ class AbstractCreature extends NativeClassWrapper {
         super(CthisPtr);
     }
 
-    get BaseClassPtr() {
-        return super.BaseClassPtr()
-    }
-
     get currentHealth() {
         return this.readOffsetS32(0x64);
     }
@@ -813,10 +792,6 @@ class AbstractPlayer extends AbstractCreature {
     //NativePointer AbstractPlayer *
     constructor(CthisPtr) {
         super(CthisPtr)
-    }
-
-    get BaseClassPtr() {
-        return super.BaseClassPtr()
     }
 
     get masterDeck() {
