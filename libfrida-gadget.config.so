@@ -1,7 +1,7 @@
 {
     "interaction": {
-        "type": "script-directory",
-        "path": "/sdcard/Android/data/com.humble.SlayTheSpire/files/ModScripts",
+        "type": "script",
+        "path": "/sdcard/Android/data/com.humble.SlayTheSpire/files/ModScripts/main.js",
         "on_change": "reload"
     }
 }
