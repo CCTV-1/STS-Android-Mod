@@ -19,6 +19,8 @@ class PatchManager {
         ArrayList_StringCtor: new NativeFunctionInfo(0x1386D19, 'pointer', ['pointer']),
         //bool System::List::add(System::List * thisPtr, jobject * objPtr)
         ArrayList_StringAdd: new NativeFunctionInfo(0x1386F7D, 'bool', ['pointer', 'pointer']),
+        //bool System::List::add(System::List * thisPtr, STS::AbstractGameEffect * effectPtr)
+        ArrayList_AbstractGameEffectAdd: new NativeFunctionInfo(0x16706F9, 'bool', ['pointer', 'pointer']),
         //System::List * System::List<AbstractCard>::Ctor(System::List * thisPtr)
         ArrayList_AbstractCardCtor: new NativeFunctionInfo(0x1678CA9, 'pointer', ['pointer']),
         //STS::AbstractCard* System::List<AbstractCard>::Ctor(System::List * thisPtr, int index)
@@ -83,7 +85,7 @@ class PatchManager {
         getStartingDeck: new NativeFunctionInfo(0x177A7DD, 'pointer', ['pointer'])
     };
     static AbstractDungeon = {
-        //System::List* AbstractDungeon::getRewardCards(AbstractDungeon * thisPtr)
+        //System::List* AbstractDungeon::getRewardCards(STS::AbstractDungeon * thisPtr)
         getRewardCards: new NativeFunctionInfo(0x17BE7F1, 'pointer', ['pointer'])
     }
     static ConfusionPower = {
@@ -94,10 +96,16 @@ class PatchManager {
         //void Relics::BurningBlood::onVictory(STS::AbstractRelic * thisPtr)
         onVictory: new NativeFunctionInfo(0x198F901, 'void', ['pointer'])
     }
-
     static BlackBlood = {
         //void Relics::BlackBlood::onVictory(STS::AbstractRelic * thisPtr)
         onVictory: new NativeFunctionInfo(0x198BF31, 'void', ['pointer'])
+    }
+
+    static VFX = {
+        //STS::AbstractGameEffect * VFX::ShowCardBrieflyEffect::Ctor(STS::AbstractGameEffect * thisPtr, STS::AbstractCard * cardPtr)
+        ShowCardBrieflyEffectCtor: new NativeFunctionInfo(0x1B5843D, 'pointer', ['pointer', 'pointer']), 
+        //STS::AbstractGameEffect * VFX::ShowCardBrieflyEffect::Ctor(STS::AbstractGameEffect * thisPtr, float x, float y)
+        UpgradeShineEffectCtor: new NativeFunctionInfo(0x1BDB775, 'pointer', ['pointer', 'float', 'float']), 
     }
 
     static STSGlobalVars = {
@@ -111,8 +119,17 @@ class PatchManager {
         get StrikeRedStr() {
             return PatchManager.GetOffsetPtr(0x3494654).readPointer();
         },
+        get STSSetting_WIDTH() {
+            return PatchManager.GetOffsetPtr(0x34987C0).readS32();
+        },
+        get STSSetting_HEIGHT() {
+            return PatchManager.GetOffsetPtr(0x34987C4).readS32();
+        },
         get AbstractDungeon_player() {
             return new AbstractPlayer(PatchManager.GetOffsetPtr(0x3498EDC).readPointer());
+        },
+        get AbstractDungeon_topLevelEffects() {
+            return PatchManager.GetOffsetPtr(0x3498F84).readPointer();
         },
     };
 
@@ -279,6 +296,7 @@ class AbstractCard extends NativeClassWrapper {
     static #vfunctionMap = {
         canUpgrade: new NativeFunctionInfo(0x50, 'bool', ['pointer']),
         upgrade: new NativeFunctionInfo(0x58, 'void', ['pointer']),
+        makeStatEquivalentCopy: new NativeFunctionInfo(0x98, 'pointer', ['pointer']),
     }
 
     canUpgrade() {
@@ -288,6 +306,11 @@ class AbstractCard extends NativeClassWrapper {
 
     upgrade() {
         this.getVirtualFunction(AbstractCard.#vfunctionMap.upgrade)(this.rawPtr);
+    }
+
+    makeStatEquivalentCopy() {
+        let makeStatEquivalentCopyFunc = this.getVirtualFunction(AbstractCard.#vfunctionMap.makeStatEquivalentCopy);
+        return makeStatEquivalentCopyFunc(this.rawPtr);
     }
 
     get type() {
@@ -869,8 +892,29 @@ class AbstractGameAction extends NativeClassWrapper {
     }
 }
 
-function fakeRandom(min, max) {
+function FakeRandom(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function UpgradeRandomCard(currentPlayer) {
+    let masterDeckGroup = currentPlayer.masterDeck.group;
+    let deckSize = masterDeckGroup.size;
+    let index = FakeRandom(0, deckSize - 1);
+    let ArrayListOperatorGet = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractCardUnsafeLoad);
+    let randCard = ArrayListOperatorGet(masterDeckGroup.data, index);
+    let wrapCard = new AbstractCard(randCard);
+    if (wrapCard.canUpgrade()) {
+        wrapCard.upgrade();
+        let topLevelEffects = PatchManager.STSGlobalVars.AbstractDungeon_topLevelEffects;
+        let statCopyCard =  wrapCard.makeStatEquivalentCopy();
+        let showCardBrieflyEffectCtor = PatchManager.CreateNativeFunction(PatchManager.VFX.ShowCardBrieflyEffectCtor);
+        let UpgradeShineEffectCtor = PatchManager.CreateNativeFunction(PatchManager.VFX.UpgradeShineEffectCtor);
+        let addFunc = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractGameEffectAdd);
+        let cardBrieflyEffectObj = showCardBrieflyEffectCtor(new NativePointer(0), statCopyCard);
+        let upgradeShineEffectObj = UpgradeShineEffectCtor(new NativePointer(0), PatchManager.STSGlobalVars.STSSetting_WIDTH*0.5, PatchManager.STSGlobalVars.STSSetting_HEIGHT*0.5);
+        addFunc(topLevelEffects, cardBrieflyEffectObj);
+        addFunc(topLevelEffects, upgradeShineEffectObj);
+    }
 }
 
 function PatchRedCards() {
@@ -968,7 +1012,7 @@ function PatchPowers() {
         //    origOnCardDrawFunc(thisPtr, cardPtr)
         let baseCard = new AbstractCard(cardPtr);
         if (baseCard.cost >= 0) {
-            let newCost = fakeRandom(0, baseCard.cost);
+            let newCost = FakeRandom(0, baseCard.cost);
             if (baseCard.cost != newCost) {
                 baseCard.cost = newCost;
                 baseCard.costForTurn = baseCard.cost;
@@ -984,15 +1028,7 @@ function PatchRelics() {
         origBurningBloodOnVictory(thisPtr);
         let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.3) {
-            let masterDeckGroup = currentPlayer.masterDeck.group;
-            let deckSize = masterDeckGroup.size;
-            let index = fakeRandom(0, deckSize - 1);
-            let ArrayListOperatorGet = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractCardUnsafeLoad);
-            let randCard = ArrayListOperatorGet(masterDeckGroup.data, index);
-            let wrapCard = new AbstractCard(randCard);
-            if (wrapCard.canUpgrade()) {
-                wrapCard.upgrade();
-            }
+            UpgradeRandomCard(currentPlayer);
         }
     });
 
@@ -1000,15 +1036,7 @@ function PatchRelics() {
         origBlackBloodBloodOnVictory(thisPtr);
         let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.4) {
-            let masterDeckGroup = currentPlayer.masterDeck.group;
-            let deckSize = masterDeckGroup.size;
-            let index = fakeRandom(0, deckSize - 1);
-            let ArrayListOperatorGet = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractCardUnsafeLoad);
-            let randCard = ArrayListOperatorGet(masterDeckGroup.data, index);
-            let wrapCard = new AbstractCard(randCard);
-            if (wrapCard.canUpgrade()) {
-                wrapCard.upgrade();
-            }
+            UpgradeRandomCard(currentPlayer);
         }
     });
 }
