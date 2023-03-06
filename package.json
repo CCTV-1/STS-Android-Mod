@@ -1,0 +1,17 @@
+{
+  "name": "sts-mod-gen",
+  "version": "1.0.0",
+  "description": "STS Android Mod Script Generator",
+  "private": true,
+  "main": "ModScripts/main.ts",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "frida-compile ModScripts/main.ts -o main.js -c",
+    "watch": "frida-compile ModScripts/main.ts -o main.js -w"
+  },
+  "devDependencies": {
+    "@types/frida-gum": "^18.3.1",
+    "@types/node": "^18.0.6",
+    "frida-compile": "^16.1.8"
+  }
+}
