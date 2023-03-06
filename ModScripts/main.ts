@@ -9,14 +9,24 @@ function FakeRandom(min: number, max: number) {
 function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
     let masterDeckGroup = currentPlayer.masterDeck.group;
     let deckSize = masterDeckGroup.size;
-    let index = FakeRandom(0, deckSize - 1);
+    let canUpgradeCards = new Array<AbstractCard>();
     let ArrayListOperatorGet = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractCardUnsafeLoad);
-    let randCard = ArrayListOperatorGet(masterDeckGroup.data, index);
-    let wrapCard = new AbstractCard(randCard);
-    if (wrapCard.canUpgrade()) {
-        wrapCard.upgrade();
+    for (let i = 0; i < deckSize - 1; i++)
+    {
+        let randCard = ArrayListOperatorGet(masterDeckGroup.data, i);
+        let wrapCard = new AbstractCard(randCard);
+        if (wrapCard.canUpgrade())
+        {
+            canUpgradeCards.push(wrapCard);
+        }
+    }
+    if (canUpgradeCards.length > 0)
+    {
+        let index = FakeRandom(0, canUpgradeCards.length - 1);
+        let upgradeCard = canUpgradeCards[index];
+        upgradeCard.upgrade();
         let topLevelEffects = PatchManager.STSGlobalVars.AbstractDungeon_topLevelEffects;
-        let statCopyCard = wrapCard.makeStatEquivalentCopy();
+        let statCopyCard = upgradeCard.makeStatEquivalentCopy();
         let showCardBrieflyEffectCtor = PatchManager.CreateNativeFunction(PatchManager.VFX.ShowCardBrieflyEffectCtor);
         let UpgradeShineEffectCtor = PatchManager.CreateNativeFunction(PatchManager.VFX.UpgradeShineEffectCtor);
         let addFunc = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractGameEffectAdd);

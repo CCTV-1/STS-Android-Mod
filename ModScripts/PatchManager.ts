@@ -154,7 +154,7 @@ export class PatchManager {
         return vFunc;
     }
 
-    static HookSTSFunction(origFuncInfo: NativeFunctionInfo, fakeFunc: any) {
+    static HookSTSFunction(origFuncInfo: NativeFunctionInfo, fakeFunc: (...args:any) => any) {
         let origFunc = PatchManager.CreateNativeFunction(origFuncInfo)
         let fakeCallback = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
         Interceptor.replace(origFunc, fakeCallback);

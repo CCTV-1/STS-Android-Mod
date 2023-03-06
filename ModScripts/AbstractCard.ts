@@ -13,16 +13,16 @@ export class AbstractCard extends NativeClassWrapper {
         makeStatEquivalentCopy: new NativeFunctionInfo(0x98, 'pointer', ['pointer']),
     }
 
-    canUpgrade() {
+    canUpgrade(): boolean {
         let canUpgradeFunc = this.getVirtualFunction(AbstractCard.#vfunctionMap.canUpgrade);
         return canUpgradeFunc(this.rawPtr);
     }
 
-    upgrade() {
+    upgrade(): void {
         this.getVirtualFunction(AbstractCard.#vfunctionMap.upgrade)(this.rawPtr);
     }
 
-    makeStatEquivalentCopy() {
+    makeStatEquivalentCopy(): NativePointer {
         let makeStatEquivalentCopyFunc = this.getVirtualFunction(AbstractCard.#vfunctionMap.makeStatEquivalentCopy);
         return makeStatEquivalentCopyFunc(this.rawPtr);
     }
