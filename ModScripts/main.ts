@@ -145,19 +145,19 @@ function PatchPowers() {
 
 function PatchRelics() {
     let origBurningBloodOnVictory = PatchManager.HookSTSFunction(PatchManager.BurningBlood.onVictory, (thisPtr: NativePointer) => {
-        origBurningBloodOnVictory(thisPtr);
-        let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
-        if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.3) {
-            UpgradeRandomCard(currentPlayer);
-        }
-    });
-
-    let origBlackBloodBloodOnVictory = PatchManager.HookSTSFunction(PatchManager.BlackBlood.onVictory, (thisPtr: NativePointer) => {
-        origBlackBloodBloodOnVictory(thisPtr);
         let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.4) {
             UpgradeRandomCard(currentPlayer);
         }
+        origBurningBloodOnVictory(thisPtr);
+    });
+
+    let origBlackBloodBloodOnVictory = PatchManager.HookSTSFunction(PatchManager.BlackBlood.onVictory, (thisPtr: NativePointer) => {
+        let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+        if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.6) {
+            UpgradeRandomCard(currentPlayer);
+        }
+        origBlackBloodBloodOnVictory(thisPtr);
     });
 }
 
