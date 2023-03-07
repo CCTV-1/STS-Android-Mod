@@ -10,7 +10,7 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
     let masterDeckGroup = currentPlayer.masterDeck.group;
     let deckSize = masterDeckGroup.size;
     let canUpgradeCards = new Array<AbstractCard>();
-    let ArrayListOperatorGet = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractCardUnsafeLoad);
+    let ArrayListOperatorGet = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractCardUnsafeLoad);
     for (let i = 0; i < deckSize - 1; i++)
     {
         let randCard = ArrayListOperatorGet(masterDeckGroup.data, i);
@@ -27,9 +27,9 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
         upgradeCard.upgrade();
         let topLevelEffects = PatchManager.STSGlobalVars.AbstractDungeon_topLevelEffects;
         let statCopyCard = upgradeCard.makeStatEquivalentCopy();
-        let showCardBrieflyEffectCtor = PatchManager.CreateNativeFunction(PatchManager.VFX.ShowCardBrieflyEffectCtor);
-        let UpgradeShineEffectCtor = PatchManager.CreateNativeFunction(PatchManager.VFX.UpgradeShineEffectCtor);
-        let addFunc = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractGameEffectAdd);
+        let showCardBrieflyEffectCtor = PatchManager.GetNativeFunction(PatchManager.VFX.ShowCardBrieflyEffectCtor);
+        let UpgradeShineEffectCtor = PatchManager.GetNativeFunction(PatchManager.VFX.UpgradeShineEffectCtor);
+        let addFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractGameEffectAdd);
         let cardBrieflyEffectObj = showCardBrieflyEffectCtor(new NativePointer(0), statCopyCard);
         let upgradeShineEffectObj = UpgradeShineEffectCtor(new NativePointer(0), PatchManager.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchManager.STSGlobalVars.STSSetting_HEIGHT * 0.5);
         addFunc(topLevelEffects, cardBrieflyEffectObj);
@@ -66,9 +66,9 @@ function PatchRedCards() {
         origSearingBlowUse(thisPtr, playerPtr, monsterPtr);
         let baseCard = new AbstractCard(thisPtr);
         let cardLevel = baseCard.timesUpgraded;
-        let HealActionCtor = PatchManager.CreateNativeFunction(PatchManager.CommonActions.HealActionCtor)
+        let HealActionCtor = PatchManager.GetNativeFunction(PatchManager.CommonActions.HealActionCtor)
         let newHealAction = HealActionCtor(new NativePointer(0), playerPtr, playerPtr, cardLevel)
-        let addToBotFunc = PatchManager.CreateNativeFunction(PatchManager.AbstractCard.addToBot);
+        let addToBotFunc = PatchManager.GetNativeFunction(PatchManager.AbstractCard.addToBot);
         addToBotFunc(thisPtr, newHealAction);
     });
     let origHeavyBladeCtor = PatchManager.HookSTSFunction(PatchManager.RedCards.HeavyBladeCtor, (thisPtr: NativePointer) => {
@@ -98,7 +98,7 @@ function PatchRedCards() {
 function PatchPurpleCards() {
     let origAlphaCtor = PatchManager.HookSTSFunction(PatchManager.PurpleCards.AlphaCtor, (thisPtr: NativePointer) => {
         let ret = origAlphaCtor(thisPtr);
-        let OmegaCtor = PatchManager.CreateNativeFunction(PatchManager.TempCards.OmegaCtor);
+        let OmegaCtor = PatchManager.GetNativeFunction(PatchManager.TempCards.OmegaCtor);
         let newCard = new AbstractCard(ret);
         let fakePreview = OmegaCtor(new NativePointer(0));
         newCard.cardsToPreview = fakePreview;
@@ -107,18 +107,113 @@ function PatchPurpleCards() {
 }
 
 function Patchcharacters() {
-    let origIroncladGetStartingDeck = PatchManager.HookSTSFunction(PatchManager.Ironclad.getStartingDeck, (thisPtr: NativePointer) => {
-        let origDeck = origIroncladGetStartingDeck(thisPtr);
-        let addStrFunc = PatchManager.CreateNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
-        //"Searing Blow"
-        addStrFunc(origDeck, PatchManager.STSGlobalVars.StrikeRedStr);
-        addStrFunc(origDeck, PatchManager.STSGlobalVars.SearingBlowStr);
-        return origDeck;
+    PatchManager.HookSTSFunction(PatchManager.Ironclad.getStartingDeck, (thisPtr: NativePointer) => {
+        let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
+        let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
+        let startDeck = stringListCtor(new NativePointer(0));
+
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeRed);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeRed);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeRed);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeRed);
+
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendRed);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendRed);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendRed);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendRed);
+
+        if (FakeRandom(0,10) > 8) {
+            addStrFunc(startDeck, PatchManager.StringLiteral.StrikeRed);
+            addStrFunc(startDeck, PatchManager.StringLiteral.DefendRed);
+            addStrFunc(startDeck, PatchManager.StringLiteral.Discovery);
+        } else {
+            addStrFunc(startDeck, PatchManager.StringLiteral.InfernalBlade);
+            addStrFunc(startDeck, PatchManager.StringLiteral.TrueGrit);
+        }
+
+        return startDeck;
+    });
+    PatchManager.HookSTSFunction(PatchManager.TheSilent.getStartingDeck, (thisPtr: NativePointer) =>{
+        let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
+        let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
+        let startDeck = stringListCtor(new NativePointer(0));
+
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeGreen);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeGreen);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeGreen);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeGreen);
+
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendGreen);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendGreen);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendGreen);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendGreen);
+
+        addStrFunc(startDeck, PatchManager.StringLiteral.Neutralize);
+        if (FakeRandom(0,10) > 8) {
+            addStrFunc(startDeck, PatchManager.StringLiteral.StrikeGreen);
+            addStrFunc(startDeck, PatchManager.StringLiteral.DefendGreen);
+            addStrFunc(startDeck, PatchManager.StringLiteral.Discovery);
+        } else {
+            addStrFunc(startDeck, PatchManager.StringLiteral.Distraction);
+            addStrFunc(startDeck, PatchManager.StringLiteral.Distraction);
+        }
+
+        return startDeck;
+    });
+    PatchManager.HookSTSFunction(PatchManager.Defect.getStartingDeck, (thisPtr: NativePointer) =>{
+        let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
+        let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
+        let startDeck = stringListCtor(new NativePointer(0));
+
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeBlue);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeBlue);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeBlue);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikeBlue);
+
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendBlue);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendBlue);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendBlue);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendBlue);
+
+        if (FakeRandom(0,10) > 8) {
+            addStrFunc(startDeck, PatchManager.StringLiteral.StrikeBlue);
+            addStrFunc(startDeck, PatchManager.StringLiteral.DefendBlue);
+            addStrFunc(startDeck, PatchManager.StringLiteral.Discovery);
+        } else {
+            addStrFunc(startDeck, PatchManager.StringLiteral.Dualcast);
+            addStrFunc(startDeck, PatchManager.StringLiteral.WhiteNoise);
+        }
+
+        return startDeck;
+    });
+    PatchManager.HookSTSFunction(PatchManager.Watcher.getStartingDeck, (thisPtr: NativePointer) =>{
+        let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
+        let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
+        let startDeck = stringListCtor(new NativePointer(0));
+
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikePurple);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikePurple);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikePurple);
+        addStrFunc(startDeck, PatchManager.StringLiteral.StrikePurple);
+
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendPurple);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendPurple);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendPurple);
+        addStrFunc(startDeck, PatchManager.StringLiteral.DefendPurple);
+
+        if (FakeRandom(0,10) > 8) {
+            addStrFunc(startDeck, PatchManager.StringLiteral.Discovery);
+        }
+
+        addStrFunc(startDeck, PatchManager.StringLiteral.Eruption);
+        addStrFunc(startDeck, PatchManager.StringLiteral.Vigilance);
+
+        return startDeck;
     });
 
     //let origLoseGoldFunc = PatchManager.HookSTSFunction(PatchManager.AbstractPlayer.loseGold, (thisPtr: NativePointer, gold: Number) => { origLoseGoldFunc(thisPtr, Math.ceil(gold * 0.6)); });
 
-    Memory.patchCode(PatchManager.STSGlobalVars.numCardsInstPtr, 64, function (code) {
+    Memory.patchCode(PatchManager.InstructionPtr.rewardCardNumber, 64, function (code) {
         let numCardsModifyer = new ThumbWriter(code);
         //modify to 017BE846 04 25 MOVS R5, #5  ;set numCards = 4
         numCardsModifyer.putBytes([0x4, 0x25]);

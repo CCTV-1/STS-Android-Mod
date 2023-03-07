@@ -100,17 +100,87 @@ export class PatchManager {
         UpgradeShineEffectCtor: new NativeFunctionInfo(0x1BDB775, 'pointer', ['pointer', 'float', 'float']),
     }
 
-    static STSGlobalVars = {
-        //AbstractDungeon::getRewardCards origin Instruction 017BE846 05 25 MOVS R5, #3
-        get numCardsInstPtr() {
-            return PatchManager.GetOffsetPtr(0x17BE846);
+    static StringLiteral = {
+        //red card names
+        get DefendRed() {
+            return PatchManager.GetOffsetPtr(0x3490118).readPointer();
         },
-        get SearingBlowStr() {
+        get InfernalBlade() {
+            return PatchManager.GetOffsetPtr(0x3491FF0).readPointer();
+        },
+        get SearingBlow() {
             return PatchManager.GetOffsetPtr(0x3493DC4).readPointer();
         },
-        get StrikeRedStr() {
+        get StrikeRed() {
             return PatchManager.GetOffsetPtr(0x3494654).readPointer();
         },
+        get TrueGrit() {
+            return PatchManager.GetOffsetPtr(0x3494DFC).readPointer();
+        },
+
+        //green card names
+        get DefendGreen() {
+            return PatchManager.GetOffsetPtr(0x3490110).readPointer();
+        },
+        get Distraction() {
+            return PatchManager.GetOffsetPtr(0x349025C).readPointer();
+        },
+        get Neutralize() {
+            return PatchManager.GetOffsetPtr(0x3492D38).readPointer();
+        },
+        get StrikeGreen() {
+            return PatchManager.GetOffsetPtr(0x349464C).readPointer();
+        },
+
+        //blue card names
+        get DefendBlue() {
+            return PatchManager.GetOffsetPtr(0x349010C).readPointer();
+        },
+        get Dualcast() {
+            return PatchManager.GetOffsetPtr(0x3490350).readPointer();
+        },
+        get StrikeBlue() {
+            return PatchManager.GetOffsetPtr(0x3494648).readPointer();
+        },
+        get WhiteNoise() {
+            return PatchManager.GetOffsetPtr(0x3495718).readPointer();
+        },
+
+        //Purple card names
+        get DefendPurple() {
+            return PatchManager.GetOffsetPtr(0x3490114).readPointer();
+        },
+        get Eruption() {
+            return PatchManager.GetOffsetPtr(0x3490680).readPointer();
+        },
+        get ForeignInfluence() {
+            return PatchManager.GetOffsetPtr(0x3490A98).readPointer();
+        },
+        get StrikePurple() {
+            return PatchManager.GetOffsetPtr(0x3494650).readPointer();
+        },
+        get Vigilance() {
+            return PatchManager.GetOffsetPtr(0x34951CC).readPointer();
+        },
+
+        //colorless card names
+        get Discovery() {
+            return PatchManager.GetOffsetPtr(0x3490238).readPointer();
+        },
+    };
+
+    static InstructionPtr = {
+        /**
+         * AbstractDungeon::getRewardCards
+         * 
+         * origin Instruction: ```0x17BE846 05 25 MOVS R5, #3```
+         */
+        get rewardCardNumber() {
+            return PatchManager.GetOffsetPtr(0x17BE846);
+        },
+    }
+
+    static STSGlobalVars = {
         get STSSetting_WIDTH() {
             return PatchManager.GetOffsetPtr(0x34987C0).readS32();
         },
@@ -132,7 +202,7 @@ export class PatchManager {
         return PatchManager.#GlobalVarCache.get(offset) || new NativePointer(0);
     }
 
-    static CreateNativeFunction(origFuncInfo: NativeFunctionInfo): NativeFunction<any, any> {
+    static GetNativeFunction(origFuncInfo: NativeFunctionInfo): NativeFunction<any, any> {
         let funcAddressPtr = PatchManager.STSModuleBaseAddress.add(origFuncInfo.funcOffset);
         let funcAddress = funcAddressPtr.toString();
         let nativeFunc = PatchManager.#NativeFuncCache.get(funcAddress);
@@ -144,7 +214,7 @@ export class PatchManager {
         return nativeFunc;
     }
 
-    static CreateNativeVFunction(funcPtr: NativePointer, returnType: NativeFunctionReturnType, argTypes: [NativeFunctionArgumentType]) {
+    static GetNativeVFunction(funcPtr: NativePointer, returnType: NativeFunctionReturnType, argTypes: [NativeFunctionArgumentType]) {
         let funcAddress = funcPtr.toString();
         let vFunc = PatchManager.#NativeFuncCache.get(funcAddress);
         if (vFunc === undefined) {
@@ -155,7 +225,7 @@ export class PatchManager {
     }
 
     static HookSTSFunction(origFuncInfo: NativeFunctionInfo, fakeFunc: (...args:any) => any) {
-        let origFunc = PatchManager.CreateNativeFunction(origFuncInfo)
+        let origFunc = PatchManager.GetNativeFunction(origFuncInfo)
         let fakeCallback = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
         Interceptor.replace(origFunc, fakeCallback);
         return origFunc;

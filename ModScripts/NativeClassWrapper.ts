@@ -17,7 +17,7 @@ export class NativeClassWrapper {
     }
     getVirtualFunction(funcInfo: NativeFunctionInfo) {
         let vFuncPtr = this.#vfuncMapPtr.add(funcInfo.funcOffset).readPointer();
-        return PatchManager.CreateNativeVFunction(vFuncPtr, funcInfo.retType, funcInfo.argTypes);
+        return PatchManager.GetNativeVFunction(vFuncPtr, funcInfo.retType, funcInfo.argTypes);
     }
 
     readOffsetPointer(offset: number) {
