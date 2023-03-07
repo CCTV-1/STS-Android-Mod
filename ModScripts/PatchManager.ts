@@ -56,25 +56,27 @@ export class PatchManager {
         //STS::AbstractCard * Cards::Temp::Omega::Ctor(STS::AbstractCard * this)
         OmegaCtor: new NativeFunctionInfo(0x1750CE9, 'pointer', ['pointer']),
     };
-    static AbstractPlayer = {
-        //void AbstractPlayer::loseGold(STS::AbstractPlayer * player, int gold)
-        loseGold: new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int32'])
-    };
-    static Ironclad = {
-        //System::List* Ironclad::getStartingDeck(STS::Ironclad * thisPtr)
-        getStartingDeck: new NativeFunctionInfo(0x1777921, 'pointer', ['pointer'])
-    };
-    static TheSilent = {
-        //System::List* TheSilent::getStartingDeck(STS::TheSilent * thisPtr)
-        getStartingDeck: new NativeFunctionInfo(0x1778D71, 'pointer', ['pointer'])
-    };
-    static Defect = {
-        //System::List* Defect::getStartingDeck(STS::Defect * thisPtr)
-        getStartingDeck: new NativeFunctionInfo(0x1776289, 'pointer', ['pointer'])
-    };
-    static Watcher = {
-        //System::List* Watcher::getStartingDeck(STS::Watcher * thisPtr)
-        getStartingDeck: new NativeFunctionInfo(0x177A7DD, 'pointer', ['pointer'])
+    static Characters = {
+        AbstractPlayer: {
+            //void AbstractPlayer::loseGold(STS::AbstractPlayer * player, int gold)
+            loseGold: new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int32'])
+        },
+        Ironclad: {
+            //System::List* Ironclad::getStartingDeck(STS::Ironclad * thisPtr)
+            getStartingDeck: new NativeFunctionInfo(0x1777921, 'pointer', ['pointer'])
+        },
+        TheSilent: {
+            //System::List* TheSilent::getStartingDeck(STS::TheSilent * thisPtr)
+            getStartingDeck: new NativeFunctionInfo(0x1778D71, 'pointer', ['pointer'])
+        },
+        Defect: {
+            //System::List* Defect::getStartingDeck(STS::Defect * thisPtr)
+            getStartingDeck: new NativeFunctionInfo(0x1776289, 'pointer', ['pointer'])
+        },
+        Watcher: {
+            //System::List* Watcher::getStartingDeck(STS::Watcher * thisPtr)
+            getStartingDeck: new NativeFunctionInfo(0x177A7DD, 'pointer', ['pointer'])
+        },
     };
     static AbstractDungeon = {
         //System::List* AbstractDungeon::getRewardCards(STS::AbstractDungeon * thisPtr)
@@ -84,13 +86,15 @@ export class PatchManager {
         //void ConfusionPower::onCardDraw(STS::AbstractPower * thisPtr, STS::AbstractCard * card)
         onCardDraw: new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
     };
-    static BurningBlood = {
-        //void Relics::BurningBlood::onVictory(STS::AbstractRelic * thisPtr)
-        onVictory: new NativeFunctionInfo(0x198F901, 'void', ['pointer'])
-    }
-    static BlackBlood = {
-        //void Relics::BlackBlood::onVictory(STS::AbstractRelic * thisPtr)
-        onVictory: new NativeFunctionInfo(0x198BF31, 'void', ['pointer'])
+    static Relics = {
+        BurningBlood: {
+            //void Relics::BurningBlood::onVictory(STS::AbstractRelic * thisPtr)
+            onVictory: new NativeFunctionInfo(0x198F901, 'void', ['pointer'])
+        },
+        BlackBlood: {
+            //void Relics::BlackBlood::onVictory(STS::AbstractRelic * thisPtr)
+            onVictory: new NativeFunctionInfo(0x198BF31, 'void', ['pointer'])
+        },
     }
 
     static VFX = {
@@ -224,7 +228,7 @@ export class PatchManager {
         return vFunc;
     }
 
-    static HookSTSFunction(origFuncInfo: NativeFunctionInfo, fakeFunc: (...args:any) => any) {
+    static HookSTSFunction(origFuncInfo: NativeFunctionInfo, fakeFunc: (...args: any) => any) {
         let origFunc = PatchManager.GetNativeFunction(origFuncInfo)
         let fakeCallback = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
         Interceptor.replace(origFunc, fakeCallback);

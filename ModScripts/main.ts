@@ -11,17 +11,14 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
     let deckSize = masterDeckGroup.size;
     let canUpgradeCards = new Array<AbstractCard>();
     let ArrayListOperatorGet = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractCardUnsafeLoad);
-    for (let i = 0; i < deckSize - 1; i++)
-    {
+    for (let i = 0; i < deckSize - 1; i++) {
         let randCard = ArrayListOperatorGet(masterDeckGroup.data, i);
         let wrapCard = new AbstractCard(randCard);
-        if (wrapCard.canUpgrade())
-        {
+        if (wrapCard.canUpgrade()) {
             canUpgradeCards.push(wrapCard);
         }
     }
-    if (canUpgradeCards.length > 0)
-    {
+    if (canUpgradeCards.length > 0) {
         let index = FakeRandom(0, canUpgradeCards.length - 1);
         let upgradeCard = canUpgradeCards[index];
         upgradeCard.upgrade();
@@ -107,7 +104,7 @@ function PatchPurpleCards() {
 }
 
 function Patchcharacters() {
-    PatchManager.HookSTSFunction(PatchManager.Ironclad.getStartingDeck, (thisPtr: NativePointer) => {
+    PatchManager.HookSTSFunction(PatchManager.Characters.Ironclad.getStartingDeck, (thisPtr: NativePointer) => {
         let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
         let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
         let startDeck = stringListCtor(new NativePointer(0));
@@ -122,7 +119,7 @@ function Patchcharacters() {
         addStrFunc(startDeck, PatchManager.StringLiteral.DefendRed);
         addStrFunc(startDeck, PatchManager.StringLiteral.DefendRed);
 
-        if (FakeRandom(0,10) > 8) {
+        if (FakeRandom(0, 10) > 8) {
             addStrFunc(startDeck, PatchManager.StringLiteral.StrikeRed);
             addStrFunc(startDeck, PatchManager.StringLiteral.DefendRed);
             addStrFunc(startDeck, PatchManager.StringLiteral.Discovery);
@@ -133,7 +130,7 @@ function Patchcharacters() {
 
         return startDeck;
     });
-    PatchManager.HookSTSFunction(PatchManager.TheSilent.getStartingDeck, (thisPtr: NativePointer) =>{
+    PatchManager.HookSTSFunction(PatchManager.Characters.TheSilent.getStartingDeck, (thisPtr: NativePointer) => {
         let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
         let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
         let startDeck = stringListCtor(new NativePointer(0));
@@ -149,7 +146,7 @@ function Patchcharacters() {
         addStrFunc(startDeck, PatchManager.StringLiteral.DefendGreen);
 
         addStrFunc(startDeck, PatchManager.StringLiteral.Neutralize);
-        if (FakeRandom(0,10) > 8) {
+        if (FakeRandom(0, 10) > 8) {
             addStrFunc(startDeck, PatchManager.StringLiteral.StrikeGreen);
             addStrFunc(startDeck, PatchManager.StringLiteral.DefendGreen);
             addStrFunc(startDeck, PatchManager.StringLiteral.Discovery);
@@ -160,7 +157,7 @@ function Patchcharacters() {
 
         return startDeck;
     });
-    PatchManager.HookSTSFunction(PatchManager.Defect.getStartingDeck, (thisPtr: NativePointer) =>{
+    PatchManager.HookSTSFunction(PatchManager.Characters.Defect.getStartingDeck, (thisPtr: NativePointer) => {
         let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
         let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
         let startDeck = stringListCtor(new NativePointer(0));
@@ -175,7 +172,7 @@ function Patchcharacters() {
         addStrFunc(startDeck, PatchManager.StringLiteral.DefendBlue);
         addStrFunc(startDeck, PatchManager.StringLiteral.DefendBlue);
 
-        if (FakeRandom(0,10) > 8) {
+        if (FakeRandom(0, 10) > 8) {
             addStrFunc(startDeck, PatchManager.StringLiteral.StrikeBlue);
             addStrFunc(startDeck, PatchManager.StringLiteral.DefendBlue);
             addStrFunc(startDeck, PatchManager.StringLiteral.Discovery);
@@ -186,7 +183,7 @@ function Patchcharacters() {
 
         return startDeck;
     });
-    PatchManager.HookSTSFunction(PatchManager.Watcher.getStartingDeck, (thisPtr: NativePointer) =>{
+    PatchManager.HookSTSFunction(PatchManager.Characters.Watcher.getStartingDeck, (thisPtr: NativePointer) => {
         let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
         let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
         let startDeck = stringListCtor(new NativePointer(0));
@@ -201,7 +198,7 @@ function Patchcharacters() {
         addStrFunc(startDeck, PatchManager.StringLiteral.DefendPurple);
         addStrFunc(startDeck, PatchManager.StringLiteral.DefendPurple);
 
-        if (FakeRandom(0,10) > 8) {
+        if (FakeRandom(0, 10) > 8) {
             addStrFunc(startDeck, PatchManager.StringLiteral.Discovery);
         }
 
@@ -239,7 +236,7 @@ function PatchPowers() {
 }
 
 function PatchRelics() {
-    let origBurningBloodOnVictory = PatchManager.HookSTSFunction(PatchManager.BurningBlood.onVictory, (thisPtr: NativePointer) => {
+    let origBurningBloodOnVictory = PatchManager.HookSTSFunction(PatchManager.Relics.BurningBlood.onVictory, (thisPtr: NativePointer) => {
         let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.4) {
             UpgradeRandomCard(currentPlayer);
@@ -247,7 +244,7 @@ function PatchRelics() {
         origBurningBloodOnVictory(thisPtr);
     });
 
-    let origBlackBloodBloodOnVictory = PatchManager.HookSTSFunction(PatchManager.BlackBlood.onVictory, (thisPtr: NativePointer) => {
+    let origBlackBloodBloodOnVictory = PatchManager.HookSTSFunction(PatchManager.Relics.BlackBlood.onVictory, (thisPtr: NativePointer) => {
         let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.6) {
             UpgradeRandomCard(currentPlayer);
