@@ -3,7 +3,7 @@ import { AbstractPlayer } from "./AbstractPlayer.js";
 
 export class PatchManager {
     static STSModuleBaseAddress = Module.findBaseAddress("libSpire_ANDROID.so") || new NativePointer(0);
-    static STSLogger = Java.use("android.util.Log");
+    static STSLogger = new File("/sdcard/Android/data/com.humble.SlayTheSpire/files/ModScripts/ModLog.txt", "w+");
     static #NativeFuncCache = new Map<string, NativeFunction<any, any>>();
     static #GlobalVarCache = new Map<number, NativePointer>();
     static STSNativeLib = {
@@ -218,7 +218,7 @@ export class PatchManager {
         return nativeFunc;
     }
 
-    static GetNativeVFunction(funcPtr: NativePointer, returnType: NativeFunctionReturnType, argTypes: [NativeFunctionArgumentType]) {
+    static GetNativeVFunction(funcPtr: NativePointer, returnType: NativeFunctionReturnType, argTypes: NativeFunctionArgumentType[]) {
         let funcAddress = funcPtr.toString();
         let vFunc = PatchManager.#NativeFuncCache.get(funcAddress);
         if (vFunc === undefined) {
@@ -236,6 +236,9 @@ export class PatchManager {
     }
 
     static LogV(message: string) {
-        PatchManager.STSLogger.v("STS Mod", message);
+        let nowDate = new Date();
+        let timeStr = nowDate.getHours() + "." + nowDate.getMinutes() + "." + nowDate.getSeconds();
+        PatchManager.STSLogger.write(timeStr + " : " + message + "\n");
+        PatchManager.STSLogger.flush();
     }
 }
