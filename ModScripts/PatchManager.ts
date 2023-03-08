@@ -95,6 +95,12 @@ export class PatchManager {
             //void Relics::BlackBlood::onVictory(STS::AbstractRelic * thisPtr)
             onVictory: new NativeFunctionInfo(0x198BF31, 'void', ['pointer'])
         },
+        Ginger: {
+            //STS::AbstractRelic * Relics::Ginger::Ctor(STS::AbstractRelic *)
+            Ctor: new NativeFunctionInfo(0x1998921, 'pointer', ['pointer']),
+            //runtimetype_t* System::Internal::__CreateRuntimeType<STS::AbstractRelic *>(void)
+            onRegister: new NativeFunctionInfo(0x2657E81, 'pointer', ['void']),
+        }
     }
 
     static VFX = {

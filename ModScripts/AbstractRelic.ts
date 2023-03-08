@@ -84,10 +84,17 @@ export class AbstractRelic extends NativeClassWrapper {
         onUsePotion: new NativeFunctionInfo(0x308, 'void', ['pointer']),
         //void AbstractRelic::onLoseHp(STS::AbstractRelic* this, int damageAmount)
         onLoseHp: new NativeFunctionInfo(0x318, 'void', ['pointer', 'int32']),
+    };
+
+    static #fakeCodeMap = {
+        getOnPlayCard(funcName: string) {
+            return "void " + funcName + "(void * arg1, void* arg2, void* arg3) { return ; }"
+        },
     }
 
-    OverrideonEquip(newVFunc:(...args:any) => any) {
-        this.setVirtualFunction(AbstractRelic.#vfunctionMap.onEquip, newVFunc);
+    OverrideonPlayCard(deriveClassName: string, newVFunc: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => void) {
+        let funcName = "AbstractRelic_" + deriveClassName + "_onPlayCard";
+        this.setVirtualFunction(funcName, AbstractRelic.#fakeCodeMap.getOnPlayCard(funcName), AbstractRelic.#vfunctionMap.onPlayCard, newVFunc);
     }
 
     get name() {

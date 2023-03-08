@@ -1,6 +1,7 @@
 import { PatchManager } from "./PatchManager.js";
 import { AbstractCard } from "./AbstractCard.js";
 import { AbstractPlayer } from "./AbstractPlayer.js";
+import { AbstractRelic } from "./AbstractRelic.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -250,6 +251,23 @@ function PatchRelics() {
             UpgradeRandomCard(currentPlayer);
         }
         origBlackBloodBloodOnVictory(thisPtr);
+    });
+
+    let origGingeronCtor = PatchManager.HookSTSFunction(PatchManager.Relics.Ginger.Ctor, (thisPtr: NativePointer) => {
+        let gingerObj = origGingeronCtor(thisPtr);
+        let wrapGinger = new AbstractRelic(gingerObj);
+        wrapGinger.OverrideonPlayCard("Gingeron", (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => {
+            let wrapGinger = new AbstractRelic(thisPtr);
+            if (wrapGinger.counter >= 4) {
+                let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+                currentPlayer.currentHealth += 5;
+                wrapGinger.counter = 0;
+            }
+            else {
+                wrapGinger.counter++;
+            }
+        });
+        return gingerObj;
     });
 }
 
