@@ -2,6 +2,8 @@ import { PatchManager } from "./PatchManager.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 
 export class NativeClassWrapper {
+    static #overridMap = new Map<string, CModule>();
+
     rawPtr: NativePointer;
     #vfuncMapPtr: NativePointer;
     //NativePointer AbstractCreature *
@@ -15,9 +17,35 @@ export class NativeClassWrapper {
         this.rawPtr = CthisPtr;
         this.#vfuncMapPtr = CthisPtr.readPointer().add(0x4).readPointer();
     }
+
     getVirtualFunction(funcInfo: NativeFunctionInfo) {
         let vFuncPtr = this.#vfuncMapPtr.add(funcInfo.funcOffset).readPointer();
         return PatchManager.GetNativeVFunction(vFuncPtr, funcInfo.retType, funcInfo.argTypes);
+    }
+    /**
+     * 
+     * @param funcName global unique string, e.g: Abstract_Gingeron__onPlayCard
+     * @param fakecode 
+     * not to do anything c function code,the name small is funcName arguemt e.g:
+     * ```c
+     *  void Abstract_Gingeron__onPlayCard(void * arg1, void* arg2, void* arg3) { return ; }
+     * ```
+     * @param funcInfo `new NativeFunctionInfo(vtableIndex,retType, argType)`
+     * @param newVFunc a javascript function
+     * @returns 
+     */
+    setVirtualFunction(funcName: string, fakecode: string, funcInfo: NativeFunctionInfo, newVFunc: any) {
+        if (NativeClassWrapper.#overridMap.has(funcName)) {
+            return;
+        }
+
+        let tmpFunc = new CModule(fakecode);
+        NativeClassWrapper.#overridMap.set(funcName, tmpFunc);
+        let overridVFunc = new NativeCallback(newVFunc, funcInfo.retType, funcInfo.argTypes);
+        Interceptor.replace(tmpFunc[funcName], overridVFunc);
+
+        this.#vfuncMapPtr.add(funcInfo.funcOffset).writePointer(tmpFunc[funcName]);
+        this.#vfuncMapPtr.add(funcInfo.funcOffset + 0x4).writeU8(0);
     }
 
     readOffsetPointer(offset: number) {
