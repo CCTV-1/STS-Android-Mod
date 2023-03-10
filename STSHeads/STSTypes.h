@@ -177,6 +177,15 @@ namespace STS
         SHOP = 0x7,
     };
 
+    enum class PlayerClass:uint32_t
+    {
+        IRONCLAD = 0x0,
+        THE_SILENT = 0x1,
+        DEFECT = 0x2,
+        WATCHER = 0x3,
+    };
+
+
     struct JString
     {
         uint32_t unk;
@@ -466,12 +475,70 @@ namespace STS
 
     struct AbstractPlayer : public AbstractCreature
     {
-        void *basePtr;
-        void *vfuncMap;
-        uint8_t gap0D[8];
+        PlayerClass chosenClass;
+        int32_t gameHandSize;
+        int32_t masterHandSize;
+        int32_t startingMaxHP;
         CardGroup *masterDeck;
-        uint8_t unk[];
-    };
+        CardGroup *drawPile;
+        CardGroup *hand;
+        CardGroup *discardPile;
+        CardGroup *exhaustPile;
+        CardGroup *limbo;
+        void *relics;
+        void *blights;
+        int32_t potionSlots;
+        void *potions;
+        void *energy;
+        bool isEndingTurn;
+        bool viewingRelics;
+        bool inspectMode;
+        uint8_t gap143;
+        void *inspectHb;
+        int32_t damagedThisCombat;
+        JString *title;
+        void *orbs;
+        int32_t masterMaxOrbs;
+        int32_t maxOrbs;
+        void *stance;
+        int32_t cardsPlayedThisTurn;
+        bool isHoveringCard;
+        bool isHoveringDropZone;
+        uint8_t pad166[2];
+        float hoverStartLine;
+        bool passedHesitationLine;
+        uint8_t gap16d[3];
+        AbstractCard *hoveredCard;
+        AbstractCard *toHover;
+        AbstractCard *cardInUse;
+        bool isDraggingCard;
+        bool isUsingClickDragControl;
+        uint8_t gap17E[2];
+        float clickDragTimer;
+        bool inSingleTargetMode;
+        uint8_t gap185[3];
+        void *hoveredMonster;
+        float hoverEnemyWaitTimer;
+        bool isInKeyboardMode;
+        bool skipMouseModeOnce;
+        uint8_t gap192[2];
+        int32_t keyboardCardIndex;
+        int32_t touchscreenInspectCount;
+        void *img;
+        void *shoulderImg;
+        void *shoulder2Img;
+        void *corpseImg;
+        float arrowScale;
+        float arrowScaleTimer;
+        bool endTurnQueued;
+        uint8_t gap1B4[3];
+        void *points;
+        void *controlPoint;
+        void *arrowTmp;
+        void *startArrowVector;
+        void *endArrowVector;
+        bool renderCorpse;
+    } __attribute__((aligned(4)));
     
 
     struct AbstractGameAction
@@ -488,7 +555,7 @@ namespace STS
         int32_t amount;
         AbstractCreature* target;
         AbstractCreature* source;
-    }__attribute__((aligned(4)));
+    } __attribute__((aligned(4)));
 
     struct DeriveGameAction : public AbstractGameAction
     {
