@@ -8,9 +8,36 @@ export class AbstractCard extends NativeClassWrapper {
     }
 
     static #vfunctionMap = {
+        /**
+         * ```c
+         *  bool AbstractCard::canUpgrade(STS::AbstractCard* this)
+         * ```
+         */
         canUpgrade: new NativeFunctionInfo(0x50, 'bool', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::upgrade(STS::AbstractCard* this)
+         * ```
+         */
         upgrade: new NativeFunctionInfo(0x58, 'void', ['pointer']),
+        /**
+         * ```c
+         *  STS::AbstractCard* AbstractCard::makeStatEquivalentCopy(STS::AbstractCard* this)
+         * ```
+         */
         makeStatEquivalentCopy: new NativeFunctionInfo(0x98, 'pointer', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::addToTop(STS::AbstractCard* this, STS::AbstractGameAction* actionPtr)
+         * ```
+         */
+        addToBot: new NativeFunctionInfo(0x2F8, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::addToTop(STS::AbstractCard* this, STS::AbstractGameAction* actionPtr)
+         * ```
+         */
+        addToTop: new NativeFunctionInfo(0x300, 'void', ['pointer', 'pointer']),
     }
 
     canUpgrade(): boolean {
@@ -25,6 +52,14 @@ export class AbstractCard extends NativeClassWrapper {
     makeStatEquivalentCopy(): NativePointer {
         let makeStatEquivalentCopyFunc = this.getVirtualFunction(AbstractCard.#vfunctionMap.makeStatEquivalentCopy);
         return makeStatEquivalentCopyFunc(this.rawPtr);
+    }
+
+    addToBot(actionPtr: NativePointer): void {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.addToBot)(this.rawPtr, actionPtr);
+    }
+
+    addToTop(actionPtr: NativePointer): void {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.addToTop)(this.rawPtr, actionPtr);
     }
 
     get type() {
