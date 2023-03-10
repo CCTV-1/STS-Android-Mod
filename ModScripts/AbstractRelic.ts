@@ -1,5 +1,6 @@
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
+import { PatchManager } from "./PatchManager.js";
 
 export class AbstractRelic extends NativeClassWrapper {
     //NativePointer AbstractRelic *
@@ -86,15 +87,21 @@ export class AbstractRelic extends NativeClassWrapper {
         onLoseHp: new NativeFunctionInfo(0x318, 'void', ['pointer', 'int32']),
     };
 
-    static #fakeCodeMap = {
-        getOnPlayCard(funcName: string) {
-            return "void " + funcName + "(void * arg1, void* arg2, void* arg3) { return ; }"
-        },
+    static #vFuncNamePrefix = "AbstractRelic_";
+
+    OverrideonPlayCard(newVFunc: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => void) {
+        let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_onPlayCard";
+        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_PPP_Func(funcName), AbstractRelic.#vfunctionMap.onPlayCard, newVFunc);
     }
 
-    OverrideonPlayCard(deriveClassName: string, newVFunc: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => void) {
-        let funcName = "AbstractRelic_" + deriveClassName + "_onPlayCard";
-        this.setVirtualFunction(funcName, AbstractRelic.#fakeCodeMap.getOnPlayCard(funcName), AbstractRelic.#vfunctionMap.onPlayCard, newVFunc);
+    OverrideatTurnStart(newVFunc:(thisPtr: NativePointer) => void) {
+        let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_atTurnStart";
+        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.atTurnStart, newVFunc);
+    }
+
+    OverrideonVictory(newVFunc:(thisPtr: NativePointer) => void) {
+        let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_onVictory";
+        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onVictory, newVFunc);
     }
 
     get name() {
@@ -105,10 +112,10 @@ export class AbstractRelic extends NativeClassWrapper {
     }
 
     get relicId() {
-        return this.readOffsetJString(0x8);
+        return this.readOffsetJString(0xC);
     }
     set relicId(value) {
-        this.writeOffsetJString(0x8, value);
+        this.writeOffsetJString(0xC, value);
     }
 
     get energyBased() {

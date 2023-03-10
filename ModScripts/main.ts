@@ -256,7 +256,7 @@ function PatchRelics() {
     let origGingeronCtor = PatchManager.HookSTSFunction(PatchManager.Relics.Ginger.Ctor, (thisPtr: NativePointer) => {
         let gingerObj = origGingeronCtor(thisPtr);
         let wrapGinger = new AbstractRelic(gingerObj);
-        wrapGinger.OverrideonPlayCard("Ginger", (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => {
+        wrapGinger.OverrideonPlayCard((thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => {
             let wrapGinger = new AbstractRelic(thisPtr);
             if (wrapGinger.counter >= 4) {
                 let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;

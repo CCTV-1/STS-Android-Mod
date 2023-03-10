@@ -205,6 +205,15 @@ export class PatchManager {
         },
     };
 
+    static fakeCodeGen = {
+        V_PPP_Func(funcName: string) {
+            return "void " + funcName + "(void * arg1, void* arg2, void* arg3) { return ; }";
+        },
+        V_P_Func(funcName: string) {
+            return "void " + funcName + "(void * arg1) { return ; }";
+        },
+    }
+
     static GetOffsetPtr(offset: number) {
         if (!PatchManager.#GlobalVarCache.has(offset)) {
             PatchManager.#GlobalVarCache.set(offset, PatchManager.STSModuleBaseAddress.add(offset));
