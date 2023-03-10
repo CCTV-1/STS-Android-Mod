@@ -94,12 +94,17 @@ export class AbstractRelic extends NativeClassWrapper {
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_PPP_Func(funcName), AbstractRelic.#vfunctionMap.onPlayCard, newVFunc);
     }
 
-    OverrideatTurnStart(newVFunc:(thisPtr: NativePointer) => void) {
+    OverrideonEquip(newVFunc: (thisPtr: NativePointer) => void) {
+        let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_onEquip";
+        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onEquip, newVFunc);
+    }
+
+    OverrideatTurnStart(newVFunc: (thisPtr: NativePointer) => void) {
         let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_atTurnStart";
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.atTurnStart, newVFunc);
     }
 
-    OverrideonVictory(newVFunc:(thisPtr: NativePointer) => void) {
+    OverrideonVictory(newVFunc: (thisPtr: NativePointer) => void) {
         let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_onVictory";
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onVictory, newVFunc);
     }
