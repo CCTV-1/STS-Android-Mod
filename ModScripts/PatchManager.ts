@@ -17,19 +17,17 @@ export class PatchManager {
         ArrayList_AbstractCardCtor: new NativeFunctionInfo(0x1678CA9, 'pointer', ['pointer']),
         //STS::AbstractCard* System::List<AbstractCard>::Ctor(System::List * thisPtr, int index)
         ArrayList_AbstractCardUnsafeLoad: new NativeFunctionInfo(0x167E58D, 'pointer', ['pointer', 'uint32']),
+        //bool System::List::add(System::List * thisPtr, AbstractPotion * potion)
+        ArrayList_AbstractPotionAdd: new NativeFunctionInfo(0x0175224D, 'bool', ['pointer', 'pointer']),
     };
     static CommonActions = {
         //AbstractGameAction* HealAction(AbstractGameAction* this, STS::AbstractCreature* target, STS::AbstractCreature* source, int amount)
         HealActionCtor: new NativeFunctionInfo(0x1682A11, 'pointer', ['pointer', 'pointer', 'pointer', 'int32']),
     };
-    static AbstractCard = {
-        //void AbstractCard::addToBot(STS::AbstractCard * thisPtr, STS::AbstractGameAction * action)
-        addToBot: new NativeFunctionInfo(0x16E5DB5, 'void', ['pointer', 'pointer'])
-    };
     static CardGroup = {
         //STS::AbstractCard* getRandomCard(STS::CardGroup * thisPtr, int useRng)
         getRandomCardBool: new NativeFunctionInfo(0x1701DA9, 'pointer', ['pointer', 'int32'])
-    }
+    };
     static PurpleCards = {
         //STS::AbstractCard * Cards::Purple::Alpha::Ctor(STS::AbstractCard * this)
         AlphaCtor: new NativeFunctionInfo(0x172AE45, 'pointer', ['pointer']),
@@ -81,7 +79,7 @@ export class PatchManager {
     static AbstractDungeon = {
         //System::List* AbstractDungeon::getRewardCards(STS::AbstractDungeon * thisPtr)
         getRewardCards: new NativeFunctionInfo(0x17BE7F1, 'pointer', ['pointer'])
-    }
+    };
     static ConfusionPower = {
         //void ConfusionPower::onCardDraw(STS::AbstractPower * thisPtr, STS::AbstractCard * card)
         onCardDraw: new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
@@ -100,9 +98,22 @@ export class PatchManager {
             Ctor: new NativeFunctionInfo(0x1998921, 'pointer', ['pointer']),
             //runtimetype_t* System::Internal::__CreateRuntimeType<STS::AbstractRelic *>(void)
             onRegister: new NativeFunctionInfo(0x2657E81, 'pointer', ['void']),
+        },
+        SacredBark: {
+            //STS::AbstractRelic * Relics::SacredBark::Ctor(STS::AbstractRelic *)
+            Ctor: new NativeFunctionInfo(0x19A67A5, 'pointer', ['pointer']),
         }
     }
-
+    static Potions = {
+        PotionSlot: {
+            /**
+             * ```c
+             *  AbstractPotion* Potions::PotionSlot::Ctor(AbstractPotion* this, int32_t slot)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x19A67A5, 'pointer', ['pointer', 'int32']),
+        }
+    };
     static VFX = {
         //STS::AbstractGameEffect * VFX::ShowCardBrieflyEffect::Ctor(STS::AbstractGameEffect * thisPtr, STS::AbstractCard * cardPtr)
         ShowCardBrieflyEffectCtor: new NativeFunctionInfo(0x1B5843D, 'pointer', ['pointer', 'pointer']),

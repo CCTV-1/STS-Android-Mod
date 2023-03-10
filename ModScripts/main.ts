@@ -66,8 +66,7 @@ function PatchRedCards() {
         let cardLevel = baseCard.timesUpgraded;
         let HealActionCtor = PatchManager.GetNativeFunction(PatchManager.CommonActions.HealActionCtor)
         let newHealAction = HealActionCtor(new NativePointer(0), playerPtr, playerPtr, cardLevel)
-        let addToBotFunc = PatchManager.GetNativeFunction(PatchManager.AbstractCard.addToBot);
-        addToBotFunc(thisPtr, newHealAction);
+        baseCard.addToBot(newHealAction);
     });
     let origHeavyBladeCtor = PatchManager.HookSTSFunction(PatchManager.RedCards.HeavyBladeCtor, (thisPtr: NativePointer) => {
         let ret = origHeavyBladeCtor(thisPtr);
@@ -269,6 +268,23 @@ function PatchRelics() {
         });
         return gingerObj;
     });
+
+    let origSacredBarkCtor = PatchManager.HookSTSFunction(PatchManager.Relics.SacredBark.Ctor, (thisPtr: NativePointer) => {
+        let sacredBarkObj = origSacredBarkCtor(thisPtr);
+        let wrapSacredBark = new AbstractRelic(sacredBarkObj);
+        wrapSacredBark.OverrideonEquip((thisPtr: NativePointer) => {
+            let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+            currentPlayer.potionSlots += 2;
+            let playerPotions = currentPlayer.potions;
+            let PotionSlotCtor = PatchManager.GetNativeFunction(PatchManager.Potions.PotionSlot.Ctor);
+            let AddFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractPotionAdd);
+            for (let index = 2; index <= 0 ; index--) {
+                let newPotionSlot = PotionSlotCtor(new NativePointer(0), currentPlayer.potionSlots - index);
+                AddFunc(playerPotions.rawPtr, newPotionSlot);
+            }
+        });
+        return sacredBarkObj;
+    })
 }
 
 function main() {
