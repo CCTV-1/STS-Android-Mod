@@ -473,6 +473,38 @@ namespace STS
         float reticleAnimTimer;
     } __attribute__((aligned(4)));
 
+    struct AbstractPlayerVFuncMap : public AbstractCreatureVMap
+    {
+        uint8_t unk[336];
+        dummyFunc_t initializeClass;
+        bool InitinitializeClass;
+        uint8_t pad30D[3];
+        uint8_t unk1[48];
+        dummyFunc_t isCursed;
+        bool InitisCursed;
+        uint8_t pad345[3];
+        uint8_t unk2[40];
+        dummyFunc_t gainEnergy;
+        bool InitgainEnergy;
+        dummyFunc_t loseEnergy;
+        bool InitloseEnergy;
+        uint8_t gap37D[3];
+        uint8_t unk3[24];
+        dummyFunc_t drawN;
+        bool InitdrawN;
+        uint8_t gap39D[3];
+        dummyFunc_t draw1;
+        bool Initdraw1;
+        uint8_t gap3A5[3];
+        uint8_t unk4[288];
+        dummyFunc_t increaseMaxOrbSlots;
+        bool InitincreaseMaxOrbSlots;
+        dummyFunc_t decreaseMaxOrbSlots;
+        bool InitdecreaseMaxOrbSlots;
+        uint8_t unk5[72];
+    }  __attribute__((aligned(4)));
+
+
     struct AbstractPlayer : public AbstractCreature
     {
         PlayerClass chosenClass;
