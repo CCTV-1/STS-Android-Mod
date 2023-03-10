@@ -1,5 +1,6 @@
 import { AbstractCard } from "./AbstractCard.js";
 import { AbstractCreature } from "./AbstractCreature.js";
+import { ArrayList } from "./ArrayList.js";
 import { CardGroup } from "./CardGroup.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 
@@ -113,6 +114,13 @@ export class AbstractPlayer extends AbstractCreature {
     }
     set potionSlots(value) {
         this.writeOffsetS32(0x134, value);
+    }
+
+    /**
+     *  type: ArrayList\<AbstractPotion\>
+     */
+    get potions() {
+        return new ArrayList(this.readOffsetPointer(0x138));
     }
 
     get masterMaxOrbs() {
