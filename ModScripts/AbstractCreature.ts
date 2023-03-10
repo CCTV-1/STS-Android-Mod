@@ -19,37 +19,37 @@ export class AbstractCreature extends NativeClassWrapper {
          * void STS::AbstractCreature::decrementBlock(STS::AbstractCreature* this, int32_t amount, bool showEffect);
          * ```
          */
-        increaseMaxHp: new NativeFunctionInfo(0x30, 'void', ['pointer', 'int32_t', 'bool']),
+        increaseMaxHp: new NativeFunctionInfo(0x30, 'void', ['pointer', 'int32', 'bool']),
         /**
          * ```c
          * void STS::AbstractCreature::decreaseMaxHealth(STS::AbstractCreature* this, int32_t amount);
          * ```
          */
-        decreaseMaxHealth: new NativeFunctionInfo(0x38, 'void', ['pointer', 'int32_t']),
+        decreaseMaxHealth: new NativeFunctionInfo(0x38, 'void', ['pointer', 'int32']),
         /**
          * ```c
          * void STS::AbstractCreature::heal(STS::AbstractCreature* this, int32_t amount, bool showEffect);
          * ```
          * 0x98 just call this.heal(amount, true);
          */
-        heal: new NativeFunctionInfo(0x90, 'void', ['pointer', 'int32_t', 'bool']),
+        heal: new NativeFunctionInfo(0x90, 'void', ['pointer', 'int32', 'bool']),
         /**
          * ```c
          * void STS::AbstractCreature::addBlock(STS::AbstractCreature* this, int32_t blockAmount);
          * ```
          */
-        addBlock: new NativeFunctionInfo(0xA0, 'void', ['pointer', 'int32_t']),
+        addBlock: new NativeFunctionInfo(0xA0, 'void', ['pointer', 'int32']),
         /**
          * ```c
          * void STS::AbstractCreature::loseBlock(STS::AbstractCreature* this, int32_t amount, bool noAnimation);
          * ```
-         * 0xB0 just call `this.heal(this.currentBlock, false);`
+         * 0xB0 just call `this.loseBlock(this.currentBlock, false);`
          * 
-         * 0xB8 just call `this.heal(this.currentBlock, noAnimation);`
+         * 0xB8 just call `this.loseBlock(this.currentBlock, noAnimation);`
          * 
-         * 0xC0 just call `this.heal(amount, false);`
+         * 0xC0 just call `this.loseBlock(amount, false);`
          */
-        loseBlock: new NativeFunctionInfo(0xA8, 'void', ['pointer', 'int32_t', 'bool']),
+        loseBlock: new NativeFunctionInfo(0xA8, 'void', ['pointer', 'int32', 'bool']),
         /**
          * ```c
          * void STS::AbstractCreature::addPower(STS::AbstractCreature* this, STS::AbstractPower* powerToApply);
@@ -79,13 +79,13 @@ export class AbstractCreature extends NativeClassWrapper {
          * void STS::AbstractCreature::loseGold(STS::AbstractCreature* this, int32_t goldAmount);
          * ```
          */
-        loseGold: new NativeFunctionInfo(0x180, 'void', ['pointer', 'int32_t']),
+        loseGold: new NativeFunctionInfo(0x180, 'void', ['pointer', 'int32']),
         /**
          * ```c
          * void STS::AbstractCreature::gainGold(STS::AbstractCreature* this, int32_t goldAmount);
          * ```
          */
-        gainGold: new NativeFunctionInfo(0x188, 'void', ['pointer', 'int32_t']),
+        gainGold: new NativeFunctionInfo(0x188, 'void', ['pointer', 'int32']),
     };
 
     heal(amount: number, showEffect: boolean) {
