@@ -612,7 +612,7 @@ namespace STS
         dummyFunc_t canUpgrade;
         bool gap54;
         dummyFunc_t upgrade;
-        uint8_t byte5C;
+        bool Iupgrade;
         uint8_t gap5d[3];
         dummyFunc_t displayUpgrades;
         bool gap64;
@@ -667,9 +667,16 @@ namespace STS
         dummyFunc_t renderOuterGlow;
         bool If10;
         dummyFunc_t getCardBgTexture;
-        uint8_t gapF8[498];
+        uint8_t gapF8[436];
+        dummyFunc_t addToBot;
+        bool InitaddToBot;
+        uint8_t pad2FD[3];
+        dummyFunc_t addToTop;
+        bool InitaddToTop;
+        uint8_t pad305[3];
+        uint8_t gap308[48];
         dummyFunc_t makeCopyFunc;
-        uint8_t byte33C;
+        bool InitmakeCopyFunc;
         uint8_t unk[11];
     } __attribute__((aligned(4)));
 
