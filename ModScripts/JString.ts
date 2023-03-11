@@ -10,7 +10,7 @@ export class JString extends NativeClassWrapper {
     static CreateJString(str:string) {
         let nativeCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.JString_Ctor);
         let nativeMem = Memory.allocUtf16String(str);
-        let nativeStrPtr = nativeCtor(new NativePointer(0), nativeMem);
+        let nativeStrPtr = nativeCtor(PatchManager.nullptr, nativeMem);
         return new JString(nativeStrPtr);
     }
 

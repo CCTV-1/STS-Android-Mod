@@ -86,6 +86,18 @@ export class AbstractRelic extends NativeClassWrapper {
         onUsePotion: new NativeFunctionInfo(0x308, 'void', ['pointer']),
         //void AbstractRelic::onLoseHp(STS::AbstractRelic* this, int damageAmount)
         onLoseHp: new NativeFunctionInfo(0x318, 'void', ['pointer', 'int32']),
+        /**
+         * ```c
+         *  void AbstractRelic::addToTop(STS::AbstractRelic* this, STS::AbstractGameAction* actionPtr)
+         * ```
+         */
+        addToBot: new NativeFunctionInfo(0x328, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  void AbstractRelic::addToTop(STS::AbstractRelic* this, STS::AbstractGameAction* actionPtr)
+         * ```
+         */
+        addToTop: new NativeFunctionInfo(0x330, 'void', ['pointer', 'pointer']),
     };
 
     static #vFuncNamePrefix = "AbstractRelic_";
@@ -100,6 +112,11 @@ export class AbstractRelic extends NativeClassWrapper {
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onEquip, newVFunc);
     }
 
+    OverrideatBattleStart(newVFunc: (thisPtr: NativePointer) => void) {
+        let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_atBattleStart";
+        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.atBattleStart, newVFunc);
+    }
+
     OverrideatTurnStart(newVFunc: (thisPtr: NativePointer) => void) {
         let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_atTurnStart";
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.atTurnStart, newVFunc);
@@ -108,6 +125,14 @@ export class AbstractRelic extends NativeClassWrapper {
     OverrideonVictory(newVFunc: (thisPtr: NativePointer) => void) {
         let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_onVictory";
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onVictory, newVFunc);
+    }
+
+    addToBot(actionPtr: NativePointer): void {
+        this.getVirtualFunction(AbstractRelic.#vfunctionMap.addToBot)(this.rawPtr, actionPtr);
+    }
+
+    addToTop(actionPtr: NativePointer): void {
+        this.getVirtualFunction(AbstractRelic.#vfunctionMap.addToTop)(this.rawPtr, actionPtr);
     }
 
     get name() {
@@ -173,7 +198,7 @@ export class AbstractRelic extends NativeClassWrapper {
         this.writeOffsetS32(0x28, value);
     }
 
-    get tier() : RelicTier {
+    get tier(): RelicTier {
         return this.readOffsetU32(0x2C);
     }
     set tier(value) {

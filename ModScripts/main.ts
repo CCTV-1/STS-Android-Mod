@@ -2,6 +2,7 @@ import { PatchManager } from "./PatchManager.js";
 import { AbstractCard } from "./AbstractCard.js";
 import { AbstractPlayer } from "./AbstractPlayer.js";
 import { AbstractRelic } from "./AbstractRelic.js";
+import { AttackEffect, PlayerClass } from "./enums.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -28,8 +29,8 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
         let showCardBrieflyEffectCtor = PatchManager.GetNativeFunction(PatchManager.VFX.ShowCardBrieflyEffectCtor);
         let UpgradeShineEffectCtor = PatchManager.GetNativeFunction(PatchManager.VFX.UpgradeShineEffectCtor);
         let addFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractGameEffectAdd);
-        let cardBrieflyEffectObj = showCardBrieflyEffectCtor(new NativePointer(0), statCopyCard);
-        let upgradeShineEffectObj = UpgradeShineEffectCtor(new NativePointer(0), PatchManager.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchManager.STSGlobalVars.STSSetting_HEIGHT * 0.5);
+        let cardBrieflyEffectObj = showCardBrieflyEffectCtor(PatchManager.nullptr, statCopyCard);
+        let upgradeShineEffectObj = UpgradeShineEffectCtor(PatchManager.nullptr, PatchManager.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchManager.STSGlobalVars.STSSetting_HEIGHT * 0.5);
         addFunc(topLevelEffects, cardBrieflyEffectObj);
         addFunc(topLevelEffects, upgradeShineEffectObj);
     }
@@ -64,8 +65,8 @@ function PatchRedCards() {
         origSearingBlowUse(thisPtr, playerPtr, monsterPtr);
         let baseCard = new AbstractCard(thisPtr);
         let cardLevel = baseCard.timesUpgraded;
-        let HealActionCtor = PatchManager.GetNativeFunction(PatchManager.CommonActions.HealActionCtor)
-        let newHealAction = HealActionCtor(new NativePointer(0), playerPtr, playerPtr, cardLevel)
+        let HealActionCtor = PatchManager.GetNativeFunction(PatchManager.Actions.HealActionCtor)
+        let newHealAction = HealActionCtor(PatchManager.nullptr, playerPtr, playerPtr, cardLevel)
         baseCard.addToBot(newHealAction);
     });
     let origHeavyBladeCtor = PatchManager.HookSTSFunction(PatchManager.RedCards.HeavyBladeCtor, (thisPtr: NativePointer) => {
@@ -97,7 +98,7 @@ function PatchPurpleCards() {
         let ret = origAlphaCtor(thisPtr);
         let OmegaCtor = PatchManager.GetNativeFunction(PatchManager.TempCards.OmegaCtor);
         let newCard = new AbstractCard(ret);
-        let fakePreview = OmegaCtor(new NativePointer(0));
+        let fakePreview = OmegaCtor(PatchManager.nullptr);
         newCard.cardsToPreview = fakePreview;
         return ret;
     });
@@ -107,7 +108,7 @@ function Patchcharacters() {
     PatchManager.HookSTSFunction(PatchManager.Characters.Ironclad.getStartingDeck, (thisPtr: NativePointer) => {
         let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
         let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
-        let startDeck = stringListCtor(new NativePointer(0));
+        let startDeck = stringListCtor(PatchManager.nullptr);
 
         addStrFunc(startDeck, PatchManager.StringLiteral.StrikeRed);
         addStrFunc(startDeck, PatchManager.StringLiteral.StrikeRed);
@@ -133,7 +134,7 @@ function Patchcharacters() {
     PatchManager.HookSTSFunction(PatchManager.Characters.TheSilent.getStartingDeck, (thisPtr: NativePointer) => {
         let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
         let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
-        let startDeck = stringListCtor(new NativePointer(0));
+        let startDeck = stringListCtor(PatchManager.nullptr);
 
         addStrFunc(startDeck, PatchManager.StringLiteral.StrikeGreen);
         addStrFunc(startDeck, PatchManager.StringLiteral.StrikeGreen);
@@ -160,7 +161,7 @@ function Patchcharacters() {
     PatchManager.HookSTSFunction(PatchManager.Characters.Defect.getStartingDeck, (thisPtr: NativePointer) => {
         let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
         let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
-        let startDeck = stringListCtor(new NativePointer(0));
+        let startDeck = stringListCtor(PatchManager.nullptr);
 
         addStrFunc(startDeck, PatchManager.StringLiteral.StrikeBlue);
         addStrFunc(startDeck, PatchManager.StringLiteral.StrikeBlue);
@@ -186,7 +187,7 @@ function Patchcharacters() {
     PatchManager.HookSTSFunction(PatchManager.Characters.Watcher.getStartingDeck, (thisPtr: NativePointer) => {
         let stringListCtor = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringCtor);
         let addStrFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_StringAdd);
-        let startDeck = stringListCtor(new NativePointer(0));
+        let startDeck = stringListCtor(PatchManager.nullptr);
 
         addStrFunc(startDeck, PatchManager.StringLiteral.StrikePurple);
         addStrFunc(startDeck, PatchManager.StringLiteral.StrikePurple);
@@ -220,7 +221,7 @@ function Patchcharacters() {
 
 function PatchPowers() {
     //let origOnCardDrawFunc = 
-    PatchManager.HookSTSFunction(PatchManager.ConfusionPower.onCardDraw, (thisPtr: NativePointer, cardPtr: NativePointer) => {
+    PatchManager.HookSTSFunction(PatchManager.Powers.ConfusionPower.onCardDraw, (thisPtr: NativePointer, cardPtr: NativePointer) => {
         //    origOnCardDrawFunc(thisPtr, cardPtr)
         let baseCard = new AbstractCard(cardPtr);
         if (baseCard.cost >= 0) {
@@ -255,15 +256,46 @@ function PatchRelics() {
     let origGingeronCtor = PatchManager.HookSTSFunction(PatchManager.Relics.Ginger.Ctor, (thisPtr: NativePointer) => {
         let gingerObj = origGingeronCtor(thisPtr);
         let wrapGinger = new AbstractRelic(gingerObj);
-        wrapGinger.OverrideonPlayCard((thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => {
-            let wrapGinger = new AbstractRelic(thisPtr);
-            if (wrapGinger.counter >= 4) {
-                let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
-                currentPlayer.heal(5, true);
-                wrapGinger.counter = 0;
-            }
-            else {
-                wrapGinger.counter++;
+        wrapGinger.OverrideatBattleStart((thisPtr: NativePointer) => {
+            let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+            if (currentPlayer.hasRelic("Turnip")) {
+                let wrapGinger = new AbstractRelic(gingerObj);
+                //Apotheosis
+                //wrapGinger.addToBot(new ApotheosisAction());
+
+                //forms
+                let ApplyPowerActionCtor = PatchManager.GetNativeFunction(PatchManager.Actions.ApplyPowerActionCtor);
+                let formPowerObj = null;
+                let formPowerCtor = null;
+                switch (currentPlayer.chosenClass) {
+                    case PlayerClass.IRONCLAD: {
+                        formPowerCtor = PatchManager.GetNativeFunction(PatchManager.Powers.DemonFormPower.Ctor);
+                        formPowerObj = formPowerCtor(PatchManager.nullptr, currentPlayer.rawPtr, 2);
+                        break;
+                    }
+                    case PlayerClass.THE_SILENT: {
+                        formPowerCtor = PatchManager.GetNativeFunction(PatchManager.Powers.IntangiblePlayerPower.Ctor);
+                        formPowerObj = formPowerCtor(PatchManager.nullptr, currentPlayer.rawPtr, 2);
+                        break;
+                    }
+                    case PlayerClass.DEFECT: {
+                        formPowerCtor = PatchManager.GetNativeFunction(PatchManager.Powers.EchoPower.Ctor);
+                        formPowerObj = formPowerCtor(PatchManager.nullptr, currentPlayer.rawPtr, 1);
+                        break;
+                    }
+                    case PlayerClass.WATCHER: {
+                        formPowerCtor = PatchManager.GetNativeFunction(PatchManager.Powers.DemonFormPower.Ctor);
+                        formPowerObj = formPowerCtor(PatchManager.nullptr, currentPlayer.rawPtr, 1);
+                        break;
+                    }
+                    default: {
+                        PatchManager.LogV("class ???:" + currentPlayer.chosenClass);
+                        return;
+                    }
+                }
+
+                let ApplyPowerActionObj = ApplyPowerActionCtor(PatchManager.nullptr, currentPlayer.rawPtr, currentPlayer.rawPtr, formPowerObj, 1, Number(false), Number(AttackEffect.NONE));
+                wrapGinger.addToBot(ApplyPowerActionObj);
             }
         });
         return gingerObj;
@@ -278,13 +310,13 @@ function PatchRelics() {
             let playerPotions = currentPlayer.potions;
             let PotionSlotCtor = PatchManager.GetNativeFunction(PatchManager.Potions.PotionSlot.Ctor);
             let AddFunc = PatchManager.GetNativeFunction(PatchManager.STSNativeLib.ArrayList_AbstractPotionAdd);
-            for (let index = 2; index <= 0 ; index--) {
-                let newPotionSlot = PotionSlotCtor(new NativePointer(0), currentPlayer.potionSlots - index);
+            for (let index = 2; index <= 0; index--) {
+                let newPotionSlot = PotionSlotCtor(PatchManager.nullptr, currentPlayer.potionSlots - index);
                 AddFunc(playerPotions.rawPtr, newPotionSlot);
             }
         });
         return sacredBarkObj;
-    })
+    });
 }
 
 function main() {

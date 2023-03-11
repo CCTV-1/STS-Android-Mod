@@ -2,7 +2,8 @@ import { NativeFunctionInfo } from "./NativeFunctionInfo.js"
 import { AbstractPlayer } from "./AbstractPlayer.js";
 
 export class PatchManager {
-    static STSModuleBaseAddress = Module.findBaseAddress("libSpire_ANDROID.so") || new NativePointer(0);
+    static nullptr = new NativePointer(0);
+    static STSModuleBaseAddress = Module.findBaseAddress("libSpire_ANDROID.so") || PatchManager.nullptr;
     static STSLogger = new File("/sdcard/Android/data/com.humble.SlayTheSpire/files/ModScripts/ModLog.txt", "w+");
     static #NativeFuncCache = new Map<string, NativeFunction<any, any>>();
     static #GlobalVarCache = new Map<number, NativePointer>();
@@ -46,9 +47,19 @@ export class PatchManager {
         //bool System::List::add(System::List * thisPtr, AbstractPotion * potion)
         ArrayList_AbstractPotionAdd: new NativeFunctionInfo(0x0175224D, 'bool', ['pointer', 'pointer']),
     };
-    static CommonActions = {
+    static Actions = {
         //AbstractGameAction* HealAction(AbstractGameAction* this, STS::AbstractCreature* target, STS::AbstractCreature* source, int amount)
         HealActionCtor: new NativeFunctionInfo(0x1682A11, 'pointer', ['pointer', 'pointer', 'pointer', 'int32']),
+        /**
+         * ```c
+         * AbstractGameAction* Actions::ApplyPowerAction::Ctor(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+         *      STS::AbstractCreature* source, STS::AbstractPower* powerToApply, int32_t stackAmount, bool isFast, STS::AttackEffect effect)
+         * 
+         * ```
+         * 
+         * default args call: `ApplyPowerAction::Ctor(this, target, source, powerPtr, powerPtr->amount, false, AttackEffect.NONE);`
+         */
+        ApplyPowerActionCtor: new NativeFunctionInfo(0x1672CFD, 'pointer', ['pointer', 'pointer', 'pointer', 'pointer', 'int32', 'bool', 'uint32']),
     };
     static CardGroup = {
         //STS::AbstractCard* getRandomCard(STS::CardGroup * thisPtr, int useRng)
@@ -106,10 +117,45 @@ export class PatchManager {
         //System::List* AbstractDungeon::getRewardCards(STS::AbstractDungeon * thisPtr)
         getRewardCards: new NativeFunctionInfo(0x17BE7F1, 'pointer', ['pointer'])
     };
-    static ConfusionPower = {
-        //void ConfusionPower::onCardDraw(STS::AbstractPower * thisPtr, STS::AbstractCard * card)
-        onCardDraw: new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
-    };
+    static Powers = {
+        ConfusionPower : {
+            //void ConfusionPower::onCardDraw(STS::AbstractPower * thisPtr, STS::AbstractCard * card)
+            onCardDraw: new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
+        },
+        DemonFormPower : {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::DemonFormPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x195EBB1, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        IntangiblePlayerPower : {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::IntangiblePlayerPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x19693B9, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        EchoPower : {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::EchoPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1961C21, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        DevaPower : {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::DevaPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197CC09, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        
+    }
     static Relics = {
         BurningBlood: {
             //void Relics::BurningBlood::onVictory(STS::AbstractRelic * thisPtr)
@@ -255,7 +301,7 @@ export class PatchManager {
         if (!PatchManager.#GlobalVarCache.has(offset)) {
             PatchManager.#GlobalVarCache.set(offset, PatchManager.STSModuleBaseAddress.add(offset));
         }
-        return PatchManager.#GlobalVarCache.get(offset) || new NativePointer(0);
+        return PatchManager.#GlobalVarCache.get(offset) || PatchManager.nullptr;
     }
 
     static GetNativeFunction(origFuncInfo: NativeFunctionInfo): NativeFunction<any, any> {
