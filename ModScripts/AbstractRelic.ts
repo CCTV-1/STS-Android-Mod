@@ -166,16 +166,16 @@ export class AbstractRelic extends NativeClassWrapper {
     }
 
     get counter() {
-        return this.readOffsetS32(0x24);
+        return this.readOffsetS32(0x28);
     }
     set counter(value) {
-        this.writeOffsetS32(0x24, value);
+        this.writeOffsetS32(0x28, value);
     }
 
     get tier() {
-        return this.readOffsetU32(0x24);
+        return this.readOffsetU32(0x2C);
     }
     set tier(value) {
-        this.writeOffsetU32(0x24, value);
+        this.writeOffsetU32(0x2C, value);
     }
 }
