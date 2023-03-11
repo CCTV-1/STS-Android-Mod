@@ -589,7 +589,17 @@ namespace STS
         dummyFunc_t draw1;
         bool Initdraw1;
         uint8_t gap3A5[3];
-        uint8_t unk4[288];
+        uint8_t unk4[104];
+        dummyFunc_t hasRelic;
+        bool InithasRelic;
+        uint8_t gap415[3];
+        dummyFunc_t hasBlight;
+        bool InithasBlight;
+        uint8_t gap41D[3];
+        dummyFunc_t hasPotion;
+        bool InithasPotion;
+        uint8_t gap425[3];
+        uint8_t unk5[160];
         dummyFunc_t increaseMaxOrbSlots;
         bool InitincreaseMaxOrbSlots;
         dummyFunc_t decreaseMaxOrbSlots;

@@ -3,6 +3,7 @@ import { AbstractCreature } from "./AbstractCreature.js";
 import { ArrayList } from "./ArrayList.js";
 import { CardGroup } from "./CardGroup.js";
 import { PlayerClass } from "./enums.js";
+import { JString } from "./JString.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 
 export class AbstractPlayer extends AbstractCreature {
@@ -23,7 +24,7 @@ export class AbstractPlayer extends AbstractCreature {
          * void AbstractPlayer::gainEnergy(STS::AbstractPlayer * this, int32_t energyAmount);
          * ```
          */
-        gainEnergy: new NativeFunctionInfo(0x370, 'void', ['pointer', 'int32']), 
+        gainEnergy: new NativeFunctionInfo(0x370, 'void', ['pointer', 'int32']),
         /**
          * ```c
          * void AbstractPlayer::loseEnergy(STS::AbstractPlayer * this, int32_t energyAmount);
@@ -44,6 +45,18 @@ export class AbstractPlayer extends AbstractCreature {
         draw1: new NativeFunctionInfo(0x3A0, 'void', ['pointer']),
         /**
          * ```c
+         * bool AbstractPlayer::hasRelic(STS::AbstractPlayer * this, JString * relicId);
+         * ```
+         */
+        hasRelic: new NativeFunctionInfo(0x410, 'bool', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * bool AbstractPlayer::hasPotion(STS::AbstractPlayer * this, JString * potionId);
+         * ```
+         */
+        hasPotion: new NativeFunctionInfo(0x420, 'bool', ['pointer', 'pointer']),
+        /**
+         * ```c
          * void AbstractPlayer::increaseMaxOrbSlots(STS::AbstractPlayer * this, int32_t amount, bool playSfx);
          * ```
          */
@@ -61,7 +74,19 @@ export class AbstractPlayer extends AbstractCreature {
         draw1Func(this.rawPtr);
     }
 
-    get chosenClass() : PlayerClass {
+    hasRelic(relicId: string): boolean {
+        let hasRelicFunc = this.getVirtualFunction(AbstractPlayer.#vfunctionMap.hasRelic);
+        let nativeStr = JString.CreateJString(relicId);
+        return hasRelicFunc(this.rawPtr, nativeStr.rawPtr);
+    }
+
+    hasPotion(potionId: string): boolean {
+        let hasPotionFunc = this.getVirtualFunction(AbstractPlayer.#vfunctionMap.hasPotion);
+        let nativeStr = JString.CreateJString(potionId);
+        return hasPotionFunc(this.rawPtr, nativeStr);
+    }
+
+    get chosenClass(): PlayerClass {
         return this.readOffsetS32(0x104);
     }
 
@@ -137,14 +162,14 @@ export class AbstractPlayer extends AbstractCreature {
     set maxOrbs(value) {
         this.writeOffsetS32(0x158, value);
     }
-    
+
     get cardsPlayedThisTurn() {
         return this.readOffsetS32(0x160);
     }
     set cardsPlayedThisTurn(value) {
         this.writeOffsetS32(0x160, value);
     }
-    
+
     get hoveredCard() {
         return new AbstractCard(this.readOffsetPointer(0x170));
     }
@@ -156,5 +181,4 @@ export class AbstractPlayer extends AbstractCreature {
     get cardInUse() {
         return new AbstractCard(this.readOffsetPointer(0x178));
     }
-    
 }
