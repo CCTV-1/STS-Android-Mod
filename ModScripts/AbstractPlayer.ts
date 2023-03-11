@@ -2,6 +2,7 @@ import { AbstractCard } from "./AbstractCard.js";
 import { AbstractCreature } from "./AbstractCreature.js";
 import { ArrayList } from "./ArrayList.js";
 import { CardGroup } from "./CardGroup.js";
+import { PlayerClass } from "./enums.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 
 export class AbstractPlayer extends AbstractCreature {
@@ -60,7 +61,7 @@ export class AbstractPlayer extends AbstractCreature {
         draw1Func(this.rawPtr);
     }
 
-    get chosenClass() {
+    get chosenClass() : PlayerClass {
         return this.readOffsetS32(0x104);
     }
 

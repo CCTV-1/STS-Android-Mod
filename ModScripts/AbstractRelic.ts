@@ -1,3 +1,4 @@
+import { RelicTier } from "./enums.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 import { PatchManager } from "./PatchManager.js";
@@ -172,7 +173,7 @@ export class AbstractRelic extends NativeClassWrapper {
         this.writeOffsetS32(0x28, value);
     }
 
-    get tier() {
+    get tier() : RelicTier {
         return this.readOffsetU32(0x2C);
     }
     set tier(value) {

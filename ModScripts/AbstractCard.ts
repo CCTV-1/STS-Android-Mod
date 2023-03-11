@@ -1,3 +1,4 @@
+import { CardTarget, CardType, DamageType } from "./enums.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 
@@ -62,7 +63,7 @@ export class AbstractCard extends NativeClassWrapper {
         this.getVirtualFunction(AbstractCard.#vfunctionMap.addToTop)(this.rawPtr, actionPtr);
     }
 
-    get type() {
+    get type(): CardType {
         return this.readOffsetU32(0x8);
     }
     set type(value) {
@@ -391,21 +392,21 @@ export class AbstractCard extends NativeClassWrapper {
         this.writeOffsetBool(0xa6, value);
     }
 
-    get damageType() {
+    get damageType(): DamageType {
         return this.readOffsetU32(0xa8);
     }
     set damageType(value) {
         this.writeOffsetU32(0xa8, value);
     }
 
-    get damageTypeForTurn() {
+    get damageTypeForTurn(): DamageType {
         return this.readOffsetU32(0xac);
     }
     set damageTypeForTurn(value) {
         this.writeOffsetU32(0xac, value);
     }
 
-    get target() {
+    get target(): CardTarget {
         return this.readOffsetU32(0xb0);
     }
     set target(value) {
