@@ -177,14 +177,67 @@ namespace STS
         SHOP = 0x7,
     };
 
-    enum class PlayerClass:uint32_t
+    enum class PotionEffect:uint32_t
     {
-        IRONCLAD = 0x0,
-        THE_SILENT = 0x1,
-        DEFECT = 0x2,
-        WATCHER = 0x3,
+        NONE = 0x0, 
+        RAINBOW, 
+        OSCILLATE
     };
 
+    enum class PotionColor:uint32_t
+    {
+        POISON = 0x0, 
+        BLUE, 
+        FIRE, 
+        GREEN, 
+        EXPLOSIVE, 
+        WEAK, 
+        FEAR, 
+        STRENGTH, 
+        WHITE, 
+        FAIRY, 
+        ANCIENT, 
+        ELIXIR, 
+        NONE, 
+        ENERGY, 
+        SWIFT, 
+        FRUIT, 
+        SNECKO, 
+        SMOKE, 
+        STEROID, 
+        SKILL, 
+        ATTACK, 
+        POWER
+    };
+
+    enum class PotionRarity:uint32_t
+    {
+        PLACEHOLDER = 0x0, 
+        COMMON, 
+        UNCOMMON, 
+        RARE
+    };
+
+    enum class PotionSize:uint32_t
+    {
+        T = 0x0, 
+        S, 
+        M, 
+        SPHERE, 
+        H, 
+        BOTTLE, 
+        HEART, 
+        SNECKO, 
+        FAIRY, 
+        GHOST, 
+        JAR, 
+        BOLT, 
+        CARD, 
+        MOON, 
+        SPIKY, 
+        EYE, 
+        ANVIL
+    };
 
     struct JString
     {
@@ -241,6 +294,46 @@ namespace STS
         void * handPositioningMap;
         ArrayList<AbstractCard *> * queued;
         ArrayList<AbstractCard *> * inHand;
+    } __attribute__((aligned(4)));
+
+    struct AbstractPotion
+    {
+        void *basePtr;
+        void *vfuncMap;
+        JString* ID;
+        JString* name;
+        JString* description;
+        int32_t slot;
+        ArrayList<void*>* tips;
+        void * containerImg;
+        void * liquidImg;
+        void * hybridImg;
+        void * spotsImg;
+        void * outlineImg;
+        float posX;
+        float posY;
+        Color* labOutlineColor;
+        ArrayList<void *>* effect;
+        float scale;
+        bool isObtained;
+        uint8_t pad45[3];
+        float sparkleTimer;
+        int32_t flashCount;
+        float flashTimer;
+        PotionEffect p_effect;
+        PotionColor color;
+        Color* liquidColor;
+        Color* hybridColor;
+        Color* spotsColor;
+        PotionRarity rarity;
+        PotionSize size;
+        int32_t potency;
+        void * hb;
+        float angle;
+        bool canUse;
+        bool discarded;
+        bool isThrown;
+        bool targetRequired;
     } __attribute__((aligned(4)));
 
     struct AbstractCreatureVMap
