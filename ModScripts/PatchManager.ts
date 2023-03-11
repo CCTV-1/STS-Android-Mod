@@ -11,6 +11,32 @@ export class PatchManager {
         ArrayList_StringCtor: new NativeFunctionInfo(0x1386D19, 'pointer', ['pointer']),
         //bool System::List::add(System::List * thisPtr, jobject * objPtr)
         ArrayList_StringAdd: new NativeFunctionInfo(0x1386F7D, 'bool', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * //use UTF-16 String constructor
+         * JString* JString::Ctor(JString* thisPtr, char16_t* str)
+         * ```
+         */
+        JString_Ctor: new NativeFunctionInfo(0x138C77D, 'pointer', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * JString* JString::Ctor(JString* thisPtr, char16_t* str, int32_t start, int32_t len)
+         * ```
+         */
+        JString_Ctor2: new NativeFunctionInfo(0x138C899, 'pointer', ['pointer', 'pointer', 'int32', 'int32']),
+        /**
+         * ```c
+         * //use C String constructor
+         * JString* JString::Ctor(JString* thisPtr, unsigned char * str)
+         * ```
+         */
+        JString_Ctor3: new NativeFunctionInfo(0x138C935, 'pointer', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * JString* JString::Ctor(JString* thisPtr, unsigned char* str, int32_t start, int32_t len)
+         * ```
+         */
+        JString_Ctor4: new NativeFunctionInfo(0x138C9D5, 'pointer', ['pointer', 'pointer', 'int32', 'int32']),
         //bool System::List::add(System::List * thisPtr, STS::AbstractGameEffect * effectPtr)
         ArrayList_AbstractGameEffectAdd: new NativeFunctionInfo(0x16706F9, 'bool', ['pointer', 'pointer']),
         //System::List * System::List<AbstractCard>::Ctor(System::List * thisPtr)
