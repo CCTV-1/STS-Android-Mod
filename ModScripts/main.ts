@@ -86,6 +86,20 @@ function PatchRedCards() {
         newCard.magicNumber += 2;
         return ret;
     });
+    let origDemonFormUse = PatchManager.Cards.Red.DemonForm.OverridUse((thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => {
+        origDemonFormUse(thisPtr, caster, target);
+        let freeAttackPower = PatchManager.Powers.FreeAttack.Ctor(caster, 1);
+        let ApplyPowerActionObj = PatchManager.Actions.ApplyPower.Ctor2(caster, caster, freeAttackPower, 1);
+        let wrapCard = new AbstractCard(thisPtr);
+        wrapCard.addToBot(ApplyPowerActionObj);
+    });
+    let origThunderclapUse = PatchManager.Cards.Red.Thunderclap.OverridUse((thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => {
+        origThunderclapUse(thisPtr, caster, target);
+        let wrapCard = new AbstractCard(thisPtr);
+        if (wrapCard.upgraded) {
+            origThunderclapUse(thisPtr, caster, target);
+        }
+    });
 }
 
 function PatchPurpleCards() {
@@ -207,11 +221,11 @@ function Patchcharacters() {
 
 function PatchPowers() {
     //let origOnCardDrawFunc = 
-    PatchManager.Powers.ConfusionPower.OverrideonCardDraw((thisPtr: NativePointer, cardPtr: NativePointer) => {
+    PatchManager.Powers.Confusion.OverrideonCardDraw((thisPtr: NativePointer, cardPtr: NativePointer) => {
         //    origOnCardDrawFunc(thisPtr, cardPtr)
         let baseCard = new AbstractCard(cardPtr);
         if (baseCard.cost >= 0) {
-            let newCost = FakeRandom(0, baseCard.cost);
+            let newCost = FakeRandom(0, Math.min(3, baseCard.cost + 1));
             if (baseCard.cost != newCost) {
                 baseCard.cost = newCost;
                 baseCard.costForTurn = baseCard.cost;
@@ -254,19 +268,19 @@ function PatchRelics() {
                 let formPowerObj = null;
                 switch (currentPlayer.chosenClass) {
                     case PlayerClass.IRONCLAD: {
-                        formPowerObj = PatchManager.Powers.DemonFormPower.Ctor(currentPlayer.rawPtr, 2);
+                        formPowerObj = PatchManager.Powers.DemonForm.Ctor(currentPlayer.rawPtr, 2);
                         break;
                     }
                     case PlayerClass.THE_SILENT: {
-                        formPowerObj = PatchManager.Powers.IntangiblePlayerPower.Ctor(currentPlayer.rawPtr, 2);
+                        formPowerObj = PatchManager.Powers.IntangiblePlayer.Ctor(currentPlayer.rawPtr, 2);
                         break;
                     }
                     case PlayerClass.DEFECT: {
-                        formPowerObj = PatchManager.Powers.EchoPower.Ctor(currentPlayer.rawPtr, 1);
+                        formPowerObj = PatchManager.Powers.Echo.Ctor(currentPlayer.rawPtr, 1);
                         break;
                     }
                     case PlayerClass.WATCHER: {
-                        formPowerObj = PatchManager.Powers.DevaPower.Ctor(currentPlayer.rawPtr, 1);
+                        formPowerObj = PatchManager.Powers.Deva.Ctor(currentPlayer.rawPtr, 1);
                         break;
                     }
                     default: {

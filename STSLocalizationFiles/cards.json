@@ -369,7 +369,7 @@
   },
   "Demon Form": {
     "NAME": "恶魔形态",
-    "DESCRIPTION": "在每回合开始时获得 NL !M! 点 力量 。"
+    "DESCRIPTION": "在每回合开始时获得 NL !M! 点 力量 。 NL 你打出的下一张攻击牌耗能变为0。"
   },
   "Die Die Die": {
     "NAME": "死吧死吧死吧",
@@ -1140,7 +1140,7 @@
   },
   "Thunderclap": {
     "NAME": "闪电霹雳",
-    "DESCRIPTION": "对所有敌人造成 !D! 点伤害，给予1层 易伤 。"
+    "DESCRIPTION": "对所有敌人造成 !D! 点伤害，给予1层 易伤 。 NL 若升级则效果生效两次。"
   },
   "Tools of the Trade": {
     "NAME": "必备工具",

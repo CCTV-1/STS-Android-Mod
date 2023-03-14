@@ -172,6 +172,22 @@ export class PatchManager {
                      */
                     Ctor: new NativeFunctionInfo(0x1747E89, 'pointer', ['pointer']),
                 },
+                DemonForm: {
+                    /**
+                     * ```c
+                     * void Cards::Red::DemonForm::Use(STS::AbstractCard * this, STS::AbstractPlayer* castPlayer, STS::AbstractMonster* targetMonster)
+                     * ```
+                     */
+                    Use: new NativeFunctionInfo(0x173EC15, 'void', ['pointer', 'pointer', 'pointer']),
+                },
+                Thunderclap: {
+                    /**
+                     * ```c
+                     * void Cards::Red::Thunderclap::Use(STS::AbstractCard * this, STS::AbstractPlayer* castPlayer, STS::AbstractMonster* targetMonster)
+                     * ```
+                     */
+                    Use: new NativeFunctionInfo(0x17487FD, 'void', ['pointer', 'pointer', 'pointer']),
+                },
             },
             Purple: {
                 Alpha: {
@@ -277,6 +293,14 @@ export class PatchManager {
                  */
                 Ctor: new NativeFunctionInfo(0x197CC09, 'pointer', ['pointer', 'pointer', 'int32'])
             },
+            FreeAttackPower: {
+                /**
+                 * ```c
+                 * STS::AbstractPower* Powers::FreeAttackPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+                 * ```
+                 */
+                Ctor: new NativeFunctionInfo(0x197E9B1, 'pointer', ['pointer', 'pointer', 'int32'])
+            }
         },
         Relics: {
             BurningBlood: {
@@ -486,6 +510,24 @@ export class PatchManager {
                     return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Cards.Red.StrikeRed.Ctor, newCtor);
                 },
             },
+            DemonForm: {
+                Use(thisPtr: NativePointer, caster: NativePointer, target: NativePointer): void {
+                    PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Cards.Red.DemonForm.Use)(thisPtr, caster, target);
+                },
+                /** return origin Use */
+                OverridUse(newUse: (thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => void): (thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => void {
+                    return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Cards.Red.DemonForm.Use, newUse);
+                }
+            },
+            Thunderclap: {
+                Use(thisPtr: NativePointer, caster: NativePointer, target: NativePointer): void {
+                    PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Cards.Red.Thunderclap.Use)(thisPtr, caster, target);
+                },
+                /** return origin Use */
+                OverridUse(newUse: (thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => void): (thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => void {
+                    return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Cards.Red.Thunderclap.Use, newUse);
+                }
+            }
         },
         Purple: {
             Alpha: {
@@ -549,29 +591,34 @@ export class PatchManager {
         },
     };
     static Powers = {
-        ConfusionPower: {
+        Confusion: {
             OverrideonCardDraw(newCallback: (thisPtr: NativePointer, cardPtr: NativePointer) => void): (thisPtr: NativePointer, cardPtr: NativePointer) => void {
                 return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Powers.ConfusionPower.onCardDraw, newCallback);
             }
         },
-        DemonFormPower: {
+        DemonForm: {
             Ctor(owner: NativePointer, strengthAmount: number): NativePointer {
                 return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Powers.DemonFormPower.Ctor)(PatchManager.nullptr, owner, strengthAmount);
             }
         },
-        IntangiblePlayerPower: {
+        IntangiblePlayer: {
             Ctor(owner: NativePointer, strengthAmount: number): NativePointer {
                 return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Powers.IntangiblePlayerPower.Ctor)(PatchManager.nullptr, owner, strengthAmount);
             }
         },
-        EchoPower: {
+        Echo: {
             Ctor(owner: NativePointer, strengthAmount: number): NativePointer {
                 return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Powers.EchoPower.Ctor)(PatchManager.nullptr, owner, strengthAmount);
             }
         },
-        DevaPower: {
+        Deva: {
             Ctor(owner: NativePointer, strengthAmount: number): NativePointer {
                 return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Powers.DevaPower.Ctor)(PatchManager.nullptr, owner, strengthAmount);
+            }
+        },
+        FreeAttack: {
+            Ctor(owner: NativePointer, strengthAmount: number): NativePointer {
+                return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Powers.FreeAttackPower.Ctor)(PatchManager.nullptr, owner, strengthAmount);
             }
         },
     }
