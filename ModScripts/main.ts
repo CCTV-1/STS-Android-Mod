@@ -3,6 +3,7 @@ import { AbstractCard } from "./AbstractCard.js";
 import { AbstractPlayer } from "./AbstractPlayer.js";
 import { AbstractRelic } from "./AbstractRelic.js";
 import { AttackEffect, PlayerClass } from "./enums.js";
+import { AbstractGameAction } from "./AbstractGameAction.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -291,6 +292,7 @@ function PatchRelics() {
 
                 let ApplyPowerActionObj = PatchManager.Actions.ApplyPower.Ctor2(currentPlayer.rawPtr, currentPlayer.rawPtr, formPowerObj, 1);
                 wrapGinger.addToBot(ApplyPowerActionObj);
+                wrapGinger.flash();
             }
         });
         return gingerObj;
@@ -308,8 +310,36 @@ function PatchRelics() {
                 let newPotionSlot = PatchManager.Potions.PotionSlot.Ctor(currentPlayer.potionSlots - index);
                 PatchManager.STSLib.ArrayList.AbstractPotion.Add(playerPotions.rawPtr, newPotionSlot);
             }
+            let wrapSacredBark = new AbstractRelic(sacredBarkObj);
+            wrapSacredBark.flash();
         });
         return sacredBarkObj;
+    });
+
+    //GoldenEye ability hard-code in ScryAction ctor
+    let origScryActionCtor = PatchManager.Actions.Scry.OverrideCtor((thisPtr: NativePointer, numCards: number) => {
+        let ret = origScryActionCtor(thisPtr, numCards);
+        let wrapAction = new AbstractGameAction(thisPtr);
+        if (wrapAction.amount >= 5) {
+            let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+            if (currentPlayer.hasRelic("GoldenEye")) {
+                currentPlayer.gainEnergy(1);
+            }
+        }
+        return ret;
+    });
+
+    let origCoffeeDripperCtor = PatchManager.Relics.CoffeeDripper.OverrideCtor((thisPtr: NativePointer) => {
+        let ret = origCoffeeDripperCtor(thisPtr);
+        let wrapCoffeeDripper = new AbstractRelic(thisPtr);
+        wrapCoffeeDripper.OverrideonEnterRestRoom((thisPtr: NativePointer) => {
+            let wrapCoffeeDripper = new AbstractRelic(thisPtr);
+            wrapCoffeeDripper.counter++;
+            let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+            currentPlayer.heal(wrapCoffeeDripper.counter, true);
+            wrapCoffeeDripper.flash();
+        });
+        return ret;
     });
 }
 

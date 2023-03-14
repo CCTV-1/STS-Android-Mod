@@ -105,6 +105,14 @@ export class PatchManager {
                  */
                 Ctor: new NativeFunctionInfo(0x1672CFD, 'pointer', ['pointer', 'pointer', 'pointer', 'pointer', 'int32', 'bool', 'uint32']),
             },
+            Scry: {
+                /**
+                 * ```c
+                 * AbstractGameAction* Actions::ScryAction(TS::AbstractGameAction* thisPtr, int32_t numCards)
+                 * ```
+                 */
+                Ctor: new NativeFunctionInfo(0x16B01F9, 'pointer', ['pointer', 'int32']),
+            }
         },
         Cards: {
             Red: {
@@ -335,6 +343,14 @@ export class PatchManager {
                  */
                 Ctor: new NativeFunctionInfo(0x19A67A5, 'pointer', ['pointer']),
             },
+            CoffeeDripper: {
+                /**
+                 * ```c
+                 * STS::AbstractRelic * Relics::CoffeeDripper::Ctor(STS::AbstractRelic *)
+                 * ```
+                 */
+                Ctor: new NativeFunctionInfo(0x1992629, 'pointer', ['pointer']),
+            },
         },
         Potions: {
             PotionSlot: {
@@ -433,6 +449,14 @@ export class PatchManager {
             },
             Ctor2(target: NativePointer, source: NativePointer, power: NativePointer, amount: number): NativePointer {
                 return PatchManager.Actions.ApplyPower.Ctor(target, source, power, amount, false, AttackEffect.NONE);
+            },
+        },
+        Scry: {
+            Ctor(numcards: number) {
+                return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Actions.Scry.Ctor)(PatchManager.nullptr, numcards);
+            },
+            OverrideCtor(newCtor: (thisPtr: NativePointer, numCards: number) => NativePointer): (thisPtr: NativePointer, numCards: number) => NativePointer {
+                return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Actions.Scry.Ctor, newCtor);
             },
         },
     };
@@ -648,7 +672,15 @@ export class PatchManager {
             OverrideCtor(newCtor: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
                 return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Relics.SacredBark.Ctor, newCtor);
             },
-        }
+        },
+        CoffeeDripper: {
+            Ctor(): NativePointer {
+                return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Relics.CoffeeDripper.Ctor)(PatchManager.nullptr);
+            },
+            OverrideCtor(newCtor: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
+                return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Relics.CoffeeDripper.Ctor, newCtor);
+            },
+        },
     }
     static Potions = {
         PotionSlot: {
