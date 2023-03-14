@@ -663,10 +663,9 @@ export class PatchManager {
                 return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.VFX.ShowCardBrieflyEffect.Ctor)(PatchManager.nullptr, cardPtr);
             }
         },
-        //STS::AbstractGameEffect * VFX::ShowCardBrieflyEffect::Ctor(STS::AbstractGameEffect * thisPtr, float x, float y)
         UpgradeShineEffect: {
             Ctor(x: number, y: number): NativePointer {
-                return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.VFX.ShowCardBrieflyEffect.Ctor)(PatchManager.nullptr, x, y);
+                return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.VFX.UpgradeShineEffect.Ctor)(PatchManager.nullptr, x, y);
             }
         }
     }
