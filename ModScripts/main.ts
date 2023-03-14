@@ -318,20 +318,20 @@ function PatchRelics() {
 
     //GoldenEye ability hard-code in ScryAction ctor
     let origScryActionCtor = PatchManager.Actions.Scry.OverrideCtor((thisPtr: NativePointer, numCards: number) => {
-        let ret = origScryActionCtor(thisPtr, numCards);
-        let wrapAction = new AbstractGameAction(thisPtr);
+        let scryActionObj = origScryActionCtor(thisPtr, numCards);
+        let wrapAction = new AbstractGameAction(scryActionObj);
         if (wrapAction.amount >= 5) {
             let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
             if (currentPlayer.hasRelic("GoldenEye")) {
                 currentPlayer.gainEnergy(1);
             }
         }
-        return ret;
+        return scryActionObj;
     });
 
     let origCoffeeDripperCtor = PatchManager.Relics.CoffeeDripper.OverrideCtor((thisPtr: NativePointer) => {
-        let ret = origCoffeeDripperCtor(thisPtr);
-        let wrapCoffeeDripper = new AbstractRelic(thisPtr);
+        let coffeeDripperObj = origCoffeeDripperCtor(thisPtr);
+        let wrapCoffeeDripper = new AbstractRelic(coffeeDripperObj);
         wrapCoffeeDripper.OverrideonEnterRestRoom((thisPtr: NativePointer) => {
             let wrapCoffeeDripper = new AbstractRelic(thisPtr);
             wrapCoffeeDripper.counter++;
@@ -339,7 +339,7 @@ function PatchRelics() {
             currentPlayer.heal(wrapCoffeeDripper.counter, true);
             wrapCoffeeDripper.flash();
         });
-        return ret;
+        return coffeeDripperObj;
     });
 }
 
