@@ -80,6 +80,8 @@ export class AbstractRelic extends NativeClassWrapper {
         onCardDraw: new NativeFunctionInfo(0x210, 'void', ['pointer', 'pointer']),
         //void AbstractRelic::onDrawOrDiscard(STS::AbstractRelic* this)
         onDrawOrDiscard: new NativeFunctionInfo(0x228, 'void', ['pointer']),
+        //void AbstractRelic::flash(STS::AbstractRelic* this)
+        flash: new NativeFunctionInfo(0x2B8, 'void', ['pointer']),
         //bool AbstractRelic::canPlay(STS::AbstractRelic* this, STS::AbstractCard* card)
         canPlay: new NativeFunctionInfo(0x2D0, 'bool', ['pointer', 'pointer']),
         //void AbstractRelic::onUsePotion(STS::AbstractRelic* this)
@@ -125,6 +127,10 @@ export class AbstractRelic extends NativeClassWrapper {
     OverrideonVictory(newVFunc: (thisPtr: NativePointer) => void) {
         let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_onVictory";
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onVictory, newVFunc);
+    }
+
+    flash(): void {
+        this.getVirtualFunction(AbstractRelic.#vfunctionMap.flash)(this.rawPtr);
     }
 
     addToBot(actionPtr: NativePointer): void {

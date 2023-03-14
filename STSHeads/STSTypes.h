@@ -1128,8 +1128,8 @@ namespace STS
         dummyFunc_t dword2B0;
         bool byte2B4;
         uint8_t gap2B5[3];
-        dummyFunc_t dword2B8;
-        bool byte2BC;
+        dummyFunc_t flash;
+        bool Initflash;
         uint8_t gap2BD[3];
         dummyFunc_t dword2C0;
         bool byte2C4;
