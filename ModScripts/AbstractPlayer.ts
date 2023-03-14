@@ -69,6 +69,11 @@ export class AbstractPlayer extends AbstractCreature {
         decreaseMaxOrbSlots: new NativeFunctionInfo(0x4D0, 'void', ['pointer', 'int32']),
     };
 
+    gainEnergy(energyAmount: number) {
+        let gainEnergyFunc = this.getVirtualFunction(AbstractPlayer.#vfunctionMap.gainEnergy);
+        gainEnergyFunc(this.rawPtr, energyAmount);
+    }
+
     draw1() {
         let draw1Func = this.getVirtualFunction(AbstractPlayer.#vfunctionMap.draw1);
         draw1Func(this.rawPtr);
