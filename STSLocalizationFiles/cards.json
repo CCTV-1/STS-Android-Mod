@@ -954,7 +954,7 @@
   },
   "Searing Blow": {
     "NAME": "灼热攻击",
-    "DESCRIPTION": "造成 !D! 点伤害。 NL 能被多次 升级 。每当你打出此牌，恢复等同于此牌等级的生命。"
+    "DESCRIPTION": "造成 !D! 点伤害。 NL 能被多次 升级 。 NL 每当你打出此牌，恢复等同于此牌等级的生命。"
   },
   "Second Wind": {
     "NAME": "重振精神",
