@@ -109,32 +109,32 @@ export class AbstractRelic extends NativeClassWrapper {
     static #vFuncNamePrefix = "AbstractRelic_";
 
     OverrideonPlayCard(newVFunc: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => void) {
-        let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_onPlayCard";
+        let funcName = (AbstractRelic.#vFuncNamePrefix + this.relicId + "_onPlayCard").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_PPP_Func(funcName), AbstractRelic.#vfunctionMap.onPlayCard, newVFunc);
     }
 
     OverrideonEquip(newVFunc: (thisPtr: NativePointer) => void) {
-        let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_onEquip";
+        let funcName = (AbstractRelic.#vFuncNamePrefix + this.relicId + "_onEquip").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onEquip, newVFunc);
     }
 
     OverrideatBattleStart(newVFunc: (thisPtr: NativePointer) => void) {
-        let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_atBattleStart";
+        let funcName = (AbstractRelic.#vFuncNamePrefix + this.relicId + "_atBattleStart").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.atBattleStart, newVFunc);
     }
 
     OverrideatTurnStart(newVFunc: (thisPtr: NativePointer) => void) {
-        let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_atTurnStart";
+        let funcName = (AbstractRelic.#vFuncNamePrefix + this.relicId + "_atTurnStart").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.atTurnStart, newVFunc);
     }
 
     OverrideonVictory(newVFunc: (thisPtr: NativePointer) => void) {
-        let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_onVictory";
+        let funcName = (AbstractRelic.#vFuncNamePrefix + this.relicId + "_onVictory").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onVictory, newVFunc);
     }
 
     OverrideonEnterRestRoom(newVFunc: (thisPtr: NativePointer) => void) {
-        let funcName = AbstractRelic.#vFuncNamePrefix + this.relicId + "_onEnterRestRoom";
+        let funcName = (AbstractRelic.#vFuncNamePrefix + this.relicId + "_onEnterRestRoom").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onEnterRestRoom, newVFunc);
     }
 

@@ -24,7 +24,7 @@ export class NativeClassWrapper {
     }
     /**
      * 
-     * @param funcName global unique string, e.g: Abstract_Gingeron__onPlayCard
+     * @param funcName global unique c variable name string, e.g: Abstract_Gingeron__onPlayCard
      * @param fakecode 
      * not to do anything c function code,the name small is funcName arguemt e.g:
      * ```c
