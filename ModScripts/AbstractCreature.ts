@@ -88,6 +88,11 @@ export class AbstractCreature extends NativeClassWrapper {
         gainGold: new NativeFunctionInfo(0x188, 'void', ['pointer', 'int32']),
     };
 
+    addBlock(amount: number) {
+        let addBlockFunc = this.getVirtualFunction(AbstractCreature.#vfunctionMap.addBlock);
+        addBlockFunc(this.rawPtr, amount);
+    }
+
     heal(amount: number, showEffect: boolean) {
         let healFunc = this.getVirtualFunction(AbstractCreature.#vfunctionMap.heal);
         healFunc(this.rawPtr, amount, Number(showEffect));

@@ -108,11 +108,81 @@ export class PatchManager {
             Scry: {
                 /**
                  * ```c
-                 * AbstractGameAction* Actions::ScryAction(TS::AbstractGameAction* thisPtr, int32_t numCards)
+                 * AbstractGameAction* Actions::ScryAction(STS::AbstractGameAction* thisPtr, int32_t numCards)
                  * ```
                  */
                 Ctor: new NativeFunctionInfo(0x16B01F9, 'pointer', ['pointer', 'int32']),
-            }
+            },
+            MakeTempCardInHand: {
+                /**
+                 * ```c
+                 * AbstractGameAction* Actions::MakeTempCardInHandAction(STS::AbstractGameAction* thisPtr, STS::AbstractCard* cardPtr, bool isOtherCardInCenter)
+                 * ```
+                 */
+                Ctor: new NativeFunctionInfo(0x1684519, 'pointer', ['pointer', 'pointer', 'bool']),
+                /**
+                 * ```c
+                 * AbstractGameAction* Actions::MakeTempCardInHandAction(STS::AbstractGameAction* thisPtr, STS::AbstractCard* cardPtr, int32_t cardAmount)
+                 * ```
+                 */
+                Ctor1: new NativeFunctionInfo(0x16847B5, 'pointer', ['pointer', 'pointer', 'int32']),
+                /**
+                 * ```c
+                 * AbstractGameAction* Actions::MakeTempCardInHandAction(STS::AbstractGameAction* thisPtr, STS::AbstractCard* cardPtr, int32_t cardAmount, bool isOtherCardInCenter)
+                 * ```
+                 */
+                Ctor2: new NativeFunctionInfo(0x16849A1, 'pointer', ['pointer', 'pointer', 'int32', 'bool']),
+                /**
+                 * ```c
+                 * AbstractGameAction* Actions::MakeTempCardInHandAction(STS::AbstractGameAction* thisPtr, STS::AbstractCard* cardPtr, bool isOtherCardInCenter, bool sameUUID)
+                 * ```
+                 */
+                Ctor3: new NativeFunctionInfo(0x1684A59, 'pointer', ['pointer', 'pointer', 'bool', 'bool']),
+            },
+            RelicAboveCreature: {
+                /**
+                 * ```c
+                 * AbstractGameAction* Actions::RelicAboveCreatureAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* source, STS::AbstractRelic* relic)
+                 * ```
+                 */
+                Ctor: new NativeFunctionInfo(0x1688E25, 'pointer', ['pointer', 'pointer', 'pointer']),
+            },
+            Discard: {
+                /**
+                 * ```c
+                 * AbstractGameAction* Actions::DiscardAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target, STS::AbstractCreature* source, int32_t cardAmount, bool isRandom, bool drawinEndTurn)
+                 * ```
+                 * 
+                 * Ctor just call ```Ctor2(thisPtr, target, source, amount, isRandom, false);```
+                 */
+                Ctor2: new NativeFunctionInfo(0x167CBD5, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'bool', 'bool']),
+            },
+            DrawCard: {
+                /**
+                 * ```c
+                 * AbstractGameAction* Actions::DrawCardAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* source, int32_t cardAmount, bool endTurnDraw)
+                 * ```
+                 * 
+                 * Ctor2 just call ```Ctor(thisPtr, source, cardAmount, false);```
+                 * 
+                 * Ctor4 just call ```Ctor(thisPtr, nullptr, cardAmount, false);```
+                 */
+                Ctor: new NativeFunctionInfo(0x167EB71, 'pointer', ['pointer', 'pointer', 'int32', 'bool']),
+                /**
+                 * ```c
+                 * AbstractGameAction* Actions::DrawCardAction(STS::AbstractGameAction* thisPtr, int32_t cardAmount, bool clearDrawHistory)
+                 * ```
+                 */
+                Ctor3: new NativeFunctionInfo(0x167EDF9, 'pointer', ['pointer', 'int32', 'bool']),
+                /**
+                 * ```c
+                 * AbstractGameAction* Actions::DrawCardAction(STS::AbstractGameAction* thisPtr, int32_t cardAmount, STS::AbstractGameAction* action, bool clearDrawHistory)
+                 * ```
+                 * 
+                 * Ctor5 just call ```Ctor6(thisPtr, amount, action, true);```
+                 */
+                Ctor6: new NativeFunctionInfo(0x167F005, 'pointer', ['pointer', 'int32', 'pointer', 'bool']),
+            },
         },
         Cards: {
             Red: {
@@ -217,6 +287,16 @@ export class PatchManager {
                     Ctor: new NativeFunctionInfo(0x1750CE9, 'pointer', ['pointer']),
                 }
             },
+            status: {
+                Burn: {
+                    /**
+                     * ```c
+                     * STS::AbstractCard * Cards::status::Omega::Burn(STS::AbstractCard * this)
+                     * ```
+                     */
+                    Ctor: new NativeFunctionInfo(0x176BDCD, 'pointer', ['pointer']),
+                }
+            }
         },
         Characters: {
             AbstractPlayer: {
@@ -225,7 +305,13 @@ export class PatchManager {
                  * void AbstractPlayer::loseGold(STS::AbstractPlayer * player, int gold)
                  * ```
                  */
-                loseGold: new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int32'])
+                loseGold: new NativeFunctionInfo(0x1756c69, 'void', ['pointer', 'int32']),
+                /**
+                 * ```c
+                 * void AbstractPlayer::gainGold(STS::AbstractPlayer * player, int gold)
+                 * ```
+                 */
+                gainGold: new NativeFunctionInfo(0x1756FE5, 'void', ['pointer', 'int32']),
             },
             Ironclad: {
                 /**
@@ -233,7 +319,7 @@ export class PatchManager {
                  * ArrayList* Ironclad::getStartingDeck(STS::Ironclad* thisPtr)
                  * ```
                  */
-                getStartingDeck: new NativeFunctionInfo(0x1777921, 'pointer', ['pointer'])
+                getStartingDeck: new NativeFunctionInfo(0x1777921, 'pointer', ['pointer']),
             },
             TheSilent: {
                 /**
@@ -241,7 +327,7 @@ export class PatchManager {
                  * ArrayList* TheSilent::getStartingDeck(STS::TheSilent* thisPtr)
                  * ```
                  */
-                getStartingDeck: new NativeFunctionInfo(0x1778D71, 'pointer', ['pointer'])
+                getStartingDeck: new NativeFunctionInfo(0x1778D71, 'pointer', ['pointer']),
             },
             Defect: {
                 /**
@@ -249,7 +335,7 @@ export class PatchManager {
                  * ArrayList* Defect::getStartingDeck(STS::Defect* thisPtr)
                  * ```
                  */
-                getStartingDeck: new NativeFunctionInfo(0x1776289, 'pointer', ['pointer'])
+                getStartingDeck: new NativeFunctionInfo(0x1776289, 'pointer', ['pointer']),
             },
             Watcher: {
                 /**
@@ -257,7 +343,7 @@ export class PatchManager {
                  * ArrayList* Watcher::getStartingDeck(STS::Watcher* thisPtr)
                  * ```
                  */
-                getStartingDeck: new NativeFunctionInfo(0x177A7DD, 'pointer', ['pointer'])
+                getStartingDeck: new NativeFunctionInfo(0x177A7DD, 'pointer', ['pointer']),
             },
         },
         Powers: {
@@ -350,6 +436,22 @@ export class PatchManager {
                  * ```
                  */
                 Ctor: new NativeFunctionInfo(0x1992629, 'pointer', ['pointer']),
+            },
+            MarkofPain: {
+                /**
+                 * ```c
+                 * void Relics::MarkofPain::atBattleStart(STS::AbstractRelic *)
+                 * ```
+                 */
+                atBattleStart: new NativeFunctionInfo(0x199C255, 'void', ['pointer']),
+            },
+            RunicPyramid: {
+                /**
+                 * ```c
+                 * STS::AbstractRelic * Relics::RunicPyramid::Ctor(STS::AbstractRelic *)
+                 * ```
+                 */
+                Ctor: new NativeFunctionInfo(0x19A6681, 'pointer', ['pointer']),
             },
         },
         Potions: {
@@ -459,6 +561,32 @@ export class PatchManager {
                 return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Actions.Scry.Ctor, newCtor);
             },
         },
+        MakeTempCardInHand: {
+            Ctor(cardPtr: NativePointer, numCards: number, isOtherCardInCenter: boolean): NativePointer {
+                return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Actions.MakeTempCardInHand.Ctor2)(PatchManager.nullptr, cardPtr, numCards, Number(isOtherCardInCenter));
+            }
+        },
+        RelicAboveCreature: {
+            Ctor(creaturePtr: NativePointer, relicPtr: NativePointer): NativePointer {
+                return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Actions.RelicAboveCreature.Ctor)(PatchManager.nullptr, creaturePtr, relicPtr);
+            }
+        },
+        Discard: {
+            Ctor(target: NativePointer, source: NativePointer, amount: number) {
+                return PatchManager.Actions.Discard.Ctor2(target, source, amount, false, false);
+            },
+            Ctor2(target: NativePointer, source: NativePointer, amount: number, isRandom: boolean, endTurn: boolean) {
+                return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Actions.Discard.Ctor2)(PatchManager.nullptr, target, source, amount, Number(isRandom), Number(endTurn));
+            },
+        },
+        DrawCard: {
+            Ctor(source: NativePointer, cardAmount: number, endTurnDraw: boolean) {
+                return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Actions.DrawCard.Ctor)(PatchManager.nullptr, source, cardAmount, Number(endTurnDraw));
+            },
+            Ctor2(cardAmount: number) {
+                return PatchManager.Actions.DrawCard.Ctor(PatchManager.nullptr, cardAmount, false);
+            },
+        }
     };
     static Cards = {
         Red: {
@@ -571,6 +699,13 @@ export class PatchManager {
                 },
             }
         },
+        status: {
+            Burn: {
+                Ctor(): NativePointer {
+                    return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Cards.status.Burn.Ctor)(PatchManager.nullptr);
+                }
+            },
+        },
     };
     static Characters = {
         AbstractPlayer: {
@@ -579,7 +714,13 @@ export class PatchManager {
             },
             OverridloseGold(newFunc: (thisPtr: NativePointer, gold: number) => void): (thisPtr: NativePointer, gold: number) => void {
                 return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Characters.AbstractPlayer.loseGold, newFunc);
-            }
+            },
+            gainGold(thisPtr: NativePointer, gold: number): void {
+                PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Characters.AbstractPlayer.gainGold)(thisPtr, gold);
+            },
+            OverridgainGold(newFunc: (thisPtr: NativePointer, gold: number) => void): (thisPtr: NativePointer, gold: number) => void {
+                return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Characters.AbstractPlayer.gainGold, newFunc);
+            },
         },
         Ironclad: {
             getStartingDeck(thisPtr: NativePointer): NativePointer {
@@ -645,7 +786,7 @@ export class PatchManager {
                 return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Powers.FreeAttackPower.Ctor)(PatchManager.nullptr, owner, strengthAmount);
             }
         },
-    }
+    };
     static Relics = {
         BurningBlood: {
             OverrideonVictory(newCallback: (thisPtr: NativePointer) => void): (thisPtr: NativePointer) => void {
@@ -681,7 +822,20 @@ export class PatchManager {
                 return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Relics.CoffeeDripper.Ctor, newCtor);
             },
         },
-    }
+        MarkofPain: {
+            OverrideatBattleStart(newCallback: (thisPtr: NativePointer) => void): (thisPtr: NativePointer) => void {
+                return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Relics.MarkofPain.atBattleStart, newCallback);
+            },
+        },
+        RunicPyramid: {
+            Ctor(): NativePointer {
+                return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Relics.RunicPyramid.Ctor)(PatchManager.nullptr);
+            },
+            OverrideCtor(newCtor: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
+                return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Relics.RunicPyramid.Ctor, newCtor);
+            },
+        },
+    };
     static Potions = {
         PotionSlot: {
             Ctor(index: number): NativePointer {
@@ -700,7 +854,7 @@ export class PatchManager {
                 return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.VFX.UpgradeShineEffect.Ctor)(PatchManager.nullptr, x, y);
             }
         }
-    }
+    };
 
     static StringLiteral = {
         //red card names
@@ -780,7 +934,31 @@ export class PatchManager {
         get rewardCardNumber() {
             return PatchManager.#GetOffsetPtr(0x17BE846);
         },
-    }
+        /**
+         *  VelvetChoker::onPlayCard
+         * 
+         * origin Instruction: ```019AD89E 05 28 CMP R0, #5```
+         */
+        get VelvetChokerPlayCounter() {
+            return PatchManager.#GetOffsetPtr(0x19AD89E);
+        },
+        /**
+         *  VelvetChoker::onPlayCard
+         * 
+         * origin Instruction: ```019AD8E2 06 28 CMP R0, #6```
+         */
+        get VelvetChokerCanPlayCheck() {
+            return PatchManager.#GetOffsetPtr(0x19AD8E2);
+        },
+        /**
+         *  VelvetChoker::onPlayCard
+         * 
+         * origin Instruction: ```019AD904 06 21 MOVS R1, #6```
+         */
+        get VelvetChokerCanPlayStateValue() {
+            return PatchManager.#GetOffsetPtr(0x19AD904);
+        }
+    };
 
     static STSGlobalVars = {
         get STSSetting_WIDTH() {
@@ -804,7 +982,7 @@ export class PatchManager {
         V_P_Func(funcName: string) {
             return "void " + funcName + "(void * arg1) { return ; }";
         },
-    }
+    };
 
     static #GetOffsetPtr(offset: number) {
         if (!PatchManager.#GlobalVarCache.has(offset)) {

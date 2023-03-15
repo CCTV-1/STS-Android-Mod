@@ -341,6 +341,54 @@ function PatchRelics() {
         });
         return coffeeDripperObj;
     });
+
+    Memory.patchCode(PatchManager.InstructionPtr.VelvetChokerPlayCounter, 4, function (code) {
+        let numCardsModifyer = new ThumbWriter(code);
+        //modify to 019AD89E 09 28 CMP R0, #0x9  ;counter max increase to 10
+        numCardsModifyer.putBytes([0x9, 0x28]);
+        numCardsModifyer.flush();
+    });
+    Memory.patchCode(PatchManager.InstructionPtr.VelvetChokerCanPlayCheck, 4, function (code) {
+        let numCardsModifyer = new ThumbWriter(code);
+        //modify to 019AD8E2 0A 28 CMP R0, #0xA  ;play card limit change to 10
+        numCardsModifyer.putBytes([0xA, 0x28]);
+        numCardsModifyer.flush();
+    });
+    Memory.patchCode(PatchManager.InstructionPtr.VelvetChokerCanPlayStateValue, 4, function (code) {
+        let numCardsModifyer = new ThumbWriter(code);
+        //modify to 019AD904 0A 21 MOVS R1, #0xA  ;tips text number increase to 10
+        numCardsModifyer.putBytes([0xA, 0x21]);
+        numCardsModifyer.flush();
+    });
+
+    PatchManager.Relics.MarkofPain.OverrideatBattleStart((thisPtr: NativePointer) => {
+        let wrapMarkofPain = new AbstractRelic(thisPtr);
+        wrapMarkofPain.flash();
+        let relicAboveCreatureAction = PatchManager.Actions.RelicAboveCreature.Ctor(PatchManager.STSGlobalVars.AbstractDungeon_player.rawPtr, thisPtr);
+        let targetCard = PatchManager.Cards.status.Burn.Ctor();
+        let makeTempCardInHandAction = PatchManager.Actions.MakeTempCardInHand.Ctor(targetCard, 2, true);
+        wrapMarkofPain.addToBot(relicAboveCreatureAction);
+        wrapMarkofPain.addToBot(makeTempCardInHandAction);
+    });
+
+    //RunicPyramid::onPlayerEndTurn don't exist,can't hook it,so we will set the function Pointer in RunicPyramid::Ctor.
+    let origRunicPyramidCtor = PatchManager.Relics.RunicPyramid.OverrideCtor((thisPtr: NativePointer) => {
+        let RunicPyramidObj = origRunicPyramidCtor(thisPtr);
+        let wrapRunicPyramid = new AbstractRelic(RunicPyramidObj);
+        wrapRunicPyramid.OverrideonPlayerEndTurn((thisPtr: NativePointer) => {
+            let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+            let handSize = currentPlayer.hand.group.size;
+            if (handSize > 0) {
+                let wrapRunicPyramid = new AbstractRelic(RunicPyramidObj);
+                let lootingNumber = Math.min(handSize, 3);
+                let discardAction = PatchManager.Actions.Discard.Ctor(currentPlayer.rawPtr, currentPlayer.rawPtr, lootingNumber);
+                let drawCardAction = PatchManager.Actions.DrawCard.Ctor2(lootingNumber);
+                wrapRunicPyramid.addToBot(discardAction);
+                wrapRunicPyramid.addToBot(drawCardAction);
+            }
+        });
+        return RunicPyramidObj;
+    });
 }
 
 function main() {
