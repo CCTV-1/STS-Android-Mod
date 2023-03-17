@@ -2,7 +2,7 @@ import { PatchManager } from "./PatchManager.js";
 import { AbstractCard } from "./AbstractCard.js";
 import { AbstractPlayer } from "./AbstractPlayer.js";
 import { AbstractRelic } from "./AbstractRelic.js";
-import { AttackEffect, PlayerClass } from "./enums.js";
+import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType, PlayerClass } from "./enums.js";
 import { AbstractGameAction } from "./AbstractGameAction.js";
 
 function FakeRandom(min: number, max: number) {
@@ -391,12 +391,46 @@ function PatchRelics() {
     });
 }
 
-function main() {
-    PatchRedCards();
-    Patchcharacters();
-    PatchPurpleCards();
-    PatchPowers();
-    PatchRelics();
+function RegisterNewCards() {
+    let origCardLibraryInitialize = PatchManager.CardLibrary.Overrideinitialize((thisPtr: NativePointer) => {
+        function testCardCtor(thisPtr: NativePointer) {
+            let cardPtr = PatchManager.Cards.AbstractCard.Ctor("ModCard1", "ModNewCard1", "red/attack/strike", 1, "999 damage", CardType.ATTACK,
+                CardColor.RED, CardRarity.COMMON, CardTarget.ENEMY, DamageType.NORMAL);
+            let wrapCard = new AbstractCard(cardPtr);
+            wrapCard.baseDamage = 999;
+            wrapCard.Overrideuse((thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
+                let wrapCard = new AbstractCard(thisPtr);
+                let dmgInfoObj = PatchManager.Cards.DamageInfo.Ctor(playerPtr, wrapCard.damage, wrapCard.damageTypeForTurn);
+                let damageAction = PatchManager.Actions.Damage.Ctor(monsterPtr, dmgInfoObj, AttackEffect.SLASH_DIAGONAL);
+                wrapCard.addToBot(damageAction);
+            });
+            wrapCard.Overrideupgrade((thisPtr: NativePointer) => {
+                let wrapCard = new AbstractCard(thisPtr);
+                if (!wrapCard.upgraded) {
+                    wrapCard.upgradeName();
+                    wrapCard.upgradeBaseCost(0);
+                }
+            });
+            wrapCard.OverridemakeCopy((thisPtr: NativePointer) => { return testCardCtor(thisPtr); });
+            return cardPtr;
+        };
+        PatchManager.CardLibrary.Add(testCardCtor(PatchManager.nullptr));
+        origCardLibraryInitialize(thisPtr);
+    });
 }
 
-main();
+function main() {
+    PatchRedCards();
+    PatchPurpleCards();
+    Patchcharacters();
+    PatchPowers();
+    PatchRelics();
+
+    RegisterNewCards();
+}
+
+try {
+    main();
+} catch (error) {
+    PatchManager.LogV("error message:" + error);
+}
