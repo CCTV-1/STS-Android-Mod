@@ -35,14 +35,13 @@ export class NativeClassWrapper {
      * @returns 
      */
     setVirtualFunction(funcName: string, fakecode: string, funcInfo: NativeFunctionInfo, newVFunc: any) {
-        if (NativeClassWrapper.#overridMap.has(funcName)) {
-            return;
+        let tmpFunc = NativeClassWrapper.#overridMap.get(funcName)
+        if (tmpFunc === undefined) {
+            tmpFunc = new CModule(fakecode);
+            NativeClassWrapper.#overridMap.set(funcName, tmpFunc);
+            let overridVFunc = new NativeCallback(newVFunc, funcInfo.retType, funcInfo.argTypes);
+            Interceptor.replace(tmpFunc[funcName], overridVFunc);
         }
-
-        let tmpFunc = new CModule(fakecode);
-        NativeClassWrapper.#overridMap.set(funcName, tmpFunc);
-        let overridVFunc = new NativeCallback(newVFunc, funcInfo.retType, funcInfo.argTypes);
-        Interceptor.replace(tmpFunc[funcName], overridVFunc);
 
         this.#vfuncMapPtr.add(funcInfo.funcOffset).writePointer(tmpFunc[funcName]);
         this.#vfuncMapPtr.add(funcInfo.funcOffset + 0x4).writeU8(0);

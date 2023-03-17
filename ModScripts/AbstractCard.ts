@@ -1,6 +1,12 @@
 import { CardTarget, CardType, DamageType } from "./enums.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
+import { PatchManager } from "./PatchManager.js";
+
+/**
+ * thisPtr will is ```nullptr```.
+ */
+export type STSCardCtor = (thisPtr: NativePointer) => NativePointer;
 
 export class AbstractCard extends NativeClassWrapper {
     //NativePointer AbstractCard *
@@ -23,10 +29,46 @@ export class AbstractCard extends NativeClassWrapper {
         upgrade: new NativeFunctionInfo(0x58, 'void', ['pointer']),
         /**
          * ```c
+         * void AbstractCard::upgradeDamage(STS::AbstractCard* this, int32_t newCost)
+         * ```
+         */
+        upgradeDamage: new NativeFunctionInfo(0x68, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractCard::upgradeBlock(STS::AbstractCard* this, int32_t newCost)
+         * ```
+         */
+        upgradeBlock: new NativeFunctionInfo(0x70, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractCard::upgradeMagicNumber(STS::AbstractCard* this, int32_t newCost)
+         * ```
+         */
+        upgradeMagicNumber: new NativeFunctionInfo(0x78, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractCard::upgradeName(STS::AbstractCard* this)
+         * ```
+         */
+        upgradeName: new NativeFunctionInfo(0x80, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractCard::upgradeBaseCost(STS::AbstractCard* this, int32_t newCost)
+         * ```
+         */
+        upgradeBaseCost: new NativeFunctionInfo(0x88, 'void', ['pointer', 'int32']),
+        /**
+         * ```c
          *  STS::AbstractCard* AbstractCard::makeStatEquivalentCopy(STS::AbstractCard* this)
          * ```
          */
         makeStatEquivalentCopy: new NativeFunctionInfo(0x98, 'pointer', ['pointer']),
+        /**
+         * ```c
+         * void AbstractCard::use(STS::AbstractCard* this, STS::AbstractPlayer* p, STS::AbstractMonster* m)
+         * ```
+         */
+        use: new NativeFunctionInfo(0xF0, 'pointer', ['pointer', 'pointer', 'pointer']),
         /**
          * ```c
          *  void AbstractCard::addToTop(STS::AbstractCard* this, STS::AbstractGameAction* actionPtr)
@@ -39,7 +81,15 @@ export class AbstractCard extends NativeClassWrapper {
          * ```
          */
         addToTop: new NativeFunctionInfo(0x300, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * STS::AbstractCard* AbstractCard::makeCopy(STS::AbstractCard* this)
+         * ```
+         */
+        makeCopy: new NativeFunctionInfo(0x338, 'pointer', ['pointer']),
     }
+
+    static #vFuncNamePrefix = "AbstractCard_";
 
     canUpgrade(): boolean {
         let canUpgradeFunc = this.getVirtualFunction(AbstractCard.#vfunctionMap.canUpgrade);
@@ -49,10 +99,39 @@ export class AbstractCard extends NativeClassWrapper {
     upgrade(): void {
         this.getVirtualFunction(AbstractCard.#vfunctionMap.upgrade)(this.rawPtr);
     }
+    Overrideupgrade(newVFunc: (thisPtr: NativePointer) => void) {
+        let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_upgrade").replace(/\s+/g, "");
+        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractCard.#vfunctionMap.upgrade, newVFunc);
+    }
+
+    upgradeDamage(newDamage: number) {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgradeDamage)(this.rawPtr, newDamage);
+    }
+
+    upgradeBlock(newBlock: number) {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgradeBlock)(this.rawPtr, newBlock);
+    }
+
+    upgradeMagicNumber(newMagicNumber: number) {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgradeMagicNumber)(this.rawPtr, newMagicNumber);
+    }
+
+    upgradeName() {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgradeName)(this.rawPtr);
+    }
+
+    upgradeBaseCost(newCost: number) {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgradeBaseCost)(this.rawPtr, newCost);
+    }
 
     makeStatEquivalentCopy(): NativePointer {
         let makeStatEquivalentCopyFunc = this.getVirtualFunction(AbstractCard.#vfunctionMap.makeStatEquivalentCopy);
         return makeStatEquivalentCopyFunc(this.rawPtr);
+    }
+
+    Overrideuse(newVFunc: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => void) {
+        let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_use").replace(/\s+/g, "");
+        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, newVFunc);
     }
 
     addToBot(actionPtr: NativePointer): void {
@@ -61,6 +140,11 @@ export class AbstractCard extends NativeClassWrapper {
 
     addToTop(actionPtr: NativePointer): void {
         this.getVirtualFunction(AbstractCard.#vfunctionMap.addToTop)(this.rawPtr, actionPtr);
+    }
+
+    OverridemakeCopy(newVFunc: (thisPtr: NativePointer) => NativePointer) {
+        let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_makeCopy").replace(/\s+/g, "");
+        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeCopy, newVFunc);
     }
 
     get type(): CardType {
