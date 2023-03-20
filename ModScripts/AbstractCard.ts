@@ -1,4 +1,4 @@
-import { CardTarget, CardType, DamageType } from "./enums.js";
+import { CardColor, CardRarity, CardTarget, DamageType, CardType } from "./enums.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 import { PatchManager } from "./PatchManager.js";
@@ -8,13 +8,24 @@ import { PatchManager } from "./PatchManager.js";
  */
 export type STSCardCtor = (thisPtr: NativePointer) => NativePointer;
 
+interface NewCardVFuncType {
+    use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => void,
+    upgrade: (thisPtr: NativePointer) => void,
+    makeCopy: (thisPtr: NativePointer) => NativePointer,
+};
+
 export class AbstractCard extends NativeClassWrapper {
     //NativePointer AbstractCard *
     constructor(CthisPtr: NativePointer) {
         super(CthisPtr);
     }
 
-    static #vfunctionMap = {
+    /**
+     * new card id => (v func name => v func)
+     */
+    static #rewriteVFuncMap = new Map<string, NewCardVFuncType>();
+
+    static readonly #vfunctionMap = {
         /**
          * ```c
          *  bool AbstractCard::canUpgrade(STS::AbstractCard* this)
@@ -91,6 +102,58 @@ export class AbstractCard extends NativeClassWrapper {
 
     static #vFuncNamePrefix = "AbstractCard_";
 
+    static NewCardCtor(id: string, name: string, imgUrl: string, cost: number, rawDescription: string,
+        type: CardType, color: CardColor, rarity: CardRarity, target: CardTarget, dType: DamageType, newFuncs: NewCardVFuncType): AbstractCard {
+
+        let origCardPtr = PatchManager.Cards.AbstractCard.Ctor(id, name, imgUrl, cost, rawDescription,
+            Number(type), Number(color), Number(rarity), Number(target), Number(dType));
+
+        let wrapCard = new AbstractCard(origCardPtr);
+        if (!AbstractCard.#rewriteVFuncMap.has(id)) {
+            AbstractCard.#rewriteVFuncMap.set(id, newFuncs);
+        }
+
+        let funcName = "AbstractCard_BasicNewCard_use";
+        wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const useFunc = cardVFuncMap.use;
+                if (useFunc !== undefined) {
+                    useFunc(thisPtr, playerPtr, monsterPtr);
+                }
+            }
+        });
+
+        funcName = "AbstractCard_BasicNewCard_upgrade";
+        wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractCard.#vfunctionMap.upgrade, (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const makeCopyFunc = cardVFuncMap.upgrade;
+                if (makeCopyFunc !== undefined) {
+                    makeCopyFunc(thisPtr);
+                }
+            }
+        });
+
+        funcName = "AbstractCard_BasicNewCard_makeCopy";
+        wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeCopy, (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const makeCopyFunc = cardVFuncMap.makeCopy;
+                if (makeCopyFunc !== undefined) {
+                    let copyObj = makeCopyFunc(thisPtr);
+                    return copyObj;
+                }
+            }
+            return PatchManager.nullptr;
+        });
+
+        return wrapCard;
+    };
+
     canUpgrade(): boolean {
         let canUpgradeFunc = this.getVirtualFunction(AbstractCard.#vfunctionMap.canUpgrade);
         return canUpgradeFunc(this.rawPtr);
@@ -127,6 +190,10 @@ export class AbstractCard extends NativeClassWrapper {
     makeStatEquivalentCopy(): NativePointer {
         let makeStatEquivalentCopyFunc = this.getVirtualFunction(AbstractCard.#vfunctionMap.makeStatEquivalentCopy);
         return makeStatEquivalentCopyFunc(this.rawPtr);
+    }
+    OverridemakeStatEquivalentCopy(newVFunc: (thisPtr: NativePointer) => NativePointer) {
+        let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_makeStatEquivalentCopy").replace(/\s+/g, "");
+        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeStatEquivalentCopy, newVFunc);
     }
 
     Overrideuse(newVFunc: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => void) {
