@@ -46,7 +46,7 @@ export class NewCardLibrary {
                 let dmgInfoObj = PatchManager.Cards.DamageInfo.Ctor(playerPtr, wrapCard.damage, wrapCard.damageTypeForTurn);
                 let damageAction = PatchManager.Actions.Damage.Ctor(monsterPtr, dmgInfoObj, AttackEffect.SLASH_DIAGONAL);
                 let targetCard = PatchManager.Cards.status.Burn.Ctor();
-                let makeTempCardInHandAction = PatchManager.Actions.MakeTempCardInHand.Ctor(targetCard, 2, true);
+                let makeTempCardInHandAction = PatchManager.Actions.MakeTempCardInHand.Ctor(targetCard, 1, true);
                 wrapCard.addToBot(damageAction);
                 wrapCard.addToBot(makeTempCardInHandAction);
             },
@@ -59,7 +59,6 @@ export class NewCardLibrary {
             },
             makeCopy: (thisPtr: NativePointer) => {
                 let wrapCard = new AbstractCard(thisPtr);
-                PatchManager.LogV(wrapCard.cardID + " enter BasicDefend_R makeCopy");
                 let copyObj = NewCardLibrary.IroncladBasicAttack(thisPtr);
                 return copyObj;
             },
@@ -90,7 +89,6 @@ export class NewCardLibrary {
             },
             makeCopy: (thisPtr: NativePointer) => {
                 let wrapCard = new AbstractCard(thisPtr);
-                PatchManager.LogV(wrapCard.cardID + "enter BasicDefend_R makeCopy");
                 let copyObj = NewCardLibrary.IroncladBasicSkill(thisPtr);
                 return copyObj;
             },
