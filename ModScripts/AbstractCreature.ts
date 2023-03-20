@@ -7,7 +7,7 @@ export class AbstractCreature extends NativeClassWrapper {
         super(CthisPtr);
     }
 
-    static #vfunctionMap = {
+    static readonly #vfunctionMap = {
         /**
          * ```c
          * int32_t STS::AbstractCreature::decrementBlock(STS::AbstractCreature* this, STS::DamageInfo* info, int32_t damageAmount);

@@ -12,7 +12,7 @@ export class AbstractPlayer extends AbstractCreature {
         super(CthisPtr)
     }
 
-    static #vfunctionMap = {
+    static readonly #vfunctionMap = {
         /**
          * ```c
          * bool AbstractPlayer::isCursed(STS::AbstractPlayer * this);

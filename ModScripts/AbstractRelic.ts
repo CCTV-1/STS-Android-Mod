@@ -9,7 +9,7 @@ export class AbstractRelic extends NativeClassWrapper {
         super(CthisPtr);
     }
 
-    static #vfunctionMap = {
+    static readonly #vfunctionMap = {
         //void AbstractRelic::onPlayCard(STS::AbstractRelic* this, STS::AbstractCard* cardPtr, STS::AbstractMonster * monsterPtr)
         onPlayCard: new NativeFunctionInfo(0xA8, 'void', ['pointer', 'pointer', 'pointer']),
         //void AbstractRelic::onPreviewObtainCard(STS::AbstractRelic* this, STS::AbstractCard* cardPtr)
@@ -106,7 +106,7 @@ export class AbstractRelic extends NativeClassWrapper {
         addToTop: new NativeFunctionInfo(0x330, 'void', ['pointer', 'pointer']),
     };
 
-    static #vFuncNamePrefix = "AbstractRelic_";
+    static readonly #vFuncNamePrefix = "AbstractRelic_";
 
     OverrideonPlayCard(newVFunc: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => void) {
         let funcName = (AbstractRelic.#vFuncNamePrefix + this.relicId + "_onPlayCard").replace(/\s+/g, "");

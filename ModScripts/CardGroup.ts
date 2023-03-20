@@ -13,7 +13,7 @@ export class CardGroup extends NativeClassWrapper {
         return new ArrayList(this.readOffsetPointer(0x8));
     }
 
-    get type() : CardGroupType {
+    get type(): CardGroupType {
         return this.readOffsetU32(0x14);
     }
 }
