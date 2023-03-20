@@ -1,10 +1,10 @@
 import { PatchManager } from "./PatchManager.js";
-import { AbstractCard } from "./AbstractCard.js";
+import { AbstractCard, STSCardCtor } from "./AbstractCard.js";
 import { AbstractPlayer } from "./AbstractPlayer.js";
 import { AbstractRelic } from "./AbstractRelic.js";
 import { PlayerClass } from "./enums.js";
 import { AbstractGameAction } from "./AbstractGameAction.js";
-import { NewCardLibrary } from "./NewCardLibrary.js";
+import { newCardLibrary } from "./NewCardLibrary.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -430,12 +430,9 @@ function PatchRelics() {
 
 function RegisterNewCards() {
     let origCardLibraryInitialize = PatchManager.CardLibrary.Overrideinitialize((thisPtr: NativePointer) => {
-        Object.entries(NewCardLibrary).forEach(([k, v]) => {
-            if (v instanceof Function) {
-                let newCardPtr = v(PatchManager.nullptr);
-                PatchManager.CardLibrary.Add(newCardPtr);
-            }
-        });
+        for (const newCardCtor of newCardLibrary) {
+            PatchManager.CardLibrary.Add(newCardCtor(PatchManager.nullptr));
+        }
         origCardLibraryInitialize(thisPtr);
     });
 }
