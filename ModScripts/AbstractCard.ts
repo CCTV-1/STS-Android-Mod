@@ -25,6 +25,41 @@ export class AbstractCard extends NativeClassWrapper {
      */
     static #rewriteVFuncMap = new Map<string, NewCardVFuncType>();
 
+    static readonly #NewCardVFuncProxys: NewCardVFuncType = {
+        use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const useFunc = cardVFuncMap.use;
+                if (useFunc !== undefined) {
+                    useFunc(thisPtr, playerPtr, monsterPtr);
+                }
+            }
+        },
+        upgrade: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const upgradeFunc = cardVFuncMap.upgrade;
+                if (upgradeFunc !== undefined) {
+                    upgradeFunc(thisPtr);
+                }
+            }
+        },
+        makeCopy: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const makeCopyFunc = cardVFuncMap.makeCopy;
+                if (makeCopyFunc !== undefined) {
+                    let copyObj = makeCopyFunc(thisPtr);
+                    return copyObj;
+                }
+            }
+            return PatchManager.nullptr;
+        }
+    }
+
     static readonly #vfunctionMap = {
         /**
          * ```c
@@ -40,22 +75,22 @@ export class AbstractCard extends NativeClassWrapper {
         upgrade: new NativeFunctionInfo(0x58, 'void', ['pointer']),
         /**
          * ```c
-         * void AbstractCard::upgradeDamage(STS::AbstractCard* this, int32_t newCost)
+         * void AbstractCard::upgradeDamage(STS::AbstractCard* this, int32_t amount)
          * ```
          */
-        upgradeDamage: new NativeFunctionInfo(0x68, 'void', ['pointer']),
+        upgradeDamage: new NativeFunctionInfo(0x68, 'void', ['pointer', 'int32']),
         /**
          * ```c
-         * void AbstractCard::upgradeBlock(STS::AbstractCard* this, int32_t newCost)
+         * void AbstractCard::upgradeBlock(STS::AbstractCard* this, int32_t amount)
          * ```
          */
-        upgradeBlock: new NativeFunctionInfo(0x70, 'void', ['pointer']),
+        upgradeBlock: new NativeFunctionInfo(0x70, 'void', ['pointer', 'int32']),
         /**
          * ```c
-         * void AbstractCard::upgradeMagicNumber(STS::AbstractCard* this, int32_t newCost)
+         * void AbstractCard::upgradeMagicNumber(STS::AbstractCard* this, int32_t amount)
          * ```
          */
-        upgradeMagicNumber: new NativeFunctionInfo(0x78, 'void', ['pointer']),
+        upgradeMagicNumber: new NativeFunctionInfo(0x78, 'void', ['pointer', 'int32']),
         /**
          * ```c
          * void AbstractCard::upgradeName(STS::AbstractCard* this)
@@ -105,51 +140,22 @@ export class AbstractCard extends NativeClassWrapper {
     static NewCardCtor(id: string, name: string, imgUrl: string, cost: number, rawDescription: string,
         type: CardType, color: CardColor, rarity: CardRarity, target: CardTarget, dType: DamageType, newFuncs: NewCardVFuncType): AbstractCard {
 
-        let origCardPtr = PatchManager.Cards.AbstractCard.Ctor(id, name, imgUrl, cost, rawDescription,
-            Number(type), Number(color), Number(rarity), Number(target), Number(dType));
+        let origCardPtr = PatchManager.Cards.AbstractCard.Ctor(id, name, imgUrl, cost, rawDescription, type, color, rarity, target, dType);
 
         let wrapCard = new AbstractCard(origCardPtr);
         if (!AbstractCard.#rewriteVFuncMap.has(id)) {
             AbstractCard.#rewriteVFuncMap.set(id, newFuncs);
         }
 
-        let funcName = "AbstractCard_BasicNewCard_use";
-        wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
-            if (cardVFuncMap !== undefined) {
-                const useFunc = cardVFuncMap.use;
-                if (useFunc !== undefined) {
-                    useFunc(thisPtr, playerPtr, monsterPtr);
-                }
-            }
-        });
-
-        funcName = "AbstractCard_BasicNewCard_upgrade";
-        wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractCard.#vfunctionMap.upgrade, (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
-            if (cardVFuncMap !== undefined) {
-                const makeCopyFunc = cardVFuncMap.upgrade;
-                if (makeCopyFunc !== undefined) {
-                    makeCopyFunc(thisPtr);
-                }
-            }
-        });
-
-        funcName = "AbstractCard_BasicNewCard_makeCopy";
-        wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeCopy, (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
-            if (cardVFuncMap !== undefined) {
-                const makeCopyFunc = cardVFuncMap.makeCopy;
-                if (makeCopyFunc !== undefined) {
-                    let copyObj = makeCopyFunc(thisPtr);
-                    return copyObj;
-                }
-            }
-            return PatchManager.nullptr;
-        });
+        if (!AbstractCard.#rewriteVFuncMap.has("AbstractCardProxy")) {
+            let funcName = "AbstractCard_BasicNewCard_use";
+            wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, AbstractCard.#NewCardVFuncProxys.use);
+            funcName = "AbstractCard_BasicNewCard_upgrade";
+            wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractCard.#vfunctionMap.upgrade, AbstractCard.#NewCardVFuncProxys.upgrade);
+            funcName = "AbstractCard_BasicNewCard_makeCopy";
+            wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeCopy, AbstractCard.#NewCardVFuncProxys.makeCopy);
+            AbstractCard.#rewriteVFuncMap.set("AbstractCardProxy", AbstractCard.#NewCardVFuncProxys);
+        }
 
         return wrapCard;
     };
