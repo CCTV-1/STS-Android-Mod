@@ -96,6 +96,14 @@ export enum RelicTier {
     SHOP = 0x7,
 };
 
+export enum LandingSound {
+    CLINK = 0x0,
+    FLAT,
+    HEAVY,
+    MAGICAL,
+    SOLID
+};
+
 export enum PlayerClass {
     IRONCLAD = 0x0,
     THE_SILENT = 0x1,

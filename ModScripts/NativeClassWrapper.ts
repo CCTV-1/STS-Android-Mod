@@ -32,9 +32,9 @@ export class NativeClassWrapper {
      * ```
      * @param funcInfo `new NativeFunctionInfo(vtableIndex,retType, argType)`
      * @param newVFunc a javascript function
-     * @returns 
+     * @returns origin virtual function pointer
      */
-    setVirtualFunction(funcName: string, fakecode: string, funcInfo: NativeFunctionInfo, newVFunc: any) {
+    setVirtualFunction(funcName: string, fakecode: string, funcInfo: NativeFunctionInfo, newVFunc: any): NativePointer  {
         let tmpFunc = NativeClassWrapper.#overridMap.get(funcName)
         if (tmpFunc === undefined) {
             tmpFunc = new CModule(fakecode);
@@ -43,8 +43,12 @@ export class NativeClassWrapper {
             Interceptor.replace(tmpFunc[funcName], overridVFunc);
         }
 
+        let origVFuncPtr = this.#vfuncMapPtr.add(funcInfo.funcOffset).readPointer();
+
         this.#vfuncMapPtr.add(funcInfo.funcOffset).writePointer(tmpFunc[funcName]);
         this.#vfuncMapPtr.add(funcInfo.funcOffset + 0x4).writeU8(0);
+
+        return origVFuncPtr;
     }
 
     readOffsetPointer(offset: number) {

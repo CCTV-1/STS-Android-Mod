@@ -1,10 +1,11 @@
 import { PatchManager } from "./PatchManager.js";
-import { AbstractCard, STSCardCtor } from "./AbstractCard.js";
+import { AbstractCard } from "./AbstractCard.js";
 import { AbstractPlayer } from "./AbstractPlayer.js";
 import { AbstractRelic } from "./AbstractRelic.js";
 import { PlayerClass } from "./enums.js";
 import { AbstractGameAction } from "./AbstractGameAction.js";
 import { newCardLibrary } from "./NewCardLibrary.js";
+import { newRelicLibrary } from "./NewRelicLibrary.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -437,6 +438,17 @@ function RegisterNewCards() {
     });
 }
 
+function RegisterNewRelic() {
+    let origRelicLibraryInitialize = PatchManager.RelicLibrary.Overrideinitialize((thisPtr: NativePointer) => {
+        for (const newRelicCtor of newRelicLibrary) {
+            let origRelicPtr = newRelicCtor(PatchManager.nullptr);
+            PatchManager.RelicLibrary.Add(origRelicPtr);
+        }
+
+        origRelicLibraryInitialize(thisPtr);
+    });
+}
+
 function main() {
     PatchRedCards();
     PatchPurpleCards();
@@ -445,6 +457,7 @@ function main() {
     PatchRelics();
 
     RegisterNewCards();
+    RegisterNewRelic();
 }
 
 try {

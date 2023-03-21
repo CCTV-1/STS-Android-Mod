@@ -1145,7 +1145,10 @@ namespace STS
         uint8_t gap2DD[3];
         dummyFunc_t dword2E0;
         bool byte2E4;
-        uint8_t gap2E5[11];
+        uint8_t gap2E5[3];
+        dummyFunc_t makeCopy;
+        bool byte2EC;
+        uint8_t gap2ED[3];
         dummyFunc_t dword2F0;
         bool byte2F4;
         uint8_t gap2F5[11];

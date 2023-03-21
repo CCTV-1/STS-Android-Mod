@@ -1,6 +1,6 @@
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js"
 import { AbstractPlayer } from "./AbstractPlayer.js";
-import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType } from "./enums.js";
+import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType, LandingSound, RelicTier } from "./enums.js";
 import { STSCardCtor } from "./AbstractCard.js";
 
 export class PatchManager {
@@ -279,8 +279,8 @@ export class PatchManager {
             AbstractCard: {
                 /**
                  * ```c
-                 * STS::AbstractCard * Cards::AbstractCard::Ctor(STS::AbstractCard * this, STS::JString id, STS::JString name, STS::JString imgUrl, 
-                 * int32_t cost, STS::JString rawDescription, STS::CardType type, STS::CardColor color, STS::CardRarity rarity, STS::CardTarget target, STS::DamageType dType)
+                 * STS::AbstractCard * Cards::AbstractCard::Ctor(STS::AbstractCard * this, STS::JString* id, STS::JString* name, STS::JString* imgUrl, 
+                 * int32_t cost, STS::JString* rawDescription, STS::CardType type, STS::CardColor color, STS::CardRarity rarity, STS::CardTarget target, STS::DamageType dType)
                  * ```
                  */
                 Ctor: new NativeFunctionInfo(0x16D4FB5, 'pointer', ['pointer', 'pointer', 'pointer', 'pointer', 'int32', 'pointer', 'uint32', 'uint32', 'uint32', 'uint32', 'uint32']),
@@ -422,6 +422,20 @@ export class PatchManager {
              */
             Add: new NativeFunctionInfo(0x1832405, 'void', ['pointer']),
         },
+        RelicLibrary: {
+            /**
+             * ```c
+             * void initialize(STS::RelicLibrary* this)
+             * ```
+             */
+            initialize: new NativeFunctionInfo(0x1884C71, 'void', ['pointer']),
+            /**
+             * ```c
+             * void Add(STS::RelicLibrary* this, STS::AbstractRelic* relicPtr)
+             * ```
+             */
+            Add: new NativeFunctionInfo(0x18854C9, 'void', ['pointer']),
+        },
         Characters: {
             AbstractPlayer: {
                 /**
@@ -521,6 +535,14 @@ export class PatchManager {
             }
         },
         Relics: {
+            AbstractRelic: {
+                /**
+                 * ```c
+                 * sts::AbstractRelic* Relics::AbstractRelic::Ctor(STS::AbstractRelic * thisPtr, STS::JString* relicId, STS::JString* imgName, RelicTier tier, LandingSound sfx)
+                 * ```
+                 */
+                Ctor: new NativeFunctionInfo(0x19841AD, 'pointer', ['pointer', 'pointer', 'pointer', 'uint32', 'uint32']),
+            },
             BurningBlood: {
                 /**
                  * ```c
@@ -896,6 +918,20 @@ export class PatchManager {
             return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.CardLibrary.Add, newFunc);
         }
     };
+    static readonly RelicLibrary = {
+        initialize() {
+            PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.RelicLibrary.initialize)(PatchManager.nullptr);
+        },
+        Overrideinitialize(newIniter: (thisPtr: NativePointer) => void): (thisPtr: NativePointer) => void {
+            return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.RelicLibrary.initialize, newIniter);
+        },
+        Add(relicPtr: NativePointer): void {
+            PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.RelicLibrary.Add)(relicPtr);
+        },
+        OverrideAdd(newFunc: (relicPtr: NativePointer) => void): (relicPtr: NativePointer) => void {
+            return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.RelicLibrary.Add, newFunc);
+        }
+    };
     static readonly Characters = {
         AbstractPlayer: {
             loseGold(thisPtr: NativePointer, gold: number): void {
@@ -977,6 +1013,17 @@ export class PatchManager {
         },
     };
     static readonly Relics = {
+        AbstractRelic: {
+            Ctor(relicId: string, imgName: string, tier: RelicTier, sfx: LandingSound): NativePointer {
+                let nativeRelicId = PatchManager.STSLib.JString.Ctor(relicId);
+                let nativeImgUrl = PatchManager.STSLib.JString.Ctor(imgName);
+                return PatchManager.#GetNativeFunction(PatchManager.#NativeFunctionInfoMap.Relics.AbstractRelic.Ctor)(PatchManager.nullptr, nativeRelicId, nativeImgUrl, Number(tier), Number(sfx));
+            },
+            OverrideCtor(newCtor: (thisPtr: NativePointer, relicId: string, imgName: string, tier: RelicTier, sfx: LandingSound) => NativePointer):
+                (relicId: string, imgName: string, tier: RelicTier, sfx: LandingSound) => NativePointer {
+                return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Relics.AbstractRelic.Ctor, newCtor);
+            },
+        },
         BurningBlood: {
             OverrideonVictory(newCallback: (thisPtr: NativePointer) => void): (thisPtr: NativePointer) => void {
                 return PatchManager.#HookSTSFunction(PatchManager.#NativeFunctionInfoMap.Relics.BurningBlood.onVictory, newCallback);
