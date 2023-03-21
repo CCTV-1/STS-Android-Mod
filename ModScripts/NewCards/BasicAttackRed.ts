@@ -26,7 +26,7 @@ export const BasicAttackRed = (thisPtr: NativePointer): NativePointer => {
         },
     };
 
-    let wrapCard = AbstractCard.NewCardCtor("BasicAttack_R", "熔岩击", "red/attack/strike", 1, "造成9点伤害，将一张灼伤放入你的手牌。", CardType.ATTACK,
+    let wrapCard = AbstractCard.NewCardCtor("BasicAttack_R", "熔岩击", "red/attack/strike", 1, "造成 !D! 点伤害，将一张灼伤放入你的手牌。", CardType.ATTACK,
         CardColor.RED, CardRarity.BASIC, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
     wrapCard.baseDamage = 9;
 

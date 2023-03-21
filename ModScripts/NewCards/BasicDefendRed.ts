@@ -24,7 +24,7 @@ export const BasicDefendRed = (thisPtr: NativePointer): NativePointer => {
         },
     };
 
-    let wrapCard = AbstractCard.NewCardCtor("BasicDefend_R", "鲜血护盾", "red/skill/defend", 1, "失去2点生命，获得9点格挡。", CardType.SKILL,
+    let wrapCard = AbstractCard.NewCardCtor("BasicDefend_R", "鲜血护盾", "red/skill/defend", 1, "失去2点生命，获得 !B! 点格挡。", CardType.SKILL,
         CardColor.RED, CardRarity.BASIC, CardTarget.SELF, DamageType.NORMAL, vfuncs);
     wrapCard.baseBlock = 9;
 
