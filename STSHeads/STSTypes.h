@@ -1229,6 +1229,123 @@ namespace STS
         uint8_t unk[];
     } __attribute__((aligned(4)));
 
+    struct AbstractPotionVFuncMap
+    {
+        void *baseClassPtr;
+        void *vFuncMap;
+        uint8_t gap08[24];
+        dummyFunc_t flash;
+        bool byte24;
+        bool gap25[3];
+        dummyFunc_t dword28;
+        bool byte2C;
+        bool gap2D[3];
+        dummyFunc_t dword30;
+        bool byte34;
+        bool gap35[3];
+        dummyFunc_t getPrice;
+        bool byte3C;
+        bool gap3D[3];
+        dummyFunc_t use;
+        bool Inituse;
+        bool byte45;
+        dummyFunc_t canDiscard;
+        bool byte4C;
+        bool gap4D[3];
+        dummyFunc_t initializeData;
+        bool byte54;
+        bool gap55[3];
+        dummyFunc_t canUse;
+        bool byte5C;
+        bool gap5D[3];
+        dummyFunc_t dword60;
+        bool byte64;
+        bool gap65[3];
+        dummyFunc_t dword68;
+        bool byte6C;
+        bool gap6D[3];
+        dummyFunc_t dword70;
+        bool byte74;
+        bool gap75[3];
+        dummyFunc_t dword78;
+        bool byte7C;
+        bool gap7D[3];
+        dummyFunc_t dword80;
+        bool byte84;
+        bool gap85[3];
+        dummyFunc_t dword88;
+        bool byte8C;
+        bool gap8D[3];
+        dummyFunc_t dword90;
+        bool byte94;
+        bool gap95[3];
+        dummyFunc_t dword98;
+        bool byte9C;
+        bool gap9D[3];
+        dummyFunc_t dwordA0;
+        bool byteA4;
+        bool gapA5[3];
+        dummyFunc_t dwordA8;
+        bool byteAC;
+        bool gapAD[3];
+        dummyFunc_t getPotencyVoid;
+        bool InitgetPotency;
+        bool gapB5[3];
+        dummyFunc_t getPotency;
+        bool byteBC;
+        bool gapBD[3];
+        dummyFunc_t onPlayerDeath;
+        bool InitonPlayerDeath;
+        uint8_t gapC5[3];
+        dummyFunc_t addToBot;
+        bool byteCC;
+        bool gapCD[3];
+        dummyFunc_t addToTop;
+        bool byteD4;
+        uint8_t unk[16];
+    } __attribute__((aligned(4)));
+
+
+    struct AbstractPotion
+    {
+        void *baseClassPtr;
+        void *vFuncMap;
+        JString * potionId;
+        JString * name;
+        JString * description;
+        int32_t slot;
+        ArrayList<void *> *tips;
+        void * containerImg;
+        void * liquidImg;
+        void * hybridImg;
+        void * spotsImg;
+        void * outlineImg;
+        float posX;
+        float posY;
+        Color * labOutlineColor;
+        ArrayList<void *> effect;
+        float scale;
+        bool isObtained;
+        uint8_t pad45[3];
+        float sparkleTimer;
+        int32_t flashCount;
+        float flashTimer;
+        PotionEffect p_effect;
+        PotionColor color;
+        Color * liquidColor;
+        Color * hybridColor;
+        Color * spotsColor;
+        PotionRarity rarity;
+        PotionSize size;
+        int32_t potency;
+        void * hb;
+        float angle;
+        bool canUse;
+        bool discarded;
+        bool isThrown;
+        bool targetRequired;
+    } __attribute__((aligned(4)));
+
 }
 
 
