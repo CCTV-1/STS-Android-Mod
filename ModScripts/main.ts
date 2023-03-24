@@ -12,6 +12,9 @@ import { NativeCards } from "./NativeFuncWrap/NativeCards.js";
 import { NativeHelpers } from "./NativeFuncWrap/NativeHelpers.js";
 import { NativeCharacters } from "./NativeFuncWrap/NativeCharacters.js";
 import { NativePowers } from "./NativeFuncWrap/NativePowers.js";
+import { NativeRelics } from "./NativeFuncWrap/NativeRelics.js";
+import { NativePotions } from "./NativeFuncWrap/NativePotions.js";
+import { NativeVFX } from "./NativeFuncWrap/NativeVFX.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -34,8 +37,8 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
         upgradeCard.upgrade();
         let topLevelEffects = PatchManager.STSGlobalVars.AbstractDungeon_topLevelEffects;
         let statCopyCard = upgradeCard.makeStatEquivalentCopy();
-        let cardBrieflyEffectObj = PatchManager.VFX.ShowCardBrieflyEffect.Ctor(statCopyCard);
-        let upgradeShineEffectObj = PatchManager.VFX.UpgradeShineEffect.Ctor(PatchManager.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchManager.STSGlobalVars.STSSetting_HEIGHT * 0.5);
+        let cardBrieflyEffectObj = NativeVFX.ShowCardBrieflyEffect.Ctor(statCopyCard);
+        let upgradeShineEffectObj = NativeVFX.UpgradeShineEffect.Ctor(PatchManager.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchManager.STSGlobalVars.STSSetting_HEIGHT * 0.5);
         NativeSTSLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
         NativeSTSLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
     }
@@ -279,7 +282,7 @@ function PatchPowers() {
 }
 
 function PatchRelics() {
-    let origBurningBloodOnVictory = PatchManager.Relics.BurningBlood.OverrideonVictory((thisPtr: NativePointer) => {
+    let origBurningBloodOnVictory = NativeRelics.BurningBlood.OverrideonVictory((thisPtr: NativePointer) => {
         let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.4) {
             UpgradeRandomCard(currentPlayer);
@@ -287,7 +290,7 @@ function PatchRelics() {
         origBurningBloodOnVictory(thisPtr);
     });
 
-    let origBlackBloodBloodOnVictory = PatchManager.Relics.BlackBlood.OverrideonVictory((thisPtr: NativePointer) => {
+    let origBlackBloodBloodOnVictory = NativeRelics.BlackBlood.OverrideonVictory((thisPtr: NativePointer) => {
         let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.6) {
             UpgradeRandomCard(currentPlayer);
@@ -296,7 +299,7 @@ function PatchRelics() {
     });
 
     //Ginger::atBattleStart don't exist,can't hook it,so we will set the function Pointer in Ginger::Ctor.
-    let origGingeronCtor = PatchManager.Relics.Ginger.OverrideCtor((thisPtr: NativePointer) => {
+    let origGingeronCtor = NativeRelics.Ginger.OverrideCtor((thisPtr: NativePointer) => {
         let gingerObj = origGingeronCtor(thisPtr);
         let wrapGinger = new AbstractRelic(gingerObj);
         wrapGinger.OverrideatBattleStart((thisPtr: NativePointer) => {
@@ -340,7 +343,7 @@ function PatchRelics() {
     });
 
     //SacredBark::onEquip don't exist,can't hook it,so we will set the function Pointer in SacredBark::Ctor.
-    let origSacredBarkCtor = PatchManager.Relics.SacredBark.OverrideCtor((thisPtr: NativePointer) => {
+    let origSacredBarkCtor = NativeRelics.SacredBark.OverrideCtor((thisPtr: NativePointer) => {
         let sacredBarkObj = origSacredBarkCtor(thisPtr);
         let wrapSacredBark = new AbstractRelic(sacredBarkObj);
         wrapSacredBark.OverrideonEquip((thisPtr: NativePointer) => {
@@ -348,7 +351,7 @@ function PatchRelics() {
             currentPlayer.potionSlots += 2;
             let playerPotions = currentPlayer.potions;
             for (let index = 2; index > 0; index--) {
-                let newPotionSlot = PatchManager.Potions.PotionSlot.Ctor(currentPlayer.potionSlots - index);
+                let newPotionSlot = NativePotions.PotionSlot.Ctor(currentPlayer.potionSlots - index);
                 NativeSTSLib.ArrayList.AbstractPotion.Add(playerPotions.rawPtr, newPotionSlot);
             }
             let wrapSacredBark = new AbstractRelic(sacredBarkObj);
@@ -370,7 +373,7 @@ function PatchRelics() {
         return scryActionObj;
     });
 
-    let origCoffeeDripperCtor = PatchManager.Relics.CoffeeDripper.OverrideCtor((thisPtr: NativePointer) => {
+    let origCoffeeDripperCtor = NativeRelics.CoffeeDripper.OverrideCtor((thisPtr: NativePointer) => {
         let coffeeDripperObj = origCoffeeDripperCtor(thisPtr);
         let wrapCoffeeDripper = new AbstractRelic(coffeeDripperObj);
         wrapCoffeeDripper.OverrideonEnterRestRoom((thisPtr: NativePointer) => {
@@ -402,7 +405,7 @@ function PatchRelics() {
         numCardsModifyer.flush();
     });
 
-    PatchManager.Relics.MarkofPain.OverrideatBattleStart((thisPtr: NativePointer) => {
+    NativeRelics.MarkofPain.OverrideatBattleStart((thisPtr: NativePointer) => {
         let wrapMarkofPain = new AbstractRelic(thisPtr);
         wrapMarkofPain.flash();
         let relicAboveCreatureAction = NativeActions.RelicAboveCreature.Ctor(PatchManager.STSGlobalVars.AbstractDungeon_player.rawPtr, thisPtr);
@@ -413,7 +416,7 @@ function PatchRelics() {
     });
 
     //RunicPyramid::onPlayerEndTurn don't exist,can't hook it,so we will set the function Pointer in RunicPyramid::Ctor.
-    let origRunicPyramidCtor = PatchManager.Relics.RunicPyramid.OverrideCtor((thisPtr: NativePointer) => {
+    let origRunicPyramidCtor = NativeRelics.RunicPyramid.OverrideCtor((thisPtr: NativePointer) => {
         let RunicPyramidObj = origRunicPyramidCtor(thisPtr);
         let wrapRunicPyramid = new AbstractRelic(RunicPyramidObj);
         wrapRunicPyramid.OverrideonPlayerEndTurn((thisPtr: NativePointer) => {

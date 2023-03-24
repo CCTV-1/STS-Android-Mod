@@ -4,6 +4,7 @@ import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { PatchManager } from "../PatchManager.js";
 import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
+import { NativeRelics } from "../NativeFuncWrap/NativeRelics.js";
 
 /**
  * thisPtr will is ```nullptr```.
@@ -242,7 +243,7 @@ export class AbstractRelic extends NativeClassWrapper {
     static readonly #vFuncNamePrefix = "AbstractRelic_";
 
     static NewRelicCtor(relicId: string, relicName: string, description: string, flavorText: string, imgName: string, tier: RelicTier, sfx: LandingSound, newVFuncs: NewRelicVFuncType): NativePointer {
-        let origRelicPtr = PatchManager.Relics.AbstractRelic.Ctor("Black Blood", imgName, tier, sfx);
+        let origRelicPtr = NativeRelics.AbstractRelic.Ctor("Black Blood", imgName, tier, sfx);
 
         let wrapRelic = new AbstractRelic(origRelicPtr);
         if (!AbstractRelic.#rewriteVFuncMap.has(relicId)) {
