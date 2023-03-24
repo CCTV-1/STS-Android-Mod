@@ -1092,75 +1092,6 @@ export class PatchManager {
         }
     };
 
-    static readonly StringLiteral = {
-        //red card names
-        get DefendRed() {
-            return PatchManager.#GetOffsetPtr(0x3490118).readPointer();
-        },
-        get InfernalBlade() {
-            return PatchManager.#GetOffsetPtr(0x3491FF0).readPointer();
-        },
-        get SearingBlow() {
-            return PatchManager.#GetOffsetPtr(0x3493DC4).readPointer();
-        },
-        get StrikeRed() {
-            return PatchManager.#GetOffsetPtr(0x3494654).readPointer();
-        },
-        get TrueGrit() {
-            return PatchManager.#GetOffsetPtr(0x3494DFC).readPointer();
-        },
-
-        //green card names
-        get DefendGreen() {
-            return PatchManager.#GetOffsetPtr(0x3490110).readPointer();
-        },
-        get Distraction() {
-            return PatchManager.#GetOffsetPtr(0x349025C).readPointer();
-        },
-        get Neutralize() {
-            return PatchManager.#GetOffsetPtr(0x3492D38).readPointer();
-        },
-        get StrikeGreen() {
-            return PatchManager.#GetOffsetPtr(0x349464C).readPointer();
-        },
-
-        //blue card names
-        get DefendBlue() {
-            return PatchManager.#GetOffsetPtr(0x349010C).readPointer();
-        },
-        get Dualcast() {
-            return PatchManager.#GetOffsetPtr(0x3490350).readPointer();
-        },
-        get StrikeBlue() {
-            return PatchManager.#GetOffsetPtr(0x3494648).readPointer();
-        },
-        get WhiteNoise() {
-            return PatchManager.#GetOffsetPtr(0x3495718).readPointer();
-        },
-
-        //Purple card names
-        get DefendPurple() {
-            return PatchManager.#GetOffsetPtr(0x3490114).readPointer();
-        },
-        get Eruption() {
-            return PatchManager.#GetOffsetPtr(0x3490680).readPointer();
-        },
-        get ForeignInfluence() {
-            return PatchManager.#GetOffsetPtr(0x3490A98).readPointer();
-        },
-        get StrikePurple() {
-            return PatchManager.#GetOffsetPtr(0x3494650).readPointer();
-        },
-        get Vigilance() {
-            return PatchManager.#GetOffsetPtr(0x34951CC).readPointer();
-        },
-
-        //colorless card names
-        get Discovery() {
-            return PatchManager.#GetOffsetPtr(0x3490238).readPointer();
-        },
-    };
-
     static readonly InstructionPtr = {
         /**
          * AbstractDungeon::getRewardCards
@@ -1220,6 +1151,10 @@ export class PatchManager {
         },
         P_P_Func(funcName: string) {
             return "void* " + funcName + "(void * arg1) { return (void *)0; }";
+        },
+        /**if int != int32_t, this func not work. */
+        I32_PI32_Func(funcName: string) {
+            return "int " + funcName + "(void * arg1, int arg2) { return 0; }";
         }
     };
 
