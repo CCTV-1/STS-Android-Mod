@@ -229,9 +229,6 @@ function Patchcharacters() {
         addNativeStr(startDeck, baseDefend);
         addNativeStr(startDeck, baseDefend);
 
-        if (FakeRandom(0, 10) > 8) {
-            PatchManager.STSLib.ArrayList.JString.AddNativeStr(startDeck, PatchManager.StringLiteral.Discovery);
-        }
         switch (FakeRandom(0, 1)) {
             case 0: {
                 PatchManager.STSLib.ArrayList.JString.Add(startDeck, "ForeignInfluence");
