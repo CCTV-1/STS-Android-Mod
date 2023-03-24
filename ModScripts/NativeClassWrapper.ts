@@ -1,5 +1,6 @@
 import { PatchManager } from "./PatchManager.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
+import { JString } from "./JString.js";
 
 export class NativeClassWrapper {
     static #overridMap = new Map<string, CModule>();
@@ -99,12 +100,12 @@ export class NativeClassWrapper {
     }
 
     readOffsetJString(offset: number) {
-        return this.rawPtr.add(offset).readPointer().add(0xc).readUtf16String() || "";
+        let JStr = new JString(this.rawPtr.add(offset).readPointer());
+        return JStr;
     }
 
-    writeOffsetJString(offset: number, value: string) {
-        this.rawPtr.add(offset).readPointer().add(0x8).writeS32(value.length);
-        this.rawPtr.add(offset).readPointer().add(0xc).writeUtf16String(value);
+    writeOffsetJString(offset: number, value: JString) {
+        this.rawPtr.add(offset).writePointer(value.rawPtr)
     }
 
     readOffsetUtf16String(offset: number) {

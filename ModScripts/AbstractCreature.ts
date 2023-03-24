@@ -1,3 +1,4 @@
+import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 
@@ -99,17 +100,17 @@ export class AbstractCreature extends NativeClassWrapper {
     }
 
     get name() {
-        return this.readOffsetJString(0x8);
+        return this.readOffsetJString(0x8).content;
     }
     set name(value) {
-        this.writeOffsetJString(0x8, value);
+        this.writeOffsetJString(0x8, JString.CreateJString(value));
     }
 
     get id() {
-        return this.readOffsetJString(0xC);
+        return this.readOffsetJString(0xC).content;
     }
     set id(value) {
-        this.writeOffsetJString(0xC, value);
+        this.writeOffsetJString(0xC, JString.CreateJString(value));
     }
 
     get isPlayer() {

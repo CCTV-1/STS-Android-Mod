@@ -1,4 +1,5 @@
 import { CardColor, CardRarity, CardTarget, DamageType, CardType } from "./enums.js";
+import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 import { PatchManager } from "./PatchManager.js";
@@ -606,10 +607,10 @@ export class AbstractCard extends NativeClassWrapper {
     }
 
     get assetUrl() {
-        return this.readOffsetJString(0xc8);
+        return this.readOffsetJString(0xc8).content;
     }
     set assetUrl(value) {
-        this.writeOffsetJString(0xc8, value);
+        this.writeOffsetJString(0xc8, JString.CreateJString(value));
     }
 
     get transparency() {
@@ -669,30 +670,30 @@ export class AbstractCard extends NativeClassWrapper {
     }
 
     get originalName() {
-        return this.readOffsetJString(0x13c);
+        return this.readOffsetJString(0x13c).content;
     }
     set originalName(value) {
-        this.writeOffsetJString(0x13c, value);
+        this.writeOffsetJString(0x13c, JString.CreateJString(value));
     }
 
     get name() {
-        return this.readOffsetJString(0x140);
+        return this.readOffsetJString(0x140).content;
     }
     set name(value) {
-        this.writeOffsetJString(0x140, value);
+        this.writeOffsetJString(0x140, JString.CreateJString(value));
     }
 
     get rawDescription() {
-        return this.readOffsetJString(0x144);
+        return this.readOffsetJString(0x144).content;
     }
     set rawDescription(value) {
-        this.writeOffsetJString(0x144, value);
+        this.writeOffsetJString(0x144, JString.CreateJString(value));
     }
 
     get cardID() {
-        return this.readOffsetJString(0x148);
+        return this.readOffsetJString(0x148).content;
     }
     set cardID(value) {
-        this.writeOffsetJString(0x148, value);
+        this.writeOffsetJString(0x148, JString.CreateJString(value));
     }
 }

@@ -18,8 +18,4 @@ export class JString extends NativeClassWrapper {
     get content() {
         return this.readOffsetUtf16String(0xC) || "";
     }
-    set content(str: string) {
-        this.writeOffsetS32(0x8, str.length);
-        this.writeOffsetUtf16String(0xC, str);
-    }
 }
