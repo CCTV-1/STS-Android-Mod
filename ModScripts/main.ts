@@ -8,6 +8,10 @@ import { newCardLibrary } from "./NewCardLibrary.js";
 import { newRelicLibrary } from "./NewRelicLibrary.js";
 import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
 import { NativeActions } from "./NativeFuncWrap/NativeActions.js";
+import { NativeCards } from "./NativeFuncWrap/NativeCards.js";
+import { NativeHelpers } from "./NativeFuncWrap/NativeHelpers.js";
+import { NativeCharacters } from "./NativeFuncWrap/NativeCharacters.js";
+import { NativePowers } from "./NativeFuncWrap/NativePowers.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -38,45 +42,45 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
 }
 
 function PatchRedCards() {
-    let origStrikeRedCtorFunc = PatchManager.Cards.Red.StrikeRed.OverrideCtor((thisPtr: NativePointer) => {
+    let origStrikeRedCtorFunc = NativeCards.Red.StrikeRed.OverrideCtor((thisPtr: NativePointer) => {
         let ret = origStrikeRedCtorFunc(thisPtr);
         let newCard = new AbstractCard(ret);
         newCard.baseDamage++;
         return ret;
     });
-    let origDefendRedCtorFunc = PatchManager.Cards.Red.DefendRed.OverrideCtor((thisPtr: NativePointer) => {
+    let origDefendRedCtorFunc = NativeCards.Red.DefendRed.OverrideCtor((thisPtr: NativePointer) => {
         let ret = origDefendRedCtorFunc(thisPtr);
         let newCard = new AbstractCard(ret);
         newCard.baseBlock++;
         return ret;
     });
-    let origFeedCtor = PatchManager.Cards.Red.Feed.OverrideCtor((thisPtr: NativePointer) => {
+    let origFeedCtor = NativeCards.Red.Feed.OverrideCtor((thisPtr: NativePointer) => {
         let ret = origFeedCtor(thisPtr);
         let newCard = new AbstractCard(ret);
         newCard.magicNumber = ++newCard.baseMagicNumber;
         return ret;
     });
-    let origBashCtor = PatchManager.Cards.Red.Bash.OverrideCtor((thisPtr: NativePointer) => {
+    let origBashCtor = NativeCards.Red.Bash.OverrideCtor((thisPtr: NativePointer) => {
         let ret = origBashCtor(thisPtr);
         let newCard = new AbstractCard(ret);
         newCard.baseDamage = 12;
         return ret;
     });
-    let origSearingBlowUse = PatchManager.Cards.Red.SearingBlow.OverridUse((thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
+    let origSearingBlowUse = NativeCards.Red.SearingBlow.OverridUse((thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
         origSearingBlowUse(thisPtr, playerPtr, monsterPtr);
         let baseCard = new AbstractCard(thisPtr);
         let cardLevel = baseCard.timesUpgraded;
         let newHealAction = NativeActions.Heal.Ctor(playerPtr, playerPtr, cardLevel);
         baseCard.addToBot(newHealAction);
     });
-    let origHeavyBladeCtor = PatchManager.Cards.Red.HeavyBlade.OverrideCtor((thisPtr: NativePointer) => {
+    let origHeavyBladeCtor = NativeCards.Red.HeavyBlade.OverrideCtor((thisPtr: NativePointer) => {
         let ret = origHeavyBladeCtor(thisPtr);
         let newCard = new AbstractCard(ret);
         newCard.baseMagicNumber += 3;
         newCard.magicNumber += 3;
         return ret;
     });
-    let origClotheslineCtor = PatchManager.Cards.Red.Clothesline.OverrideCtor((thisPtr: NativePointer) => {
+    let origClotheslineCtor = NativeCards.Red.Clothesline.OverrideCtor((thisPtr: NativePointer) => {
         let ret = origClotheslineCtor(thisPtr);
         let newCard = new AbstractCard(ret);
         newCard.cost = 1;
@@ -84,21 +88,21 @@ function PatchRedCards() {
         newCard.baseDamage = 6;
         return ret;
     });
-    let origPerfectedStrikeCtor = PatchManager.Cards.Red.PerfectedStrike.OverrideCtor((thisPtr: NativePointer) => {
+    let origPerfectedStrikeCtor = NativeCards.Red.PerfectedStrike.OverrideCtor((thisPtr: NativePointer) => {
         let ret = origPerfectedStrikeCtor(thisPtr);
         let newCard = new AbstractCard(ret);
         newCard.baseMagicNumber += 2;
         newCard.magicNumber += 2;
         return ret;
     });
-    let origDemonFormUse = PatchManager.Cards.Red.DemonForm.OverridUse((thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => {
+    let origDemonFormUse = NativeCards.Red.DemonForm.OverridUse((thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => {
         origDemonFormUse(thisPtr, caster, target);
-        let freeAttackPower = PatchManager.Powers.FreeAttack.Ctor(caster, 1);
+        let freeAttackPower = NativePowers.FreeAttack.Ctor(caster, 1);
         let ApplyPowerActionObj = NativeActions.ApplyPower.Ctor2(caster, caster, freeAttackPower, 1);
         let wrapCard = new AbstractCard(thisPtr);
         wrapCard.addToBot(ApplyPowerActionObj);
     });
-    let origThunderclapUse = PatchManager.Cards.Red.Thunderclap.OverridUse((thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => {
+    let origThunderclapUse = NativeCards.Red.Thunderclap.OverridUse((thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => {
         origThunderclapUse(thisPtr, caster, target);
         let wrapCard = new AbstractCard(thisPtr);
         if (wrapCard.upgraded) {
@@ -108,17 +112,17 @@ function PatchRedCards() {
 }
 
 function PatchPurpleCards() {
-    let origAlphaCtor = PatchManager.Cards.Purple.Alpha.OverrideCtor((thisPtr: NativePointer) => {
+    let origAlphaCtor = NativeCards.Purple.Alpha.OverrideCtor((thisPtr: NativePointer) => {
         let ret = origAlphaCtor(thisPtr);
         let newCard = new AbstractCard(ret);
-        let fakePreview = PatchManager.Cards.Temp.Omega.Ctor();
+        let fakePreview = NativeCards.Temp.Omega.Ctor();
         newCard.cardsToPreview = fakePreview;
         return ret;
     });
 }
 
 function Patchcharacters() {
-    PatchManager.Characters.Ironclad.OverridegetStartingDeck((thisPtr: NativePointer) => {
+    NativeCharacters.Ironclad.OverridegetStartingDeck((thisPtr: NativePointer) => {
         let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
 
         const baseStrike = NativeSTSLib.JString.Ctor("Strike_R");
@@ -150,7 +154,7 @@ function Patchcharacters() {
 
         return startDeck;
     });
-    PatchManager.Characters.TheSilent.OverridegetStartingDeck((thisPtr: NativePointer) => {
+    NativeCharacters.TheSilent.OverridegetStartingDeck((thisPtr: NativePointer) => {
         let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
 
         const baseStrike = NativeSTSLib.JString.Ctor("Strike_G");
@@ -182,7 +186,7 @@ function Patchcharacters() {
 
         return startDeck;
     });
-    PatchManager.Characters.Defect.OverridegetStartingDeck((thisPtr: NativePointer) => {
+    NativeCharacters.Defect.OverridegetStartingDeck((thisPtr: NativePointer) => {
         let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
 
         const baseStrike = NativeSTSLib.JString.Ctor("Strike_B");
@@ -214,7 +218,7 @@ function Patchcharacters() {
 
         return startDeck;
     });
-    PatchManager.Characters.Watcher.OverridegetStartingDeck((thisPtr: NativePointer) => {
+    NativeCharacters.Watcher.OverridegetStartingDeck((thisPtr: NativePointer) => {
         let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
 
         const baseStrike = NativeSTSLib.JString.Ctor("Strike_P");
@@ -247,7 +251,7 @@ function Patchcharacters() {
         return startDeck;
     });
 
-    //let origLoseGoldFunc = PatchManager.Characters.AbstractPlayer.OverridloseGold((thisPtr: NativePointer, gold: number) => { origLoseGoldFunc(thisPtr, Math.ceil(gold*0.6)); });
+    //let origLoseGoldFunc = NativeCharacters.AbstractPlayer.OverridloseGold((thisPtr: NativePointer, gold: number) => { origLoseGoldFunc(thisPtr, Math.ceil(gold*0.6)); });
 
     Memory.patchCode(PatchManager.InstructionPtr.rewardCardNumber, 64, function (code) {
         let numCardsModifyer = new ThumbWriter(code);
@@ -259,7 +263,7 @@ function Patchcharacters() {
 
 function PatchPowers() {
     //let origOnCardDrawFunc = 
-    PatchManager.Powers.Confusion.OverrideonCardDraw((thisPtr: NativePointer, cardPtr: NativePointer) => {
+    NativePowers.Confusion.OverrideonCardDraw((thisPtr: NativePointer, cardPtr: NativePointer) => {
         //    origOnCardDrawFunc(thisPtr, cardPtr)
         let baseCard = new AbstractCard(cardPtr);
         if (baseCard.cost >= 0) {
@@ -306,19 +310,19 @@ function PatchRelics() {
                 let formPowerObj = null;
                 switch (currentPlayer.chosenClass) {
                     case PlayerClass.IRONCLAD: {
-                        formPowerObj = PatchManager.Powers.DemonForm.Ctor(currentPlayer.rawPtr, 2);
+                        formPowerObj = NativePowers.DemonForm.Ctor(currentPlayer.rawPtr, 2);
                         break;
                     }
                     case PlayerClass.THE_SILENT: {
-                        formPowerObj = PatchManager.Powers.IntangiblePlayer.Ctor(currentPlayer.rawPtr, 2);
+                        formPowerObj = NativePowers.IntangiblePlayer.Ctor(currentPlayer.rawPtr, 2);
                         break;
                     }
                     case PlayerClass.DEFECT: {
-                        formPowerObj = PatchManager.Powers.Echo.Ctor(currentPlayer.rawPtr, 1);
+                        formPowerObj = NativePowers.Echo.Ctor(currentPlayer.rawPtr, 1);
                         break;
                     }
                     case PlayerClass.WATCHER: {
-                        formPowerObj = PatchManager.Powers.Deva.Ctor(currentPlayer.rawPtr, 1);
+                        formPowerObj = NativePowers.Deva.Ctor(currentPlayer.rawPtr, 1);
                         break;
                     }
                     default: {
@@ -402,7 +406,7 @@ function PatchRelics() {
         let wrapMarkofPain = new AbstractRelic(thisPtr);
         wrapMarkofPain.flash();
         let relicAboveCreatureAction = NativeActions.RelicAboveCreature.Ctor(PatchManager.STSGlobalVars.AbstractDungeon_player.rawPtr, thisPtr);
-        let targetCard = PatchManager.Cards.status.Burn.Ctor();
+        let targetCard = NativeCards.status.Burn.Ctor();
         let makeTempCardInHandAction = NativeActions.MakeTempCardInHand.Ctor(targetCard, 2, true);
         wrapMarkofPain.addToBot(relicAboveCreatureAction);
         wrapMarkofPain.addToBot(makeTempCardInHandAction);
@@ -429,19 +433,19 @@ function PatchRelics() {
 }
 
 function RegisterNewCards() {
-    let origCardLibraryInitialize = PatchManager.CardLibrary.Overrideinitialize((thisPtr: NativePointer) => {
+    let origCardLibraryInitialize = NativeHelpers.CardLibrary.Overrideinitialize((thisPtr: NativePointer) => {
         for (const newCardCtor of newCardLibrary) {
-            PatchManager.CardLibrary.Add(newCardCtor(PatchManager.nullptr));
+            NativeHelpers.CardLibrary.Add(newCardCtor(PatchManager.nullptr));
         }
         origCardLibraryInitialize(thisPtr);
     });
 }
 
 function RegisterNewRelic() {
-    let origRelicLibraryInitialize = PatchManager.RelicLibrary.Overrideinitialize((thisPtr: NativePointer) => {
+    let origRelicLibraryInitialize = NativeHelpers.RelicLibrary.Overrideinitialize((thisPtr: NativePointer) => {
         for (const newRelicCtor of newRelicLibrary) {
             let origRelicPtr = newRelicCtor(PatchManager.nullptr);
-            PatchManager.RelicLibrary.Add(origRelicPtr);
+            NativeHelpers.RelicLibrary.Add(origRelicPtr);
         }
 
         origRelicLibraryInitialize(thisPtr);

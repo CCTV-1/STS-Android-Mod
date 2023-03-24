@@ -1,15 +1,15 @@
 import { AbstractCard } from "../NativeClassWrap/AbstractCard.js";
 import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
-import { PatchManager } from "../PatchManager.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
+import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
 
 export const BasicAttackRed = (thisPtr: NativePointer): NativePointer => {
     const vfuncs = {
         use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
             let wrapCard = new AbstractCard(thisPtr);
-            let dmgInfoObj = PatchManager.Cards.DamageInfo.Ctor(playerPtr, wrapCard.damage, wrapCard.damageTypeForTurn);
+            let dmgInfoObj = NativeCards.DamageInfo.Ctor(playerPtr, wrapCard.damage, wrapCard.damageTypeForTurn);
             let damageAction = NativeActions.Damage.Ctor(monsterPtr, dmgInfoObj, AttackEffect.SLASH_DIAGONAL);
-            let targetCard = PatchManager.Cards.status.Burn.Ctor();
+            let targetCard = NativeCards.status.Burn.Ctor();
             let makeTempCardInHandAction = NativeActions.MakeTempCardInHand.Ctor(targetCard, 1, true);
             wrapCard.addToBot(damageAction);
             wrapCard.addToBot(makeTempCardInHandAction);

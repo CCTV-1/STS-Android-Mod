@@ -3,6 +3,7 @@ import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { PatchManager } from "../PatchManager.js";
+import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
 
 /**
  * thisPtr will is ```nullptr```.
@@ -141,7 +142,7 @@ export class AbstractCard extends NativeClassWrapper {
     static NewCardCtor(id: string, name: string, imgUrl: string, cost: number, rawDescription: string,
         type: CardType, color: CardColor, rarity: CardRarity, target: CardTarget, dType: DamageType, newFuncs: NewCardVFuncType): AbstractCard {
 
-        let origCardPtr = PatchManager.Cards.AbstractCard.Ctor(id, name, imgUrl, cost, rawDescription, type, color, rarity, target, dType);
+        let origCardPtr = NativeCards.AbstractCard.Ctor(id, name, imgUrl, cost, rawDescription, type, color, rarity, target, dType);
 
         let wrapCard = new AbstractCard(origCardPtr);
         if (!AbstractCard.#rewriteVFuncMap.has(id)) {
