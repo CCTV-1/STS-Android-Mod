@@ -13,7 +13,7 @@ export const DoNothing = (thisPtr: NativePointer): NativePointer => {
         },
     };
     
-    let relicObj = AbstractRelic.NewRelicCtor("Black Blood", "burningBlood.png", RelicTier.STARTER, LandingSound.MAGICAL, vfuncs);
+    let relicObj = AbstractRelic.NewRelicCtor("DoNothing", "什么都不做", "确实什么都不做", "废物遗物一个", "burningBlood.png", RelicTier.STARTER, LandingSound.MAGICAL, vfuncs);
 
     return relicObj;
 };

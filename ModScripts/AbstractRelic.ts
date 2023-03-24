@@ -240,18 +240,18 @@ export class AbstractRelic extends NativeClassWrapper {
 
     static readonly #vFuncNamePrefix = "AbstractRelic_";
 
-    /**
-     * the func call `STS::AbstractRelic::Ctor`, `STS::AbstractRelic::Ctor` use relicId call `this.relicStrings = CardCrawlGame.languagePack.getRelicStrings(this.relicId);`,
-     * then deref `this.relicStrings` so,if you pass a nonexistent id(can not found in localization file),the game will crash.
-     * @returns raw STS::AbstractRelic pointer
-     */
-    static NewRelicCtor(relicId: string, imgName: string, tier: RelicTier, sfx: LandingSound, newVFuncs: NewRelicVFuncType): NativePointer {
-        let origRelicPtr = PatchManager.Relics.AbstractRelic.Ctor(relicId, imgName, tier, sfx);
+    static NewRelicCtor(relicId: string, relicName: string, description: string, flavorText: string, imgName: string, tier: RelicTier, sfx: LandingSound, newVFuncs: NewRelicVFuncType): NativePointer {
+        let origRelicPtr = PatchManager.Relics.AbstractRelic.Ctor("Black Blood", imgName, tier, sfx);
 
         let wrapRelic = new AbstractRelic(origRelicPtr);
         if (!AbstractRelic.#rewriteVFuncMap.has(relicId)) {
             AbstractRelic.#rewriteVFuncMap.set(relicId, newVFuncs);
         }
+
+        wrapRelic.relicId = relicId;
+        wrapRelic.name = relicName;
+        wrapRelic.description = description;
+        wrapRelic.flavorText = flavorText;
 
         if (!AbstractRelic.#rewriteVFuncMap.has("AbstractRelicProxy")) {
             let funcName = "AbstractRelic_BasicNewRelic_getUpdatedDescription";
@@ -334,17 +334,17 @@ export class AbstractRelic extends NativeClassWrapper {
     }
 
     get name() {
-        return this.readOffsetJString(0x8);
+        return this.readOffsetJString(0x8).content;
     }
     set name(value) {
-        this.writeOffsetJString(0x8, value);
+        this.writeOffsetJString(0x8, JString.CreateJString(value));
     }
 
     get relicId() {
-        return this.readOffsetJString(0xC);
+        return this.readOffsetJString(0xC).content;
     }
     set relicId(value) {
-        this.writeOffsetJString(0xC, value);
+        this.writeOffsetJString(0xC, JString.CreateJString(value));
     }
 
     get energyBased() {
@@ -369,17 +369,17 @@ export class AbstractRelic extends NativeClassWrapper {
     }
 
     get description() {
-        return this.readOffsetJString(0x1C);
+        return this.readOffsetJString(0x1C).content;
     }
     set description(value) {
-        this.writeOffsetJString(0x1C, value);
+        this.writeOffsetJString(0x1C, JString.CreateJString(value));
     }
 
     get flavorText() {
-        return this.readOffsetJString(0x20);
+        return this.readOffsetJString(0x20).content;
     }
     set flavorText(value) {
-        this.writeOffsetJString(0x20, value);
+        this.writeOffsetJString(0x20, JString.CreateJString(value));
     }
 
     get cost() {
