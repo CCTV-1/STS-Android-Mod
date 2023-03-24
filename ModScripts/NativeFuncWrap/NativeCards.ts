@@ -1,8 +1,142 @@
 import { CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
 import { STSCardCtor } from "../NativeClassWrap/AbstractCard.js";
 import { PatchHelper } from "../PatchHelper.js";
-import { NativeFunctionInfoMap } from "./NativeFunctionInfo.js";
+import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 import { NativeSTSLib } from "./NativeSTSLib.js";
+
+const Cards = {
+    AbstractCard: {
+        /**
+         * ```c
+         * STS::AbstractCard * Cards::AbstractCard::Ctor(STS::AbstractCard * this, STS::JString* id, STS::JString* name, STS::JString* imgUrl, 
+         * int32_t cost, STS::JString* rawDescription, STS::CardType type, STS::CardColor color, STS::CardRarity rarity, STS::CardTarget target, STS::DamageType dType)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x16D4FB5, 'pointer', ['pointer', 'pointer', 'pointer', 'pointer', 'int32', 'pointer', 'uint32', 'uint32', 'uint32', 'uint32', 'uint32']),
+    },
+    DamageInfo: {
+        /**
+         * ```c
+         * STS::DamageInfo* Cards::DamageInfo::Ctor(STS::DamageInfo* thisPtr, STS::AbstractCreature* damageSource, int dmgValue, DamageType type)
+         * ```
+         * 
+         * Ctor2 just call ```Ctor(thisPtr, damageSource, dmgValue, DamageType.NORMAL);```
+         */
+        Ctor: new NativeFunctionInfo(0x1719A8D, 'pointer', ['pointer', 'pointer', 'int32', 'uint32']),
+    },
+    Red: {
+        Bash: {
+            /**
+             * ```c
+             * STS::AbstractCard * Cards::Red::Bash::Ctor(STS::AbstractCard * this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x173AD4D, 'pointer', ['pointer']),
+        },
+        Clothesline: {
+            /**
+             * ```c
+             * STS::AbstractCard * Cards::Red::Clothesline::Ctor(STS::AbstractCard * this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x173DA49, 'pointer', ['pointer']),
+        },
+        DefendRed: {
+            /**
+             * ```c
+             * STS::AbstractCard * Cards::Red::Defend_Red::Ctor(STS::AbstractCard * this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x173E7DD, 'pointer', ['pointer']),
+        },
+        Feed: {
+            /**
+             * ```c
+             * STS::AbstractCard * Cards::Red::Feed::Ctor(STS::AbstractCard * this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1740309, 'pointer', ['pointer']),
+        },
+        HeavyBlade: {
+            /**
+             * ```c
+             * STS::AbstractCard * Cards::Red::HeavyBlade::Ctor(STS::AbstractCard * this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1741E25, 'pointer', ['pointer']),
+        },
+        PerfectedStrike: {
+            /**
+             * ```c
+             * STS::AbstractCard * Cards::Red::PerfectedStrike::Ctor(STS::AbstractCard * this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x17445DD, 'pointer', ['pointer']),
+        },
+        SearingBlow: {
+            /**
+             * ```c
+             * void Cards::Red::SearingBlow::Use(STS::AbstractCard * this, STS::AbstractPlayer* castPlayer, STS::AbstractMonster* targetMonster)
+             * ```
+             */
+            Use: new NativeFunctionInfo(0x17467A5, 'void', ['pointer', 'pointer', 'pointer']),
+        },
+        StrikeRed: {
+            /**
+             * ```c
+             * STS::AbstractCard * Cards::Red::Strike_Red::Ctor(STS::AbstractCard * this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1747E89, 'pointer', ['pointer']),
+        },
+        DemonForm: {
+            /**
+             * ```c
+             * void Cards::Red::DemonForm::Use(STS::AbstractCard * this, STS::AbstractPlayer* castPlayer, STS::AbstractMonster* targetMonster)
+             * ```
+             */
+            Use: new NativeFunctionInfo(0x173EC15, 'void', ['pointer', 'pointer', 'pointer']),
+        },
+        Thunderclap: {
+            /**
+             * ```c
+             * void Cards::Red::Thunderclap::Use(STS::AbstractCard * this, STS::AbstractPlayer* castPlayer, STS::AbstractMonster* targetMonster)
+             * ```
+             */
+            Use: new NativeFunctionInfo(0x17487FD, 'void', ['pointer', 'pointer', 'pointer']),
+        },
+    },
+    Purple: {
+        Alpha: {
+            /**
+             * ```c
+             * STS::AbstractCard * Cards::Purple::Alpha::Ctor(STS::AbstractCard * this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x172AE45, 'pointer', ['pointer'])
+        }
+    },
+    Temp: {
+        Omega: {
+            /**
+             * ```c
+             * STS::AbstractCard * Cards::Temp::Omega::Ctor(STS::AbstractCard * this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1750CE9, 'pointer', ['pointer']),
+        }
+    },
+    status: {
+        Burn: {
+            /**
+             * ```c
+             * STS::AbstractCard * Cards::status::Burn::Ctor(STS::AbstractCard * this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x176BDCD, 'pointer', ['pointer']),
+        }
+    }
+};
 
 export const NativeCards = {
     AbstractCard: {
@@ -12,135 +146,135 @@ export const NativeCards = {
             let nativeName = NativeSTSLib.JString.Ctor(name);
             let nativeimgUrl = NativeSTSLib.JString.Ctor(imgUrl);
             let nativerawDescription = NativeSTSLib.JString.Ctor(rawDescription);
-            return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.AbstractCard.Ctor)(PatchHelper.nullptr, nativeId, nativeName,
+            return PatchHelper.GetNativeFunction(Cards.AbstractCard.Ctor)(PatchHelper.nullptr, nativeId, nativeName,
                 nativeimgUrl, cost, nativerawDescription, Number(type), Number(color), Number(rarity), Number(target), Number(dType));
         },
         OverrideCtor(newCtor: (thisPtr: NativePointer, id: NativePointer, name: NativePointer, imgUrl: NativePointer, cost: number, rawDescription: NativePointer,
             type: Number, color: Number, rarity: Number, target: Number, dType: Number) => NativePointer):
             (thisPtr: NativePointer, id: NativePointer, name: NativePointer, imgUrl: NativePointer, cost: number, rawDescription: NativePointer,
                 type: Number, color: Number, rarity: Number, target: Number, dType: Number) => NativePointer {
-            return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.AbstractCard.Ctor, newCtor);
+            return PatchHelper.HookSTSFunction(Cards.AbstractCard.Ctor, newCtor);
         },
     },
     DamageInfo: {
         Ctor(damageSource: NativePointer, dmgValue: number, dmgTYpe: DamageType): NativePointer {
-            return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.DamageInfo.Ctor)(PatchHelper.nullptr, damageSource, dmgValue, Number(dmgTYpe));
+            return PatchHelper.GetNativeFunction(Cards.DamageInfo.Ctor)(PatchHelper.nullptr, damageSource, dmgValue, Number(dmgTYpe));
         }
     },
     Red: {
         Bash: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Red.Bash.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.Bash.Ctor)(PatchHelper.nullptr);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
-                return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.Red.Bash.Ctor, newCtor);
+                return PatchHelper.HookSTSFunction(Cards.Red.Bash.Ctor, newCtor);
             },
         },
         Clothesline: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Red.Clothesline.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.Clothesline.Ctor)(PatchHelper.nullptr);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
-                return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.Red.Clothesline.Ctor, newCtor);
+                return PatchHelper.HookSTSFunction(Cards.Red.Clothesline.Ctor, newCtor);
             },
         },
         DefendRed: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Red.DefendRed.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.DefendRed.Ctor)(PatchHelper.nullptr);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
-                return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.Red.DefendRed.Ctor, newCtor);
+                return PatchHelper.HookSTSFunction(Cards.Red.DefendRed.Ctor, newCtor);
             },
         },
         Feed: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Red.Feed.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.Feed.Ctor)(PatchHelper.nullptr);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
-                return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.Red.Feed.Ctor, newCtor);
+                return PatchHelper.HookSTSFunction(Cards.Red.Feed.Ctor, newCtor);
             },
         },
         HeavyBlade: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Red.HeavyBlade.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.HeavyBlade.Ctor)(PatchHelper.nullptr);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
-                return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.Red.HeavyBlade.Ctor, newCtor);
+                return PatchHelper.HookSTSFunction(Cards.Red.HeavyBlade.Ctor, newCtor);
             },
         },
         PerfectedStrike: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Red.PerfectedStrike.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.PerfectedStrike.Ctor)(PatchHelper.nullptr);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
-                return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.Red.PerfectedStrike.Ctor, newCtor);
+                return PatchHelper.HookSTSFunction(Cards.Red.PerfectedStrike.Ctor, newCtor);
             },
         },
         SearingBlow: {
             Use(thisPtr: NativePointer, caster: NativePointer, target: NativePointer): void {
-                PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Red.SearingBlow.Use)(thisPtr, caster, target);
+                PatchHelper.GetNativeFunction(Cards.Red.SearingBlow.Use)(thisPtr, caster, target);
             },
             /** return origin Use */
             OverridUse(newUse: (thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => void): (thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => void {
-                return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.Red.SearingBlow.Use, newUse);
+                return PatchHelper.HookSTSFunction(Cards.Red.SearingBlow.Use, newUse);
             }
         },
         StrikeRed: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Red.StrikeRed.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.StrikeRed.Ctor)(PatchHelper.nullptr);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
-                return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.Red.StrikeRed.Ctor, newCtor);
+                return PatchHelper.HookSTSFunction(Cards.Red.StrikeRed.Ctor, newCtor);
             },
         },
         DemonForm: {
             Use(thisPtr: NativePointer, caster: NativePointer, target: NativePointer): void {
-                PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Red.DemonForm.Use)(thisPtr, caster, target);
+                PatchHelper.GetNativeFunction(Cards.Red.DemonForm.Use)(thisPtr, caster, target);
             },
             /** return origin Use */
             OverridUse(newUse: (thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => void): (thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => void {
-                return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.Red.DemonForm.Use, newUse);
+                return PatchHelper.HookSTSFunction(Cards.Red.DemonForm.Use, newUse);
             }
         },
         Thunderclap: {
             Use(thisPtr: NativePointer, caster: NativePointer, target: NativePointer): void {
-                PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Red.Thunderclap.Use)(thisPtr, caster, target);
+                PatchHelper.GetNativeFunction(Cards.Red.Thunderclap.Use)(thisPtr, caster, target);
             },
             /** return origin Use */
             OverridUse(newUse: (thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => void): (thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => void {
-                return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.Red.Thunderclap.Use, newUse);
+                return PatchHelper.HookSTSFunction(Cards.Red.Thunderclap.Use, newUse);
             }
         }
     },
     Purple: {
         Alpha: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Purple.Alpha.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Purple.Alpha.Ctor)(PatchHelper.nullptr);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
-                return PatchHelper.HookSTSFunction(NativeFunctionInfoMap.Cards.Purple.Alpha.Ctor, newCtor);
+                return PatchHelper.HookSTSFunction(Cards.Purple.Alpha.Ctor, newCtor);
             }
         }
     },
     Temp: {
         Omega: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.Temp.Omega.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Temp.Omega.Ctor)(PatchHelper.nullptr);
             },
         }
     },
     status: {
         Burn: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Cards.status.Burn.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.status.Burn.Ctor)(PatchHelper.nullptr);
             }
         },
     },
