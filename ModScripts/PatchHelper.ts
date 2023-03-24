@@ -1,12 +1,9 @@
-import { NativeFunctionInfo, NativeFunctionInfoMap } from "./NativeFuncWrap/NativeFunctionInfo.js"
+import { NativeFunctionInfo } from "./NativeFuncWrap/NativeFunctionInfo.js"
 import { AbstractPlayer } from "./NativeClassWrap/AbstractPlayer.js";
-import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType, LandingSound, RelicTier } from "./enums.js";
-import { STSCardCtor } from "./NativeClassWrap/AbstractCard.js";
-import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
 
-export class PatchManager {
+export class PatchHelper {
     static readonly nullptr = new NativePointer(0);
-    static readonly STSModuleBaseAddress = Module.findBaseAddress("libSpire_ANDROID.so") || PatchManager.nullptr;
+    static readonly STSModuleBaseAddress = Module.findBaseAddress("libSpire_ANDROID.so") || PatchHelper.nullptr;
 
     static readonly #STSLogger = new File("/sdcard/Android/data/com.humble.SlayTheSpire/files/ModScripts/ModLog.txt", "w+");
     static readonly RewriteVFuncMap = new Map<string, NativePointer>();
@@ -20,7 +17,7 @@ export class PatchManager {
          * origin Instruction: ```0x17BE846 05 25 MOVS R5, #3```
          */
         get rewardCardNumber() {
-            return PatchManager.#GetOffsetPtr(0x17BE846);
+            return PatchHelper.#GetOffsetPtr(0x17BE846);
         },
         /**
          *  VelvetChoker::onPlayCard
@@ -28,7 +25,7 @@ export class PatchManager {
          * origin Instruction: ```019AD89E 05 28 CMP R0, #5```
          */
         get VelvetChokerPlayCounter() {
-            return PatchManager.#GetOffsetPtr(0x19AD89E);
+            return PatchHelper.#GetOffsetPtr(0x19AD89E);
         },
         /**
          *  VelvetChoker::onPlayCard
@@ -36,7 +33,7 @@ export class PatchManager {
          * origin Instruction: ```019AD8E2 06 28 CMP R0, #6```
          */
         get VelvetChokerCanPlayCheck() {
-            return PatchManager.#GetOffsetPtr(0x19AD8E2);
+            return PatchHelper.#GetOffsetPtr(0x19AD8E2);
         },
         /**
          *  VelvetChoker::onPlayCard
@@ -44,22 +41,22 @@ export class PatchManager {
          * origin Instruction: ```019AD904 06 21 MOVS R1, #6```
          */
         get VelvetChokerCanPlayStateValue() {
-            return PatchManager.#GetOffsetPtr(0x19AD904);
+            return PatchHelper.#GetOffsetPtr(0x19AD904);
         }
     };
 
     static readonly STSGlobalVars = {
         get STSSetting_WIDTH() {
-            return PatchManager.#GetOffsetPtr(0x34987C0).readS32();
+            return PatchHelper.#GetOffsetPtr(0x34987C0).readS32();
         },
         get STSSetting_HEIGHT() {
-            return PatchManager.#GetOffsetPtr(0x34987C4).readS32();
+            return PatchHelper.#GetOffsetPtr(0x34987C4).readS32();
         },
         get AbstractDungeon_player() {
-            return new AbstractPlayer(PatchManager.#GetOffsetPtr(0x3498EDC).readPointer());
+            return new AbstractPlayer(PatchHelper.#GetOffsetPtr(0x3498EDC).readPointer());
         },
         get AbstractDungeon_topLevelEffects() {
-            return PatchManager.#GetOffsetPtr(0x3498F84).readPointer();
+            return PatchHelper.#GetOffsetPtr(0x3498F84).readPointer();
         },
     };
 
@@ -80,19 +77,19 @@ export class PatchManager {
     };
 
     static #GetOffsetPtr(offset: number): NativePointer {
-        if (!PatchManager.#GlobalVarCache.has(offset)) {
-            PatchManager.#GlobalVarCache.set(offset, PatchManager.STSModuleBaseAddress.add(offset));
+        if (!PatchHelper.#GlobalVarCache.has(offset)) {
+            PatchHelper.#GlobalVarCache.set(offset, PatchHelper.STSModuleBaseAddress.add(offset));
         }
-        return PatchManager.#GlobalVarCache.get(offset) || PatchManager.nullptr;
+        return PatchHelper.#GlobalVarCache.get(offset) || PatchHelper.nullptr;
     }
 
     static GetNativeFunction(origFuncInfo: NativeFunctionInfo): NativeFunction<any, any> {
-        let funcAddressPtr = PatchManager.STSModuleBaseAddress.add(origFuncInfo.funcOffset);
+        let funcAddressPtr = PatchHelper.STSModuleBaseAddress.add(origFuncInfo.funcOffset);
         let funcAddress = funcAddressPtr.toString();
-        let nativeFunc = PatchManager.#NativeFuncCache.get(funcAddress);
+        let nativeFunc = PatchHelper.#NativeFuncCache.get(funcAddress);
         if (nativeFunc === undefined) {
             nativeFunc = new NativeFunction(funcAddressPtr, origFuncInfo.retType, origFuncInfo.argTypes);
-            PatchManager.#NativeFuncCache.set(funcAddress, nativeFunc);
+            PatchHelper.#NativeFuncCache.set(funcAddress, nativeFunc);
         }
 
         return nativeFunc;
@@ -100,16 +97,16 @@ export class PatchManager {
 
     static GetNativeVFunction(funcPtr: NativePointer, returnType: NativeFunctionReturnType, argTypes: NativeFunctionArgumentType[]): NativeFunction<any, any> {
         let funcAddress = funcPtr.toString();
-        let vFunc = PatchManager.#NativeFuncCache.get(funcAddress);
+        let vFunc = PatchHelper.#NativeFuncCache.get(funcAddress);
         if (vFunc === undefined) {
             vFunc = new NativeFunction(funcPtr, returnType, argTypes);
-            PatchManager.#NativeFuncCache.set(funcAddress, vFunc);
+            PatchHelper.#NativeFuncCache.set(funcAddress, vFunc);
         }
         return vFunc;
     }
 
     static HookSTSFunction(origFuncInfo: NativeFunctionInfo, fakeFunc: (...args: any) => any): NativeFunction<any, any> {
-        let origFunc = PatchManager.GetNativeFunction(origFuncInfo)
+        let origFunc = PatchHelper.GetNativeFunction(origFuncInfo)
         let fakeCallback = new NativeCallback(fakeFunc, origFuncInfo.retType, origFuncInfo.argTypes);
         Interceptor.replace(origFunc, fakeCallback);
         return origFunc;
@@ -118,7 +115,7 @@ export class PatchManager {
     static LogV(message: string) {
         let nowDate = new Date();
         let timeStr = nowDate.getHours() + "." + nowDate.getMinutes() + "." + nowDate.getSeconds() + "." + nowDate.getMilliseconds();
-        PatchManager.#STSLogger.write(timeStr + " : " + message + "\n");
-        PatchManager.#STSLogger.flush();
+        PatchHelper.#STSLogger.write(timeStr + " : " + message + "\n");
+        PatchHelper.#STSLogger.flush();
     }
 }

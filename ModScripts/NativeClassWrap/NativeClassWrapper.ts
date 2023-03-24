@@ -1,4 +1,4 @@
-import { PatchManager } from "../PatchManager.js";
+import { PatchHelper } from "../PatchHelper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { JString } from "./JString.js";
 
@@ -21,7 +21,7 @@ export class NativeClassWrapper {
 
     getVirtualFunction(funcInfo: NativeFunctionInfo) {
         let vFuncPtr = this.#vfuncMapPtr.add(funcInfo.funcOffset).readPointer();
-        return PatchManager.GetNativeVFunction(vFuncPtr, funcInfo.retType, funcInfo.argTypes);
+        return PatchHelper.GetNativeVFunction(vFuncPtr, funcInfo.retType, funcInfo.argTypes);
     }
     /**
      * 

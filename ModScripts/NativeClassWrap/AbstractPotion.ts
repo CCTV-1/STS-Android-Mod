@@ -1,7 +1,7 @@
 import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
-import { PatchManager } from "../PatchManager.js";
+import { PatchHelper } from "../PatchHelper.js";
 
 export class AbstractPotion extends NativeClassWrapper {
     //NativePointer AbstractPotion *
@@ -94,7 +94,7 @@ export class AbstractPotion extends NativeClassWrapper {
     }
     OverrideinitializeData(newVFunc: (thisPtr: NativePointer) => void) {
         let funcName = (AbstractPotion.#vFuncNamePrefix + this.potionId + "_initializeData").replace(/\s+/g, "");
-        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractPotion.#vfunctionMap.initializeData, newVFunc);
+        this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractPotion.#vfunctionMap.initializeData, newVFunc);
     }
 
     canUse(): boolean {
@@ -106,7 +106,7 @@ export class AbstractPotion extends NativeClassWrapper {
     }
     OverridegetPotency(newVFunc: (thisPtr: NativePointer, ascensionLevel: number) => number) {
         let funcName = (AbstractPotion.#vFuncNamePrefix + this.potionId + "_getPotency").replace(/\s+/g, "");
-        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.I32_PI32_Func(funcName), AbstractPotion.#vfunctionMap.getPotency, newVFunc);
+        this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), AbstractPotion.#vfunctionMap.getPotency, newVFunc);
     }
 
     addToBot(actionPtr: NativePointer): void {

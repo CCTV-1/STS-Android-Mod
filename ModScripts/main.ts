@@ -1,4 +1,4 @@
-import { PatchManager } from "./PatchManager.js";
+import { PatchHelper } from "./PatchHelper.js";
 import { AbstractCard } from "./NativeClassWrap/AbstractCard.js";
 import { AbstractPlayer } from "./NativeClassWrap/AbstractPlayer.js";
 import { AbstractRelic } from "./NativeClassWrap/AbstractRelic.js";
@@ -35,10 +35,10 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
         let index = FakeRandom(0, canUpgradeCards.length - 1);
         let upgradeCard = canUpgradeCards[index];
         upgradeCard.upgrade();
-        let topLevelEffects = PatchManager.STSGlobalVars.AbstractDungeon_topLevelEffects;
+        let topLevelEffects = PatchHelper.STSGlobalVars.AbstractDungeon_topLevelEffects;
         let statCopyCard = upgradeCard.makeStatEquivalentCopy();
         let cardBrieflyEffectObj = NativeVFX.ShowCardBrieflyEffect.Ctor(statCopyCard);
-        let upgradeShineEffectObj = NativeVFX.UpgradeShineEffect.Ctor(PatchManager.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchManager.STSGlobalVars.STSSetting_HEIGHT * 0.5);
+        let upgradeShineEffectObj = NativeVFX.UpgradeShineEffect.Ctor(PatchHelper.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchHelper.STSGlobalVars.STSSetting_HEIGHT * 0.5);
         NativeSTSLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
         NativeSTSLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
     }
@@ -256,7 +256,7 @@ function Patchcharacters() {
 
     //let origLoseGoldFunc = NativeCharacters.AbstractPlayer.OverridloseGold((thisPtr: NativePointer, gold: number) => { origLoseGoldFunc(thisPtr, Math.ceil(gold*0.6)); });
 
-    Memory.patchCode(PatchManager.InstructionPtr.rewardCardNumber, 64, function (code) {
+    Memory.patchCode(PatchHelper.InstructionPtr.rewardCardNumber, 64, function (code) {
         let numCardsModifyer = new ThumbWriter(code);
         //modify to 017BE846 04 25 MOVS R5, #5  ;set numCards = 4
         numCardsModifyer.putBytes([0x4, 0x25]);
@@ -283,7 +283,7 @@ function PatchPowers() {
 
 function PatchRelics() {
     let origBurningBloodOnVictory = NativeRelics.BurningBlood.OverrideonVictory((thisPtr: NativePointer) => {
-        let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+        let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.4) {
             UpgradeRandomCard(currentPlayer);
         }
@@ -291,7 +291,7 @@ function PatchRelics() {
     });
 
     let origBlackBloodBloodOnVictory = NativeRelics.BlackBlood.OverrideonVictory((thisPtr: NativePointer) => {
-        let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+        let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.6) {
             UpgradeRandomCard(currentPlayer);
         }
@@ -303,7 +303,7 @@ function PatchRelics() {
         let gingerObj = origGingeronCtor(thisPtr);
         let wrapGinger = new AbstractRelic(gingerObj);
         wrapGinger.OverrideatBattleStart((thisPtr: NativePointer) => {
-            let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
             if (currentPlayer.hasRelic("Turnip")) {
                 let wrapGinger = new AbstractRelic(gingerObj);
                 //Apotheosis
@@ -329,7 +329,7 @@ function PatchRelics() {
                         break;
                     }
                     default: {
-                        PatchManager.LogV("class ???:" + currentPlayer.chosenClass);
+                        PatchHelper.LogV("class ???:" + currentPlayer.chosenClass);
                         return;
                     }
                 }
@@ -347,7 +347,7 @@ function PatchRelics() {
         let sacredBarkObj = origSacredBarkCtor(thisPtr);
         let wrapSacredBark = new AbstractRelic(sacredBarkObj);
         wrapSacredBark.OverrideonEquip((thisPtr: NativePointer) => {
-            let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
             currentPlayer.potionSlots += 2;
             let playerPotions = currentPlayer.potions;
             for (let index = 2; index > 0; index--) {
@@ -365,7 +365,7 @@ function PatchRelics() {
         let scryActionObj = origScryActionCtor(thisPtr, numCards);
         let wrapAction = new AbstractGameAction(scryActionObj);
         if (wrapAction.amount >= 5) {
-            let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
             if (currentPlayer.hasRelic("GoldenEye")) {
                 currentPlayer.gainEnergy(1);
             }
@@ -379,26 +379,26 @@ function PatchRelics() {
         wrapCoffeeDripper.OverrideonEnterRestRoom((thisPtr: NativePointer) => {
             let wrapCoffeeDripper = new AbstractRelic(thisPtr);
             wrapCoffeeDripper.counter++;
-            let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
             currentPlayer.heal(wrapCoffeeDripper.counter, true);
             wrapCoffeeDripper.flash();
         });
         return coffeeDripperObj;
     });
 
-    Memory.patchCode(PatchManager.InstructionPtr.VelvetChokerPlayCounter, 4, function (code) {
+    Memory.patchCode(PatchHelper.InstructionPtr.VelvetChokerPlayCounter, 4, function (code) {
         let numCardsModifyer = new ThumbWriter(code);
         //modify to 019AD89E 09 28 CMP R0, #0x9  ;counter max increase to 10
         numCardsModifyer.putBytes([0x9, 0x28]);
         numCardsModifyer.flush();
     });
-    Memory.patchCode(PatchManager.InstructionPtr.VelvetChokerCanPlayCheck, 4, function (code) {
+    Memory.patchCode(PatchHelper.InstructionPtr.VelvetChokerCanPlayCheck, 4, function (code) {
         let numCardsModifyer = new ThumbWriter(code);
         //modify to 019AD8E2 0A 28 CMP R0, #0xA  ;play card limit change to 10
         numCardsModifyer.putBytes([0xA, 0x28]);
         numCardsModifyer.flush();
     });
-    Memory.patchCode(PatchManager.InstructionPtr.VelvetChokerCanPlayStateValue, 4, function (code) {
+    Memory.patchCode(PatchHelper.InstructionPtr.VelvetChokerCanPlayStateValue, 4, function (code) {
         let numCardsModifyer = new ThumbWriter(code);
         //modify to 019AD904 0A 21 MOVS R1, #0xA  ;tips text number increase to 10
         numCardsModifyer.putBytes([0xA, 0x21]);
@@ -408,7 +408,7 @@ function PatchRelics() {
     NativeRelics.MarkofPain.OverrideatBattleStart((thisPtr: NativePointer) => {
         let wrapMarkofPain = new AbstractRelic(thisPtr);
         wrapMarkofPain.flash();
-        let relicAboveCreatureAction = NativeActions.RelicAboveCreature.Ctor(PatchManager.STSGlobalVars.AbstractDungeon_player.rawPtr, thisPtr);
+        let relicAboveCreatureAction = NativeActions.RelicAboveCreature.Ctor(PatchHelper.STSGlobalVars.AbstractDungeon_player.rawPtr, thisPtr);
         let targetCard = NativeCards.status.Burn.Ctor();
         let makeTempCardInHandAction = NativeActions.MakeTempCardInHand.Ctor(targetCard, 2, true);
         wrapMarkofPain.addToBot(relicAboveCreatureAction);
@@ -420,7 +420,7 @@ function PatchRelics() {
         let RunicPyramidObj = origRunicPyramidCtor(thisPtr);
         let wrapRunicPyramid = new AbstractRelic(RunicPyramidObj);
         wrapRunicPyramid.OverrideonPlayerEndTurn((thisPtr: NativePointer) => {
-            let currentPlayer = PatchManager.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
             let handSize = currentPlayer.hand.group.size;
             if (handSize > 0) {
                 let wrapRunicPyramid = new AbstractRelic(RunicPyramidObj);
@@ -438,7 +438,7 @@ function PatchRelics() {
 function RegisterNewCards() {
     let origCardLibraryInitialize = NativeHelpers.CardLibrary.Overrideinitialize((thisPtr: NativePointer) => {
         for (const newCardCtor of newCardLibrary) {
-            NativeHelpers.CardLibrary.Add(newCardCtor(PatchManager.nullptr));
+            NativeHelpers.CardLibrary.Add(newCardCtor(PatchHelper.nullptr));
         }
         origCardLibraryInitialize(thisPtr);
     });
@@ -447,7 +447,7 @@ function RegisterNewCards() {
 function RegisterNewRelic() {
     let origRelicLibraryInitialize = NativeHelpers.RelicLibrary.Overrideinitialize((thisPtr: NativePointer) => {
         for (const newRelicCtor of newRelicLibrary) {
-            let origRelicPtr = newRelicCtor(PatchManager.nullptr);
+            let origRelicPtr = newRelicCtor(PatchHelper.nullptr);
             NativeHelpers.RelicLibrary.Add(origRelicPtr);
         }
 
@@ -469,5 +469,5 @@ function main() {
 try {
     main();
 } catch (error) {
-    PatchManager.LogV("error message:" + error);
+    PatchHelper.LogV("error message:" + error);
 }

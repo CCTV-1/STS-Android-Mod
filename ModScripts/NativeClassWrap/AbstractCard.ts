@@ -2,7 +2,7 @@ import { CardColor, CardRarity, CardTarget, DamageType, CardType } from "../enum
 import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
-import { PatchManager } from "../PatchManager.js";
+import { PatchHelper } from "../PatchHelper.js";
 import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
 
 /**
@@ -58,7 +58,7 @@ export class AbstractCard extends NativeClassWrapper {
                     return copyObj;
                 }
             }
-            return PatchManager.nullptr;
+            return PatchHelper.nullptr;
         }
     }
 
@@ -151,11 +151,11 @@ export class AbstractCard extends NativeClassWrapper {
 
         if (!AbstractCard.#rewriteVFuncMap.has("AbstractCardProxy")) {
             let funcName = "AbstractCard_BasicNewCard_use";
-            wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, AbstractCard.#NewCardVFuncProxys.use);
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, AbstractCard.#NewCardVFuncProxys.use);
             funcName = "AbstractCard_BasicNewCard_upgrade";
-            wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractCard.#vfunctionMap.upgrade, AbstractCard.#NewCardVFuncProxys.upgrade);
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractCard.#vfunctionMap.upgrade, AbstractCard.#NewCardVFuncProxys.upgrade);
             funcName = "AbstractCard_BasicNewCard_makeCopy";
-            wrapCard.setVirtualFunction(funcName, PatchManager.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeCopy, AbstractCard.#NewCardVFuncProxys.makeCopy);
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeCopy, AbstractCard.#NewCardVFuncProxys.makeCopy);
             AbstractCard.#rewriteVFuncMap.set("AbstractCardProxy", AbstractCard.#NewCardVFuncProxys);
         }
 
@@ -172,7 +172,7 @@ export class AbstractCard extends NativeClassWrapper {
     }
     Overrideupgrade(newVFunc: (thisPtr: NativePointer) => void) {
         let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_upgrade").replace(/\s+/g, "");
-        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_P_Func(funcName), AbstractCard.#vfunctionMap.upgrade, newVFunc);
+        this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractCard.#vfunctionMap.upgrade, newVFunc);
     }
 
     upgradeDamage(newDamage: number) {
@@ -201,12 +201,12 @@ export class AbstractCard extends NativeClassWrapper {
     }
     OverridemakeStatEquivalentCopy(newVFunc: (thisPtr: NativePointer) => NativePointer) {
         let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_makeStatEquivalentCopy").replace(/\s+/g, "");
-        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeStatEquivalentCopy, newVFunc);
+        this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeStatEquivalentCopy, newVFunc);
     }
 
     Overrideuse(newVFunc: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => void) {
         let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_use").replace(/\s+/g, "");
-        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, newVFunc);
+        this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, newVFunc);
     }
 
     addToBot(actionPtr: NativePointer): void {
@@ -219,7 +219,7 @@ export class AbstractCard extends NativeClassWrapper {
 
     OverridemakeCopy(newVFunc: (thisPtr: NativePointer) => NativePointer) {
         let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_makeCopy").replace(/\s+/g, "");
-        this.setVirtualFunction(funcName, PatchManager.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeCopy, newVFunc);
+        this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeCopy, newVFunc);
     }
 
     get type(): CardType {

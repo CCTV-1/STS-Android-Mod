@@ -1,10 +1,10 @@
-import { PatchManager } from "../PatchManager.js";
+import { PatchHelper } from "../PatchHelper.js";
 import { NativeFunctionInfoMap } from "./NativeFunctionInfo.js";
 
 export const NativePotions = {
     PotionSlot: {
         Ctor(index: number): NativePointer {
-            return PatchManager.GetNativeFunction(NativeFunctionInfoMap.Potions.PotionSlot.Ctor)(PatchManager.nullptr, index);
+            return PatchHelper.GetNativeFunction(NativeFunctionInfoMap.Potions.PotionSlot.Ctor)(PatchHelper.nullptr, index);
         }
     }
 };
