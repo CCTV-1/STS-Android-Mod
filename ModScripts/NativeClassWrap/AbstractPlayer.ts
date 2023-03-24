@@ -2,9 +2,9 @@ import { AbstractCard } from "./AbstractCard.js";
 import { AbstractCreature } from "./AbstractCreature.js";
 import { ArrayList } from "./ArrayList.js";
 import { CardGroup } from "./CardGroup.js";
-import { PlayerClass } from "./enums.js";
+import { PlayerClass } from "../enums.js";
 import { JString } from "./JString.js";
-import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
+import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 
 export class AbstractPlayer extends AbstractCreature {
     //NativePointer AbstractPlayer *

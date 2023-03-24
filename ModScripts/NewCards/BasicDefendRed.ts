@@ -1,4 +1,4 @@
-import { AbstractCard } from "../AbstractCard.js";
+import { AbstractCard } from "../NativeClassWrap/AbstractCard.js";
 import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
 import { PatchManager } from "../PatchManager.js";
 

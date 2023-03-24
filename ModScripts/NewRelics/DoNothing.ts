@@ -1,4 +1,4 @@
-import { AbstractRelic } from "../AbstractRelic.js";
+import { AbstractRelic } from "../NativeClassWrap/AbstractRelic.js";
 import { LandingSound, RelicTier } from "../enums.js";
 import { PatchManager } from "../PatchManager.js";
 

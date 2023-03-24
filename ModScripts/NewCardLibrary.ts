@@ -1,4 +1,4 @@
-import { STSCardCtor } from "./AbstractCard.js";
+import { STSCardCtor } from "./NativeClassWrap/AbstractCard.js";
 import { BasicAttackRed } from "./NewCards/BasicAttackRed.js";
 import { BasicDefendRed } from "./NewCards/BasicDefendRed.js";
 

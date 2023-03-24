@@ -1,5 +1,5 @@
-import { PatchManager } from "./PatchManager.js";
-import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
+import { PatchManager } from "../PatchManager.js";
+import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { JString } from "./JString.js";
 
 export class NativeClassWrapper {

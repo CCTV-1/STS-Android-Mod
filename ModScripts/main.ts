@@ -1,9 +1,9 @@
 import { PatchManager } from "./PatchManager.js";
-import { AbstractCard } from "./AbstractCard.js";
-import { AbstractPlayer } from "./AbstractPlayer.js";
-import { AbstractRelic } from "./AbstractRelic.js";
+import { AbstractCard } from "./NativeClassWrap/AbstractCard.js";
+import { AbstractPlayer } from "./NativeClassWrap/AbstractPlayer.js";
+import { AbstractRelic } from "./NativeClassWrap/AbstractRelic.js";
 import { PlayerClass } from "./enums.js";
-import { AbstractGameAction } from "./AbstractGameAction.js";
+import { AbstractGameAction } from "./NativeClassWrap/AbstractGameAction.js";
 import { newCardLibrary } from "./NewCardLibrary.js";
 import { newRelicLibrary } from "./NewRelicLibrary.js";
 

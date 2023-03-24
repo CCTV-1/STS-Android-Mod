@@ -1,6 +1,6 @@
 import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
-import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
+import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 
 export class AbstractCreature extends NativeClassWrapper {
     //NativePointer AbstractCreature *

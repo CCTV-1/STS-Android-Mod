@@ -1,6 +1,6 @@
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { ArrayList } from "./ArrayList.js";
-import { CardGroupType } from "./enums.js";
+import { CardGroupType } from "../enums.js";
 
 export class CardGroup extends NativeClassWrapper {
     //NativePointer CardGroup *

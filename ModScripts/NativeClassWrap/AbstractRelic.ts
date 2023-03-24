@@ -1,8 +1,8 @@
-import { LandingSound, RelicTier } from "./enums.js";
+import { LandingSound, RelicTier } from "../enums.js";
 import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
-import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
-import { PatchManager } from "./PatchManager.js";
+import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
+import { PatchManager } from "../PatchManager.js";
 
 /**
  * thisPtr will is ```nullptr```.

@@ -1,7 +1,7 @@
-import { NativeFunctionInfo, NativeFunctionInfoMap } from "./NativeFunctionInfo.js"
-import { AbstractPlayer } from "./AbstractPlayer.js";
+import { NativeFunctionInfo, NativeFunctionInfoMap } from "./NativeFuncWrap/NativeFunctionInfo.js"
+import { AbstractPlayer } from "./NativeClassWrap/AbstractPlayer.js";
 import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType, LandingSound, RelicTier } from "./enums.js";
-import { STSCardCtor } from "./AbstractCard.js";
+import { STSCardCtor } from "./NativeClassWrap/AbstractCard.js";
 
 export class PatchManager {
     static readonly nullptr = new NativePointer(0);

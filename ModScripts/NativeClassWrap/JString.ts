@@ -1,4 +1,4 @@
-import { PatchManager } from "./PatchManager.js";
+import { PatchManager } from "../PatchManager.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 
 export class JString extends NativeClassWrapper {    

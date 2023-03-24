@@ -1,7 +1,7 @@
 import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
-import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
-import { PatchManager } from "./PatchManager.js";
+import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
+import { PatchManager } from "../PatchManager.js";
 
 export class AbstractPotion extends NativeClassWrapper {
     //NativePointer AbstractPotion *
