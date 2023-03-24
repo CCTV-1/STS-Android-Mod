@@ -1,11 +1,11 @@
 import { AbstractRelic } from "../NativeClassWrap/AbstractRelic.js";
 import { LandingSound, RelicTier } from "../enums.js";
-import { PatchManager } from "../PatchManager.js";
+import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
 
 export const DoNothing = (thisPtr: NativePointer): NativePointer => {
     const vfuncs = {
         getUpdatedDescription: (thisPtr: NativePointer) => {
-            return PatchManager.STSLib.JString.Ctor("什么都不做");
+            return NativeSTSLib.JString.Ctor("什么都不做");
         },
         makeCopy: (thisPtr: NativePointer) => {
             let copyObj = DoNothing(thisPtr);

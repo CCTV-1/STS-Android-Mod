@@ -6,6 +6,8 @@ import { PlayerClass } from "./enums.js";
 import { AbstractGameAction } from "./NativeClassWrap/AbstractGameAction.js";
 import { newCardLibrary } from "./NewCardLibrary.js";
 import { newRelicLibrary } from "./NewRelicLibrary.js";
+import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
+import { NativeActions } from "./NativeFuncWrap/NativeActions.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -16,7 +18,7 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
     let deckSize = masterDeckGroup.size;
     let canUpgradeCards = new Array<AbstractCard>();
     for (let i = 0; i < deckSize - 1; i++) {
-        let randCard = PatchManager.STSLib.ArrayList.AbstractCard.get(masterDeckGroup.data, i);
+        let randCard = NativeSTSLib.ArrayList.AbstractCard.get(masterDeckGroup.data, i);
         let wrapCard = new AbstractCard(randCard);
         if (wrapCard.canUpgrade()) {
             canUpgradeCards.push(wrapCard);
@@ -30,8 +32,8 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
         let statCopyCard = upgradeCard.makeStatEquivalentCopy();
         let cardBrieflyEffectObj = PatchManager.VFX.ShowCardBrieflyEffect.Ctor(statCopyCard);
         let upgradeShineEffectObj = PatchManager.VFX.UpgradeShineEffect.Ctor(PatchManager.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchManager.STSGlobalVars.STSSetting_HEIGHT * 0.5);
-        PatchManager.STSLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
-        PatchManager.STSLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
+        NativeSTSLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
+        NativeSTSLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
     }
 }
 
@@ -64,7 +66,7 @@ function PatchRedCards() {
         origSearingBlowUse(thisPtr, playerPtr, monsterPtr);
         let baseCard = new AbstractCard(thisPtr);
         let cardLevel = baseCard.timesUpgraded;
-        let newHealAction = PatchManager.Actions.Heal.Ctor(playerPtr, playerPtr, cardLevel);
+        let newHealAction = NativeActions.Heal.Ctor(playerPtr, playerPtr, cardLevel);
         baseCard.addToBot(newHealAction);
     });
     let origHeavyBladeCtor = PatchManager.Cards.Red.HeavyBlade.OverrideCtor((thisPtr: NativePointer) => {
@@ -92,7 +94,7 @@ function PatchRedCards() {
     let origDemonFormUse = PatchManager.Cards.Red.DemonForm.OverridUse((thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => {
         origDemonFormUse(thisPtr, caster, target);
         let freeAttackPower = PatchManager.Powers.FreeAttack.Ctor(caster, 1);
-        let ApplyPowerActionObj = PatchManager.Actions.ApplyPower.Ctor2(caster, caster, freeAttackPower, 1);
+        let ApplyPowerActionObj = NativeActions.ApplyPower.Ctor2(caster, caster, freeAttackPower, 1);
         let wrapCard = new AbstractCard(thisPtr);
         wrapCard.addToBot(ApplyPowerActionObj);
     });
@@ -117,11 +119,11 @@ function PatchPurpleCards() {
 
 function Patchcharacters() {
     PatchManager.Characters.Ironclad.OverridegetStartingDeck((thisPtr: NativePointer) => {
-        let startDeck = PatchManager.STSLib.ArrayList.JString.Ctor();
+        let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
 
-        const baseStrike = PatchManager.STSLib.JString.Ctor("Strike_R");
-        const baseDefend = PatchManager.STSLib.JString.Ctor("Defend_R");
-        const addNativeStr = PatchManager.STSLib.ArrayList.JString.AddNativeStr;
+        const baseStrike = NativeSTSLib.JString.Ctor("Strike_R");
+        const baseDefend = NativeSTSLib.JString.Ctor("Defend_R");
+        const addNativeStr = NativeSTSLib.ArrayList.JString.AddNativeStr;
 
         addNativeStr(startDeck, baseStrike);
         addNativeStr(startDeck, baseStrike);
@@ -135,13 +137,13 @@ function Patchcharacters() {
 
         switch (FakeRandom(0, 1)) {
             case 0: {
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "BasicAttack_R");
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "BasicDefend_R");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "BasicAttack_R");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "BasicDefend_R");
                 break;
             }
             default: {
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "Infernal Blade");
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "True Grit");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "Infernal Blade");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "True Grit");
                 break;
             }
         }
@@ -149,11 +151,11 @@ function Patchcharacters() {
         return startDeck;
     });
     PatchManager.Characters.TheSilent.OverridegetStartingDeck((thisPtr: NativePointer) => {
-        let startDeck = PatchManager.STSLib.ArrayList.JString.Ctor();
+        let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
 
-        const baseStrike = PatchManager.STSLib.JString.Ctor("Strike_G");
-        const baseDefend = PatchManager.STSLib.JString.Ctor("Defend_G");
-        const addNativeStr = PatchManager.STSLib.ArrayList.JString.AddNativeStr;
+        const baseStrike = NativeSTSLib.JString.Ctor("Strike_G");
+        const baseDefend = NativeSTSLib.JString.Ctor("Defend_G");
+        const addNativeStr = NativeSTSLib.ArrayList.JString.AddNativeStr;
 
         addNativeStr(startDeck, baseStrike);
         addNativeStr(startDeck, baseStrike);
@@ -169,11 +171,11 @@ function Patchcharacters() {
 
         switch (FakeRandom(0, 1)) {
             case 0: {
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "Distraction");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "Distraction");
                 break;
             }
             default: {
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "Discovery");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "Discovery");
                 break;
             }
         }
@@ -181,11 +183,11 @@ function Patchcharacters() {
         return startDeck;
     });
     PatchManager.Characters.Defect.OverridegetStartingDeck((thisPtr: NativePointer) => {
-        let startDeck = PatchManager.STSLib.ArrayList.JString.Ctor();
+        let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
 
-        const baseStrike = PatchManager.STSLib.JString.Ctor("Strike_B");
-        const baseDefend = PatchManager.STSLib.JString.Ctor("Defend_B");
-        const addNativeStr = PatchManager.STSLib.ArrayList.JString.AddNativeStr;
+        const baseStrike = NativeSTSLib.JString.Ctor("Strike_B");
+        const baseDefend = NativeSTSLib.JString.Ctor("Defend_B");
+        const addNativeStr = NativeSTSLib.ArrayList.JString.AddNativeStr;
 
         addNativeStr(startDeck, baseStrike);
         addNativeStr(startDeck, baseStrike);
@@ -199,13 +201,13 @@ function Patchcharacters() {
 
         switch (FakeRandom(0, 1)) {
             case 0: {
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "Ball Lightning");
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "Distraction");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "Ball Lightning");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "Distraction");
                 break;
             }
             default: {
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "Dualcast");
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "White Noise");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "Dualcast");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "White Noise");
                 break;
             }
         }
@@ -213,11 +215,11 @@ function Patchcharacters() {
         return startDeck;
     });
     PatchManager.Characters.Watcher.OverridegetStartingDeck((thisPtr: NativePointer) => {
-        let startDeck = PatchManager.STSLib.ArrayList.JString.Ctor();
+        let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
 
-        const baseStrike = PatchManager.STSLib.JString.Ctor("Strike_P");
-        const baseDefend = PatchManager.STSLib.JString.Ctor("Defend_P");
-        const addNativeStr = PatchManager.STSLib.ArrayList.JString.AddNativeStr;
+        const baseStrike = NativeSTSLib.JString.Ctor("Strike_P");
+        const baseDefend = NativeSTSLib.JString.Ctor("Defend_P");
+        const addNativeStr = NativeSTSLib.ArrayList.JString.AddNativeStr;
 
         addNativeStr(startDeck, baseStrike);
         addNativeStr(startDeck, baseStrike);
@@ -231,13 +233,13 @@ function Patchcharacters() {
 
         switch (FakeRandom(0, 1)) {
             case 0: {
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "ForeignInfluence");
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "Discovery");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "ForeignInfluence");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "Discovery");
                 break;
             }
             default: {
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "Eruption");
-                PatchManager.STSLib.ArrayList.JString.Add(startDeck, "Vigilance");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "Eruption");
+                NativeSTSLib.ArrayList.JString.Add(startDeck, "Vigilance");
                 break;
             }
         }
@@ -325,7 +327,7 @@ function PatchRelics() {
                     }
                 }
 
-                let ApplyPowerActionObj = PatchManager.Actions.ApplyPower.Ctor2(currentPlayer.rawPtr, currentPlayer.rawPtr, formPowerObj, 1);
+                let ApplyPowerActionObj = NativeActions.ApplyPower.Ctor2(currentPlayer.rawPtr, currentPlayer.rawPtr, formPowerObj, 1);
                 wrapGinger.addToBot(ApplyPowerActionObj);
                 wrapGinger.flash();
             }
@@ -343,7 +345,7 @@ function PatchRelics() {
             let playerPotions = currentPlayer.potions;
             for (let index = 2; index > 0; index--) {
                 let newPotionSlot = PatchManager.Potions.PotionSlot.Ctor(currentPlayer.potionSlots - index);
-                PatchManager.STSLib.ArrayList.AbstractPotion.Add(playerPotions.rawPtr, newPotionSlot);
+                NativeSTSLib.ArrayList.AbstractPotion.Add(playerPotions.rawPtr, newPotionSlot);
             }
             let wrapSacredBark = new AbstractRelic(sacredBarkObj);
             wrapSacredBark.flash();
@@ -352,7 +354,7 @@ function PatchRelics() {
     });
 
     //GoldenEye ability hard-code in ScryAction ctor
-    let origScryActionCtor = PatchManager.Actions.Scry.OverrideCtor((thisPtr: NativePointer, numCards: number) => {
+    let origScryActionCtor = NativeActions.Scry.OverrideCtor((thisPtr: NativePointer, numCards: number) => {
         let scryActionObj = origScryActionCtor(thisPtr, numCards);
         let wrapAction = new AbstractGameAction(scryActionObj);
         if (wrapAction.amount >= 5) {
@@ -399,9 +401,9 @@ function PatchRelics() {
     PatchManager.Relics.MarkofPain.OverrideatBattleStart((thisPtr: NativePointer) => {
         let wrapMarkofPain = new AbstractRelic(thisPtr);
         wrapMarkofPain.flash();
-        let relicAboveCreatureAction = PatchManager.Actions.RelicAboveCreature.Ctor(PatchManager.STSGlobalVars.AbstractDungeon_player.rawPtr, thisPtr);
+        let relicAboveCreatureAction = NativeActions.RelicAboveCreature.Ctor(PatchManager.STSGlobalVars.AbstractDungeon_player.rawPtr, thisPtr);
         let targetCard = PatchManager.Cards.status.Burn.Ctor();
-        let makeTempCardInHandAction = PatchManager.Actions.MakeTempCardInHand.Ctor(targetCard, 2, true);
+        let makeTempCardInHandAction = NativeActions.MakeTempCardInHand.Ctor(targetCard, 2, true);
         wrapMarkofPain.addToBot(relicAboveCreatureAction);
         wrapMarkofPain.addToBot(makeTempCardInHandAction);
     });
@@ -416,8 +418,8 @@ function PatchRelics() {
             if (handSize > 0) {
                 let wrapRunicPyramid = new AbstractRelic(RunicPyramidObj);
                 let lootingNumber = Math.min(handSize, 3);
-                let discardAction = PatchManager.Actions.Discard.Ctor(currentPlayer.rawPtr, currentPlayer.rawPtr, lootingNumber);
-                let drawCardAction = PatchManager.Actions.DrawCard.Ctor2(lootingNumber);
+                let discardAction = NativeActions.Discard.Ctor(currentPlayer.rawPtr, currentPlayer.rawPtr, lootingNumber);
+                let drawCardAction = NativeActions.DrawCard.Ctor2(lootingNumber);
                 wrapRunicPyramid.addToBot(discardAction);
                 wrapRunicPyramid.addToBot(drawCardAction);
             }

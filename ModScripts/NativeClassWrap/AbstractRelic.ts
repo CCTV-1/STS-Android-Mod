@@ -3,6 +3,7 @@ import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { PatchManager } from "../PatchManager.js";
+import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
 
 /**
  * thisPtr will is ```nullptr```.
@@ -42,7 +43,7 @@ export class AbstractRelic extends NativeClassWrapper {
                     return getUpdatedDescriptionFunc(thisPtr);
                 }
             }
-            return PatchManager.STSLib.JString.Ctor("");
+            return NativeSTSLib.JString.Ctor("");
         },
         makeCopy: (thisPtr: NativePointer) => {
             let wrapRelic = new AbstractRelic(thisPtr);
