@@ -25,7 +25,7 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
     let deckSize = masterDeckGroup.size;
     let canUpgradeCards = new Array<AbstractCard>();
     for (let i = 0; i < deckSize - 1; i++) {
-        let randCard = NativeSTSLib.ArrayList.AbstractCard.get(masterDeckGroup.data, i);
+        let randCard = NativeSTSLib.ArrayList.AbstractCard.get(masterDeckGroup, i);
         let wrapCard = new AbstractCard(randCard);
         if (wrapCard.canUpgrade()) {
             canUpgradeCards.push(wrapCard);

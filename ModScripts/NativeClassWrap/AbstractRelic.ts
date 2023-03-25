@@ -5,6 +5,9 @@ import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
 import { NativeRelics } from "../NativeFuncWrap/NativeRelics.js";
+import { JObjectArray } from "./JObjectArray.js";
+import { ArrayList } from "./ArrayList.js";
+import { PowerTip } from "./PowerTip.js";
 
 /**
  * thisPtr will is ```nullptr```.
@@ -266,6 +269,11 @@ export class AbstractRelic extends NativeClassWrapper {
         wrapRelic.description = description;
         wrapRelic.flavorText = flavorText;
 
+        let wrapTips = new ArrayList(wrapRelic.tips);
+        let wrapTip = new PowerTip(NativeSTSLib.PowerTip.get(wrapTips, 0));
+        wrapTip.header = relicName;
+        wrapTip.body = description;
+
         if (!AbstractRelic.#rewriteVFuncMap.has("AbstractRelicProxy")) {
             let funcName = "AbstractRelic_BasicNewRelic_getUpdatedDescription";
             wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), AbstractRelic.#vfunctionMap.getUpdatedDescription, AbstractRelic.#NewRelicVFuncProxys.getUpdatedDescription);
@@ -367,6 +375,13 @@ export class AbstractRelic extends NativeClassWrapper {
         this.writeOffsetJString(0xC, JString.CreateJString(value));
     }
 
+    /**
+     * the Object type is JString
+     */
+    get DESCRIPTIONS() {
+        return new JObjectArray(this.readOffsetPointer(0x14));
+    }
+
     get energyBased() {
         return this.readOffsetBool(0x18);
     }
@@ -421,5 +436,15 @@ export class AbstractRelic extends NativeClassWrapper {
     }
     set tier(value) {
         this.writeOffsetU32(0x2C, value);
+    }
+
+    /**
+     * the element type is ArrayList\<PowerTip\>
+     */
+    get tips() {
+        return this.readOffsetPointer(0x30);
+    }
+    set tips(tipsPtr: NativePointer) {
+        this.writeOffsetPointer(0x30, tipsPtr);
     }
 }

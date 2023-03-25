@@ -1,3 +1,5 @@
+import { ArrayList } from "../NativeClassWrap/ArrayList.js";
+import { PowerTip } from "../NativeClassWrap/PowerTip.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 
@@ -34,10 +36,10 @@ const STSLib = {
             Ctor: new NativeFunctionInfo(0x1678CA9, 'pointer', ['pointer']),
             /**
              * ```c
-             * STS::AbstractCard* ArrayList<AbstractCard>::UnsafeLoad(STS::AbstractCard* dataPtr, int index)
+             * STS::AbstractCard* STS::ArrayList<AbstractCard>::getItem(STS::ArrayList<AbstractCard>* thisPtr, int index)
              * ```
              */
-            get: new NativeFunctionInfo(0x167E58D, 'pointer', ['pointer', 'uint32']),
+            get: new NativeFunctionInfo(0x205A631, 'pointer', ['pointer', 'uint32']),
         },
         AbstractPotion: {
             /**
@@ -46,6 +48,14 @@ const STSLib = {
              * ```
              */
             Add: new NativeFunctionInfo(0x0175224D, 'bool', ['pointer', 'pointer']),
+        },
+        PowerTip: {
+            /**
+             * ```c
+             * STS::PowerTip* ArrayList<PowerTip>::getItem(STS::ArrayList<PowerTip>* PowerTip, int index)
+             * ```
+             */
+            get: new NativeFunctionInfo(0x208CAAD, 'pointer', ['pointer', 'uint32']),
         }
     },
     JString: {
@@ -120,8 +130,8 @@ export const NativeSTSLib = {
             Ctor(): NativePointer {
                 return PatchHelper.GetNativeFunction(STSLib.ArrayList.AbstractCard.Ctor)(PatchHelper.nullptr);
             },
-            get(dataPtr: NativePointer, index: number): NativePointer {
-                return PatchHelper.GetNativeFunction(STSLib.ArrayList.AbstractCard.get)(dataPtr, index);
+            get(arrayListPtr: ArrayList, index: number): NativePointer {
+                return PatchHelper.GetNativeFunction(STSLib.ArrayList.AbstractCard.get)(arrayListPtr.rawPtr, index);
             }
         },
     },
@@ -147,4 +157,9 @@ export const NativeSTSLib = {
             return PatchHelper.GetNativeFunction(STSLib.JString.Ctor4)(PatchHelper.nullptr, nativeMem, start, len);
         },
     },
+    PowerTip: {
+        get(arrayListPtr: ArrayList, index: number): NativePointer {
+            return PatchHelper.GetNativeFunction(STSLib.ArrayList.PowerTip.get)(arrayListPtr.rawPtr, index);
+        }
+    }
 };
