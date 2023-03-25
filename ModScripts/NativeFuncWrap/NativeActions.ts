@@ -177,6 +177,14 @@ const Actions = {
          */
         Ctor: new NativeFunctionInfo(0x1682DFD, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'uint32']),
     },
+    Artifact: {
+        /**
+         * ```c
+         * AbstractGameAction* Actions::Artifact(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x1957FA1, 'pointer', ['pointer', 'pointer', 'int32']),
+    }
 };
 
 export const NativeActions = {
@@ -249,6 +257,11 @@ export const NativeActions = {
     LoseHP: {
         Ctor(target: NativePointer, source: NativePointer, amount: number, atkEffect: AttackEffect): NativePointer {
             return PatchHelper.GetNativeFunction(Actions.LoseHP.Ctor)(PatchHelper.nullptr, target, source, amount, Number(atkEffect));
+        },
+    },
+    Artifact: {
+        Ctor(owner: NativePointer, amount: number): NativePointer {
+            return PatchHelper.GetNativeFunction(Actions.Artifact.Ctor)(PatchHelper.nullptr, owner, amount);
         },
     },
 };

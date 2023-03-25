@@ -20,6 +20,7 @@ export interface NewRelicVFuncType {
     onPlayerEndTurn?: (thisPtr: NativePointer) => void,
     onVictory?: (thisPtr: NativePointer) => void,
     onEnterRestRoom?: (thisPtr: NativePointer) => void,
+    onShuffle?: (thisPtr: NativePointer) => void,
     makeCopy: (thisPtr: NativePointer) => NativePointer,
 };
 
@@ -126,6 +127,16 @@ export class AbstractRelic extends NativeClassWrapper {
                 const onEnterRestRoomFuc = cardVFuncMap.onEnterRestRoom;
                 if (onEnterRestRoomFuc !== undefined) {
                     onEnterRestRoomFuc(thisPtr);
+                }
+            }
+        },
+        onShuffle: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const onShuffleFuc = cardVFuncMap.onShuffle;
+                if (onShuffleFuc !== undefined) {
+                    onShuffleFuc(thisPtr);
                 }
             }
         },
@@ -274,6 +285,8 @@ export class AbstractRelic extends NativeClassWrapper {
             wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onVictory, AbstractRelic.#NewRelicVFuncProxys.onVictory);
             funcName = "AbstractRelic_BasicNewRelic_onEnterRestRoom";
             wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onEnterRestRoom, AbstractRelic.#NewRelicVFuncProxys.onEnterRestRoom);
+            funcName = "AbstractRelic_BasicNewRelic_onShuffle";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onShuffle, AbstractRelic.#NewRelicVFuncProxys.onShuffle);
             AbstractRelic.#rewriteVFuncMap.set("AbstractRelicProxy", AbstractRelic.#NewRelicVFuncProxys);
         }
 
@@ -321,6 +334,11 @@ export class AbstractRelic extends NativeClassWrapper {
     OverrideonEnterRestRoom(newVFunc: (thisPtr: NativePointer) => void) {
         let funcName = (AbstractRelic.#vFuncNamePrefix + this.relicId + "_onEnterRestRoom").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onEnterRestRoom, newVFunc);
+    }
+
+    OverrideonShuffle(newVFunc: (thisPtr: NativePointer) => void) {
+        let funcName = (AbstractRelic.#vFuncNamePrefix + this.relicId + "_onShuffle").replace(/\s+/g, "");
+        this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onShuffle, newVFunc);
     }
 
     flash(): void {
