@@ -19,7 +19,7 @@ export class NativeClassWrapper {
         this.#vfuncMapPtr = CthisPtr.readPointer().add(0x4).readPointer();
     }
 
-    getVirtualFunction(funcInfo: NativeFunctionInfo) {
+    protected getVirtualFunction(funcInfo: NativeFunctionInfo) {
         let vFuncPtr = this.#vfuncMapPtr.add(funcInfo.funcOffset).readPointer();
         return PatchHelper.GetNativeVFunction(vFuncPtr, funcInfo.retType, funcInfo.argTypes);
     }
@@ -35,7 +35,7 @@ export class NativeClassWrapper {
      * @param newVFunc a javascript function
      * @returns origin virtual function pointer
      */
-    setVirtualFunction(funcName: string, fakecode: string, funcInfo: NativeFunctionInfo, newVFunc: any): NativePointer  {
+    protected setVirtualFunction(funcName: string, fakecode: string, funcInfo: NativeFunctionInfo, newVFunc: any): NativePointer  {
         let tmpFunc = NativeClassWrapper.#overridMap.get(funcName)
         if (tmpFunc === undefined) {
             tmpFunc = new CModule(fakecode);
@@ -52,67 +52,67 @@ export class NativeClassWrapper {
         return origVFuncPtr;
     }
 
-    readOffsetPointer(offset: number) {
+    protected readOffsetPointer(offset: number) {
         return this.rawPtr.add(offset).readPointer();
     }
-    writeOffsetPointer(offset: number, value: NativePointer) {
+    protected writeOffsetPointer(offset: number, value: NativePointer) {
         return this.rawPtr.add(offset).writePointer(value);
     }
 
-    readOffsetBool(offset: number) {
+    protected readOffsetBool(offset: number) {
         return Boolean(this.rawPtr.add(offset).readU8());
     }
 
-    writeOffsetBool(offset: number, value: boolean) {
+    protected writeOffsetBool(offset: number, value: boolean) {
         this.rawPtr.add(offset).writeU8(Number(value));
     }
 
-    readOffsetU8(offset: number) {
+    protected readOffsetU8(offset: number) {
         return this.rawPtr.add(offset).readU8();
     }
 
-    writeOffsetU8(offset: number, value: number) {
+    protected writeOffsetU8(offset: number, value: number) {
         this.rawPtr.add(offset).writeU8(value);
     }
 
-    readOffsetU32(offset: number) {
+    protected readOffsetU32(offset: number) {
         return this.rawPtr.add(offset).readU32();
     }
 
-    writeOffsetU32(offset: number, value: number) {
+    protected writeOffsetU32(offset: number, value: number) {
         this.rawPtr.add(offset).writeU32(value);
     }
 
-    readOffsetS32(offset: number) {
+    protected readOffsetS32(offset: number) {
         return this.rawPtr.add(offset).readS32();
     }
 
-    writeOffsetS32(offset: number, value: number) {
+    protected writeOffsetS32(offset: number, value: number) {
         this.rawPtr.add(offset).writeS32(value);
     }
 
-    readOffsetFloat(offset: number) {
+    protected readOffsetFloat(offset: number) {
         return this.rawPtr.add(offset).readFloat();
     }
 
-    writeOffsetFloat(offset: number, value: number) {
+    protected writeOffsetFloat(offset: number, value: number) {
         this.rawPtr.add(offset).writeFloat(value);
     }
 
-    readOffsetJString(offset: number) {
+    protected readOffsetJString(offset: number) {
         let JStr = new JString(this.rawPtr.add(offset).readPointer());
         return JStr;
     }
 
-    writeOffsetJString(offset: number, value: JString) {
+    protected writeOffsetJString(offset: number, value: JString) {
         this.rawPtr.add(offset).writePointer(value.rawPtr)
     }
 
-    readOffsetUtf16String(offset: number) {
+    protected readOffsetUtf16String(offset: number) {
         return this.rawPtr.add(offset).readUtf16String();
     }
 
-    writeOffsetUtf16String(offset: number, value: string) {
+    protected writeOffsetUtf16String(offset: number, value: string) {
         this.rawPtr.add(offset).writeUtf16String(value);
     }
 }
