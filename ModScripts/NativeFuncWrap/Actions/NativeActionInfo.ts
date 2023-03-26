@@ -82,7 +82,12 @@ export const NativeActionInfo = {
             Ctor2: new NativeFunctionInfo(0x1677F49, 'pointer', ['pointer', 'int32', 'int32']),
         },
         BetterDrawPileToHand: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::BetterDrawPileToHand::Ctor(STS::AbstractGameAction* thisPtr, int32_t numberOfCards, bool optional)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16792CD, 'pointer', ['pointer', 'int32', 'bool']),
         },
         ChangeState: {
 
