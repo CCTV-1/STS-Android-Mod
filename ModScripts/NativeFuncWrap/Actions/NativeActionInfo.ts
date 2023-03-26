@@ -407,19 +407,48 @@ export const NativeActionInfo = {
             Ctor: new NativeFunctionInfo(0x16866E1, 'pointer', ['pointer', 'pointer', 'pointer', 'int32']),
         },
         ModifyBlock: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ModifyBlock(STS::AbstractGameAction* thisPtr, UUID targetUUID, int32_t amount)
+             * ```
+             * 
+             * `struct UUID { uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4 }`
+             */
+            Ctor: new NativeFunctionInfo(0x16869FD, 'pointer', ['pointer', 'uint32', 'uint32', 'uint32', 'uint32', 'int32']),
         },
         ModifyDamage: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ModifyDamage(STS::AbstractGameAction* thisPtr, UUID targetUUID, int32_t amount)
+             * ```
+             * 
+             * `struct UUID { uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4 }`
+             */
+            Ctor: new NativeFunctionInfo(0x1686D8D, 'pointer', ['pointer', 'uint32', 'uint32', 'uint32', 'uint32', 'int32']),
         },
         MonsterStartTurn: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::MonsterStartTurn(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1686F31, 'pointer', ['pointer']),
         },
         ObtainPotion: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ObtainPotion(STS::AbstractGameAction* thisPtr, STS::AbstractPotion* potion)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16870ED, 'pointer', ['pointer', 'pointer']),
         },
         PlayTopCard: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ObtainPotion(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* creaturePtr, bool exhausts)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1687495, 'pointer', ['pointer', 'pointer', 'bool']),
         },
         PummelDamage: {
 

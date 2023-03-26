@@ -29,6 +29,11 @@ import { MakeTempCardInDiscardAndDeckAction } from "./common/MakeTempCardInDisca
 import { MakeTempCardInDrawPileAction } from "./common/MakeTempCardInDrawPileAction.js";
 import { MakeTempCardInHandAction } from "./common/MakeTempCardInHandAction.js";
 import { MillAction } from "./common/MillAction.js";
+import { ModifyBlockAction } from "./common/ModifyBlockAction.js";
+import { ModifyDamageAction } from "./common/ModifyDamageAction.js";
+import { MonsterStartTurnAction } from "./common/MonsterStartTurnAction.js";
+import { ObtainPotionAction } from "./common/ObtainPotionAction.js";
+import { PlayTopCardAction } from "./common/PlayTopCardAction.js";
 import { RelicAboveCreatureAction } from "./common/RelicAboveCreatureAction.js";
 
 export const NativeCommonActions = {
@@ -63,5 +68,10 @@ export const NativeCommonActions = {
     MakeTempCardInDrawPile: MakeTempCardInDrawPileAction,
     MakeTempCardInHand: MakeTempCardInHandAction,
     Mill: MillAction,
+    ModifyBlock: ModifyBlockAction,
+    ModifyDamage: ModifyDamageAction,
+    MonsterStartTurn: MonsterStartTurnAction,
+    ObtainPotion: ObtainPotionAction,
+    PlayTopCard: PlayTopCardAction,
     RelicAboveCreature: RelicAboveCreatureAction,
 };
