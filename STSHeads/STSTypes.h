@@ -283,6 +283,26 @@ namespace STS
         int32_t size;
     } __attribute__((aligned(4)));
 
+    template<typename T>
+    struct JObjArr
+    {
+        void *basePtr;
+        void *vfuncMap;
+        T (*objArr)[0];
+        uint8_t unk[9];
+        int32_t *arrSize;
+    };
+    
+    struct PowerTip
+    {
+        void *basePtr;
+        void *vfuncMap;
+        void * img;
+        void * imgRegion;
+        JString*  header;
+        JString* body;
+    } __attribute__((aligned(4)));
+
     struct CardGroup
     {
         void *basePtr;
@@ -294,6 +314,14 @@ namespace STS
         void * handPositioningMap;
         ArrayList<AbstractCard *> * queued;
         ArrayList<AbstractCard *> * inHand;
+    } __attribute__((aligned(4)));
+
+    struct EnergyManager
+    {
+        void *basePtr;
+        void *vfuncMap;
+        int32_t energy;
+        int32_t energyMaster;
     } __attribute__((aligned(4)));
 
     struct AbstractPotion
@@ -1190,7 +1218,7 @@ namespace STS
         JString *name;
         JString *relicId;
         void *relicStrings;
-        void *DESCRIPTIONS;
+        JObjArr<JString> *DESCRIPTIONS;
         bool energyBased;
         bool usedUp;
         bool grayscale;
@@ -1200,7 +1228,7 @@ namespace STS
         int32_t cost;
         int32_t counter;
         RelicTier tier;
-        void *tips;
+        ArrayList<PowerTip> *tips;
         void *img;
         void *largeImg;
         void *outlineImg;
