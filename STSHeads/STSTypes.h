@@ -239,6 +239,27 @@ namespace STS
         ANVIL
     };
 
+    enum class MonsterIntent:unt32_t
+    {
+        ATTACK = 0x1, 
+        ATTACK_BUFF, 
+        ATTACK_DEBUFF, 
+        ATTACK_DEFEND, 
+        BUFF, 
+        DEBUFF, 
+        STRONG_DEBUFF, 
+        DEBUG, 
+        DEFEND, 
+        DEFEND_DEBUFF, 
+        DEFEND_BUFF, 
+        ESCAPE, 
+        MAGIC, 
+        NONE, 
+        SLEEP, 
+        STUN, 
+        UNKNOWN
+    };
+
     struct JString
     {
         uint32_t unk;
