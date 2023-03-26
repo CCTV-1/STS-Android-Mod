@@ -12,6 +12,10 @@ import { DiscardAction } from "./common/DiscardAction.js";
 import { DiscardAtEndOfTurnAction } from "./common/DiscardAtEndOfTurnAction.js";
 import { DiscardSpecificCardAction } from "./common/DiscardSpecificCardAction.js";
 import { DrawCardAction } from "./common/DrawCardAction.js";
+import { EmptyDeckShuffleAction } from "./common/EmptyDeckShuffleAction.js";
+import { EscapeAction } from "./common/EscapeAction.js";
+import { ExhaustAction } from "./common/ExhaustAction.js";
+import { ExhaustSpecificCardAction } from "./common/ExhaustSpecificCard.js";
 import { GainBlockAction } from "./common/GainBlock.js";
 import { HealAction } from "./common/HealAction.js";
 import { LoseHPAction } from "./common/LoseHPAction.js";
@@ -32,10 +36,14 @@ export const NativeCommonActions = {
     Discard: DiscardAction,
     DiscardAtEndOfTurn: DiscardAtEndOfTurnAction,
     DiscardSpecificCard: DiscardSpecificCardAction,
+    DrawCard: DrawCardAction,
+    EmptyDeckShuffle: EmptyDeckShuffleAction,
+    Escape: EscapeAction,
+    Exhaust: ExhaustAction,
+    ExhaustSpecificCard: ExhaustSpecificCardAction,
     Heal: HealAction,
     MakeTempCardInHand: MakeTempCardInHandAction,
     RelicAboveCreature: RelicAboveCreatureAction,
-    DrawCard: DrawCardAction,
     GainBlock: GainBlockAction,
     LoseHP: LoseHPAction,
 };

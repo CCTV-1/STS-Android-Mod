@@ -215,22 +215,44 @@ export const NativeActionInfo = {
             Ctor6: new NativeFunctionInfo(0x167F005, 'pointer', ['pointer', 'int32', 'pointer', 'bool']),
         },
         EmptyDeckShuffle: {
-
-        },
-        EnableEndTurnButton: {
-
-        },
-        EndTurn: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::EmptyDeckShuffle(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x167FAD1, 'pointer', ['pointer']),
+            
         },
         Escape: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Escape(STS::AbstractGameAction* thisPtr, STS::AbstractMonster source)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1680A5D, 'pointer', ['pointer', 'pointer']),
+            
         },
         Exhaust: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Exhaust::Ctor(STS::AbstractGameAction* thisPtr, int32_t amount, bool isRandom, bool anyNumber, bool canPickZero)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1680BF1, 'pointer', ['pointer', 'int32', 'bool', 'bool', 'bool']),
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Exhaust::Ctor2(STS::AbstractGameAction* thisPtr, int32_t amount, bool isRandom, bool anyNumber, bool canPickZero, float duration)
+             * ```
+             */
+            Ctor2: new NativeFunctionInfo(0x1680F59, 'pointer', ['pointer', 'int32', 'bool', 'bool', 'bool', 'float']),
         },
         ExhaustSpecificCard: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ExhaustSpecificCard::Ctor(STS::AbstractGameAction* thisPtr, STS::AbstractCard* targetCard, CardGroup group, bool isFast)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16818E1, 'pointer', ['pointer', 'pointer', 'pointer', 'bool']),
         },
         FastDrawCard: {
 
