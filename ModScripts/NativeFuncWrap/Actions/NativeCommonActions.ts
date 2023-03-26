@@ -5,6 +5,8 @@ import { BetterDiscardPileToHandAction } from "./common/BetterDiscardPileToHandA
 import { BetterDrawPileToHandAction } from "./common/BetterDrawPileToHandAction.js";
 import { ChangeStateAction } from "./common/ChangeStateAction.js";
 import { DamageAction } from "./common/DamageAction.js";
+import { DamageAllEnemiesAction } from "./common/DamageAllEnemiesAction.js";
+import { DamageRandomEnemyAction } from "./common/DamageRandomEnemyAction.js";
 import { DiscardAction } from "./common/DiscardAction.js";
 import { DrawCardAction } from "./common/DrawCardAction.js";
 import { GainBlockAction } from "./common/GainBlock.js";
@@ -21,6 +23,8 @@ export const NativeCommonActions = {
     BetterDrawPileToHand: BetterDrawPileToHandAction,
     ChangeState: ChangeStateAction,
     Damage: DamageAction,
+    DamageAllEnemies: DamageAllEnemiesAction,
+    DamageRandomEnemy: DamageRandomEnemyAction,
     Heal: HealAction,
     MakeTempCardInHand: MakeTempCardInHandAction,
     RelicAboveCreature: RelicAboveCreatureAction,

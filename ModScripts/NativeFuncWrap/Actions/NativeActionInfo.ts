@@ -138,10 +138,21 @@ export const NativeActionInfo = {
             Ctor6: new NativeFunctionInfo(0x167A465, 'pointer', ['pointer', 'pointer', 'pointer', 'uint32', 'bool', 'bool']),
         },
         DamageAllEnemies: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DamageAllEnemies(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* source, JObectArray* amounts,
+             *      DamageType type, AttackEffect effect, bool isFast)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x167ADDD, 'pointer', ['pointer', 'pointer', 'pointer', 'uint32', 'uint32', 'bool']),
         },
         DamageRandomEnemy: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DamageRandomEnemy(STS::AbstractGameAction* thisPtr, STS::DamageInfo* info, AttackEffect effect)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x167C11CD, 'pointer', ['pointer', 'pointer', 'uint32']),
         },
         DarkOrbEvoke: {
 
