@@ -34,7 +34,14 @@ import { ModifyDamageAction } from "./common/ModifyDamageAction.js";
 import { MonsterStartTurnAction } from "./common/MonsterStartTurnAction.js";
 import { ObtainPotionAction } from "./common/ObtainPotionAction.js";
 import { PlayTopCardAction } from "./common/PlayTopCardAction.js";
+import { PummelDamageAction } from "./common/PummelDamageAction.js";
+import { PutOnDeckAction } from "./common/PutOnDeckAction.js";
+import { ReduceCostAction } from "./common/ReduceCostAction.js";
+import { ReducePowerAction } from "./common/ReducePowerAction.js";
 import { RelicAboveCreatureAction } from "./common/RelicAboveCreatureAction.js";
+import { RemoveAllBlockAction } from "./common/RemoveAllBlockAction.js";
+import { RemoveSpecificPowerAction } from "./common/RemoveSpecificPowerAction.js";
+import { RollMoveAction } from "./common/RollMoveAction.js";
 
 export const NativeCommonActions = {
     ApplyPower: ApplyPowerAction,
@@ -73,5 +80,12 @@ export const NativeCommonActions = {
     MonsterStartTurn: MonsterStartTurnAction,
     ObtainPotion: ObtainPotionAction,
     PlayTopCard: PlayTopCardAction,
+    PummelDamage: PummelDamageAction,
+    PutOnDeck: PutOnDeckAction,
+    ReduceCost: ReduceCostAction,
+    ReducePower: ReducePowerAction,
     RelicAboveCreature: RelicAboveCreatureAction,
+    RemoveAllBlock: RemoveAllBlockAction,
+    RemoveSpecificPower: RemoveSpecificPowerAction,
+    RollMove: RollMoveAction,
 };

@@ -451,22 +451,53 @@ export const NativeActionInfo = {
             Ctor: new NativeFunctionInfo(0x1687495, 'pointer', ['pointer', 'pointer', 'bool']),
         },
         PummelDamage: {
-
-        },
-        PutOnBottomOfDeck: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::PummelDamage(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* creaturePtr, DamageInfo* dmgInfo)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1687B29, 'pointer', ['pointer', 'pointer', 'pointer']),
         },
         PutOnDeck: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::PutOnDeck(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::AbstractCreature* source, int32_t amount, bool isRandom)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1687F4D, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'bool']),
         },
         ReduceCost: {
-
-        },
-        ReduceCostForTurn: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ReduceCost(STS::AbstractGameAction* thisPtr, UUID targetUUID, int32_t amount)
+             * ```
+             * 
+             * `struct UUID { uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4 }`
+             */
+            Ctor: new NativeFunctionInfo(0x1688911, 'pointer', ['pointer', 'uint32', 'uint32', 'uint32', 'uint32', 'int32']),
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ReduceCost(STS::AbstractGameAction* thisPtr, STS::AbstractCard* cardPtr)
+             * ```
+             */
+            Ctor2: new NativeFunctionInfo(0x168888D, 'pointer', ['pointer', 'pointer']),
         },
         ReducePower: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ReduceCost(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::AbstractCreature* source, JString * powerName, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1688AF5, 'pointer', ['pointer', 'pointer', 'pointer', 'pointer', 'int32']),
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ReduceCost(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::AbstractCreature* source, STS::AbstractPower * powerInstance, int32_t amount)
+             * ```
+             */
+            Ctor2: new NativeFunctionInfo(0x1688C0D, 'pointer', ['pointer', 'pointer', 'pointer', 'pointer', 'int32']),
         },
         RelicAboveCreature: {
             /**
@@ -476,17 +507,37 @@ export const NativeActionInfo = {
              */
             Ctor: new NativeFunctionInfo(0x1688E25, 'pointer', ['pointer', 'pointer', 'pointer']),
         },
-        RemoveAllBlockAction: {
-
+        RemoveAllBlock: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::RemoveAllBlockAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target, STS::AbstractCreature* source)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1688E25, 'pointer', ['pointer', 'pointer', 'pointer']),
         },
-        RemoveSpecificPowerAction: {
-
-        },
-        ReviveMonster: {
-
+        RemoveSpecificPower: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::RemoveSpecificPowerAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::AbstractCreature* source, JString * powerName)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1689149, 'pointer', ['pointer', 'pointer', 'pointer', 'pointer']),
+            /**
+             * ```c
+             * AbstractGameAction* Actions::RemoveSpecificPowerAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::AbstractCreature* source, STS::AbstractPower * powerInstance)
+             * ```
+             */
+            Ctor2: new NativeFunctionInfo(0x168920D, 'pointer', ['pointer', 'pointer', 'pointer', 'pointer']),
         },
         RollMove: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::RollMove(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* monster)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x168A219, 'pointer', ['pointer', 'pointer']),
         },
         SetDontTrigger: {
 
