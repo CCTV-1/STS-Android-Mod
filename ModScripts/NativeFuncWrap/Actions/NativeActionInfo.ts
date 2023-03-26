@@ -68,7 +68,18 @@ export const NativeActionInfo = {
             Ctor: new NativeFunctionInfo(0x1677981, 'pointer', ['pointer', 'pointer', 'uint32']),
         },
         BetterDiscardPileToHand: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::BetterDiscardPileToHand::Ctor(STS::AbstractGameAction* thisPtr, int32_t numberOfCards, bool optional)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1677D65, 'pointer', ['pointer', 'int32', 'bool']),
+            /**
+             * ```c
+             * AbstractGameAction* Actions::BetterDiscardPileToHand::Ctor(STS::AbstractGameAction* thisPtr, int32_t numberOfCards, int32_t newCost)
+             * ```
+             */
+            Ctor2: new NativeFunctionInfo(0x1677F49, 'pointer', ['pointer', 'int32', 'int32']),
         },
         BetterDrawPileToHand: {
 
