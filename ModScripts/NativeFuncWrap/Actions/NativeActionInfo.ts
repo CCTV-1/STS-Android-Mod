@@ -155,7 +155,12 @@ export const NativeActionInfo = {
             Ctor: new NativeFunctionInfo(0x167C11CD, 'pointer', ['pointer', 'pointer', 'uint32']),
         },
         DarkOrbEvoke: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DarkOrbEvoke(STS::AbstractGameAction* thisPtr, STS::DamageInfo* info, AttackEffect effect)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x167C265, 'pointer', ['pointer', 'pointer', 'uint32']),
         },
         Discard: {
             /**
@@ -167,11 +172,21 @@ export const NativeActionInfo = {
              */
             Ctor2: new NativeFunctionInfo(0x167CBD5, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'bool', 'bool']),
         },
-        DiscardAtEndOfTurnAction: {
-
+        DiscardAtEndOfTurn: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DiscardAtEndOfTurnAction(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x167D84D, 'pointer', ['pointer']),
         },
-        DiscardSpecificCardAction: {
-
+        DiscardSpecificCard: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DiscardSpecificCard::Ctor(STS::AbstractGameAction* thisPtr, STS::AbstractCard* targetCard)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x167E91D, 'pointer', ['pointer', 'pointer']),
         },
         DrawCard: {
             /**
