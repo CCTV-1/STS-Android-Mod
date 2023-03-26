@@ -1,5 +1,6 @@
 import { ApplyPowerAction } from "./common/ApplyPowerAction.js";
 import { ApplyPowerToRandomEnemyAction } from "./common/ApplyPowerToRandomEnemyAction.js";
+import { AttackDamageRandomEnemyAction } from "./common/AttackDamageRandomEnemyAction.js";
 import { DamageAction } from "./common/DamageAction.js";
 import { DiscardAction } from "./common/DiscardAction.js";
 import { DrawCardAction } from "./common/DrawCardAction.js";
@@ -12,6 +13,7 @@ import { RelicAboveCreatureAction } from "./common/RelicAboveCreatureAction.js";
 export const NativeCommonActions = {
     ApplyPower: ApplyPowerAction,
     ApplyPowerToRandomEnemy: ApplyPowerToRandomEnemyAction,
+    AttackDamageRandomEnemy: AttackDamageRandomEnemyAction,
     Heal: HealAction,
     MakeTempCardInHand: MakeTempCardInHandAction,
     RelicAboveCreature: RelicAboveCreatureAction,

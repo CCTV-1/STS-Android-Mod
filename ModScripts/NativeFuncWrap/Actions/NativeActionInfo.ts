@@ -59,7 +59,13 @@ export const NativeActionInfo = {
             Ctor: new NativeFunctionInfo(0x16777D1, 'pointer', ['pointer', 'pointer', 'pointer',  'int32', 'bool', 'uint32']),
         },
         AttackDamageRandomEnemy: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::AttackDamageRandomEnemyAction::Ctor(STS::AbstractGameAction* thisPtr, STS::AbstractCard* cardPtr,
+             *      STS::AttackEffect effect)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1677981, 'pointer', ['pointer', 'pointer', 'uint32']),
         },
         BetterDiscardPileToHand: {
 
