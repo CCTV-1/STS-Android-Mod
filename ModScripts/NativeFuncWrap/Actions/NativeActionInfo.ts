@@ -34,15 +34,13 @@ export const NativeActionInfo = {
         },
     },
     common: {
-        ApplyPoisonOnRandomMonster: {
-
-        },
+        //not implement in android sts
+        //ApplyPoisonOnRandomMonster {},
         ApplyPower: {
             /**
              * ```c
              * AbstractGameAction* Actions::ApplyPowerAction::Ctor(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
              *      STS::AbstractCreature* source, STS::AbstractPower* powerToApply, int32_t stackAmount, bool isFast, STS::AttackEffect effect)
-             * 
              * ```
              * 
              * default args call: `ApplyPowerAction::Ctor(this, target, source, powerPtr, powerPtr->amount, false, AttackEffect.NONE);`
@@ -50,7 +48,15 @@ export const NativeActionInfo = {
             Ctor: new NativeFunctionInfo(0x1672CFD, 'pointer', ['pointer', 'pointer', 'pointer', 'pointer', 'int32', 'bool', 'uint32']),
         },
         ApplyPowerToRandomEnemy: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ApplyPowerToRandomEnemyAction::Ctor(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* source,
+             *      STS::AbstractPower* powerToApply, int32_t stackAmount, bool isFast, STS::AttackEffect effect)
+             * ```
+             * 
+             * default args call: `ApplyPowerToRandomEnemyAction::Ctor(this, source, powerPtr, -1, false, AttackEffect.NONE);`
+             */
+            Ctor: new NativeFunctionInfo(0x16777D1, 'pointer', ['pointer', 'pointer', 'pointer',  'int32', 'bool', 'uint32']),
         },
         AttackDamageRandomEnemy: {
 

@@ -1,4 +1,5 @@
 import { ApplyPowerAction } from "./common/ApplyPowerAction.js";
+import { ApplyPowerToRandomEnemyAction } from "./common/ApplyPowerToRandomEnemyAction.js";
 import { DamageAction } from "./common/DamageAction.js";
 import { DiscardAction } from "./common/DiscardAction.js";
 import { DrawCardAction } from "./common/DrawCardAction.js";
@@ -9,8 +10,9 @@ import { MakeTempCardInHandAction } from "./common/MakeTempCardInHandAction.js";
 import { RelicAboveCreatureAction } from "./common/RelicAboveCreatureAction.js";
 
 export const NativeCommonActions = {
-    Heal: HealAction,
     ApplyPower: ApplyPowerAction,
+    ApplyPowerToRandomEnemy: ApplyPowerToRandomEnemyAction,
+    Heal: HealAction,
     MakeTempCardInHand: MakeTempCardInHandAction,
     RelicAboveCreature: RelicAboveCreatureAction,
     Discard: DiscardAction,
