@@ -49,6 +49,14 @@ const Powers = {
          * ```
          */
         Ctor: new NativeFunctionInfo(0x197E9B1, 'pointer', ['pointer', 'pointer', 'int32'])
+    },
+    Artifact: {
+        /**
+         * ```c
+         * STS::AbstractPower* Powers::ArtifactPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x1957FA1, 'pointer', ['pointer', 'pointer', 'int32']),
     }
 };
 
@@ -82,5 +90,10 @@ export const NativePowers = {
         Ctor(owner: NativePointer, strengthAmount: number): NativePointer {
             return PatchHelper.GetNativeFunction(Powers.FreeAttackPower.Ctor)(PatchHelper.nullptr, owner, strengthAmount);
         }
+    },
+    Artifact: {
+        Ctor(owner: NativePointer, amount: number): NativePointer {
+            return PatchHelper.GetNativeFunction(Powers.Artifact.Ctor)(PatchHelper.nullptr, owner, amount);
+        },
     },
 };

@@ -7,7 +7,7 @@ import { AbstractGameAction } from "./NativeClassWrap/AbstractGameAction.js";
 import { newCardLibrary } from "./NewCardLibrary.js";
 import { newRelicLibrary } from "./NewRelicLibrary.js";
 import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
-import { NativeActions } from "./NativeFuncWrap/NativeActions.js";
+import { NativeActions } from "./NativeFuncWrap/Actions/NativeActions.js";
 import { NativeCards } from "./NativeFuncWrap/NativeCards.js";
 import { NativeHelpers } from "./NativeFuncWrap/NativeHelpers.js";
 import { NativeCharacters } from "./NativeFuncWrap/NativeCharacters.js";
@@ -73,7 +73,7 @@ function PatchRedCards() {
         origSearingBlowUse(thisPtr, playerPtr, monsterPtr);
         let baseCard = new AbstractCard(thisPtr);
         let cardLevel = baseCard.timesUpgraded;
-        let newHealAction = NativeActions.Heal.Ctor(playerPtr, playerPtr, cardLevel);
+        let newHealAction = NativeActions.common.Heal.Ctor(playerPtr, playerPtr, cardLevel);
         baseCard.addToBot(newHealAction);
     });
     let origHeavyBladeCtor = NativeCards.Red.HeavyBlade.OverrideCtor((thisPtr: NativePointer) => {
@@ -101,7 +101,7 @@ function PatchRedCards() {
     let origDemonFormUse = NativeCards.Red.DemonForm.OverridUse((thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => {
         origDemonFormUse(thisPtr, caster, target);
         let freeAttackPower = NativePowers.FreeAttack.Ctor(caster, 1);
-        let ApplyPowerActionObj = NativeActions.ApplyPower.Ctor2(caster, caster, freeAttackPower, 1);
+        let ApplyPowerActionObj = NativeActions.common.ApplyPower.Ctor2(caster, caster, freeAttackPower, 1);
         let wrapCard = new AbstractCard(thisPtr);
         wrapCard.addToBot(ApplyPowerActionObj);
     });
@@ -334,7 +334,7 @@ function PatchRelics() {
                     }
                 }
 
-                let ApplyPowerActionObj = NativeActions.ApplyPower.Ctor2(currentPlayer.rawPtr, currentPlayer.rawPtr, formPowerObj, 1);
+                let ApplyPowerActionObj = NativeActions.common.ApplyPower.Ctor2(currentPlayer.rawPtr, currentPlayer.rawPtr, formPowerObj, 1);
                 wrapGinger.addToBot(ApplyPowerActionObj);
                 wrapGinger.flash();
             }
@@ -361,7 +361,7 @@ function PatchRelics() {
     });
 
     //GoldenEye ability hard-code in ScryAction ctor
-    let origScryActionCtor = NativeActions.Scry.OverrideCtor((thisPtr: NativePointer, numCards: number) => {
+    let origScryActionCtor = NativeActions.utility.Scry.OverrideCtor((thisPtr: NativePointer, numCards: number) => {
         let scryActionObj = origScryActionCtor(thisPtr, numCards);
         let wrapAction = new AbstractGameAction(scryActionObj);
         if (wrapAction.amount >= 5) {
@@ -408,9 +408,9 @@ function PatchRelics() {
     NativeRelics.MarkofPain.OverrideatBattleStart((thisPtr: NativePointer) => {
         let wrapMarkofPain = new AbstractRelic(thisPtr);
         wrapMarkofPain.flash();
-        let relicAboveCreatureAction = NativeActions.RelicAboveCreature.Ctor(PatchHelper.STSGlobalVars.AbstractDungeon_player.rawPtr, thisPtr);
+        let relicAboveCreatureAction = NativeActions.common.RelicAboveCreature.Ctor(PatchHelper.STSGlobalVars.AbstractDungeon_player.rawPtr, thisPtr);
         let targetCard = NativeCards.status.Burn.Ctor();
-        let makeTempCardInHandAction = NativeActions.MakeTempCardInHand.Ctor(targetCard, 2, true);
+        let makeTempCardInHandAction = NativeActions.common.MakeTempCardInHand.Ctor(targetCard, 2, true);
         wrapMarkofPain.addToBot(relicAboveCreatureAction);
         wrapMarkofPain.addToBot(makeTempCardInHandAction);
     });
@@ -425,8 +425,8 @@ function PatchRelics() {
             if (handSize > 0) {
                 let wrapRunicPyramid = new AbstractRelic(RunicPyramidObj);
                 let lootingNumber = Math.min(handSize, 3);
-                let discardAction = NativeActions.Discard.Ctor(currentPlayer.rawPtr, currentPlayer.rawPtr, lootingNumber);
-                let drawCardAction = NativeActions.DrawCard.Ctor2(lootingNumber);
+                let discardAction = NativeActions.common.Discard.Ctor(currentPlayer.rawPtr, currentPlayer.rawPtr, lootingNumber);
+                let drawCardAction = NativeActions.common.DrawCard.Ctor2(lootingNumber);
                 wrapRunicPyramid.addToBot(discardAction);
                 wrapRunicPyramid.addToBot(drawCardAction);
             }

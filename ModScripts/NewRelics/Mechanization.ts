@@ -1,8 +1,9 @@
 import { AbstractRelic, NewRelicVFuncType } from "../NativeClassWrap/AbstractRelic.js";
 import { LandingSound, RelicTier } from "../enums.js";
 import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
-import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
+import { NativeActions } from "../NativeFuncWrap/Actions/NativeActions.js";
 import { PatchHelper } from "../PatchHelper.js";
+import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
 
 export const Mechanization = (thisPtr: NativePointer): NativePointer => {
     const vfuncs: NewRelicVFuncType = {
@@ -13,8 +14,8 @@ export const Mechanization = (thisPtr: NativePointer): NativePointer => {
             let wrapRelic = new AbstractRelic(thisPtr);
             wrapRelic.flash();
             let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
-            let artifactPower = NativeActions.Artifact.Ctor(currentPlayer.rawPtr, 1);
-            let applyPowerAction = NativeActions.ApplyPower.Ctor2(currentPlayer.rawPtr, currentPlayer.rawPtr, artifactPower, 1);
+            let artifactPower = NativePowers.Artifact.Ctor(currentPlayer.rawPtr, 1);
+            let applyPowerAction = NativeActions.common.ApplyPower.Ctor2(currentPlayer.rawPtr, currentPlayer.rawPtr, artifactPower, 1);
             wrapRelic.addToTop(applyPowerAction);
         },
         makeCopy: (thisPtr: NativePointer) => {

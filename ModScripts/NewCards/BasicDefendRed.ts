@@ -1,14 +1,14 @@
 import { AbstractCard } from "../NativeClassWrap/AbstractCard.js";
 import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
-import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
+import { NativeActions } from "../NativeFuncWrap/Actions/NativeActions.js";
 
 export const BasicDefendRed = (thisPtr: NativePointer): NativePointer => {
     const vfuncs = {
         use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
             let wrapCard = new AbstractCard(thisPtr);
-            let damageAction = NativeActions.GainBlock.Ctor2(playerPtr, playerPtr, wrapCard.block);
+            let damageAction = NativeActions.common.GainBlock.Ctor2(playerPtr, playerPtr, wrapCard.block);
             wrapCard.addToBot(damageAction);
-            let loseHpAction = NativeActions.LoseHP.Ctor(playerPtr, playerPtr, 2, AttackEffect.NONE);
+            let loseHpAction = NativeActions.common.LoseHP.Ctor(playerPtr, playerPtr, 2, AttackEffect.NONE);
             wrapCard.addToBot(loseHpAction);
         },
         upgrade: (thisPtr: NativePointer) => {
