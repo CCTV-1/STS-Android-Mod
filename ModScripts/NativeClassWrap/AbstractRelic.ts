@@ -18,6 +18,7 @@ export interface NewRelicVFuncType {
     getUpdatedDescription: (thisPtr: NativePointer) => NativePointer,
     onPlayCard?: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => void,
     onEquip?: (thisPtr: NativePointer) => void,
+    onUnequip?: (thisPtr: NativePointer) => void,
     atBattleStart?: (thisPtr: NativePointer) => void,
     atTurnStart?: (thisPtr: NativePointer) => void,
     onPlayerEndTurn?: (thisPtr: NativePointer) => void,
@@ -80,6 +81,16 @@ export class AbstractRelic extends NativeClassWrapper {
                 const onEquipFunc = cardVFuncMap.onEquip;
                 if (onEquipFunc !== undefined) {
                     onEquipFunc(thisPtr);
+                }
+            }
+        },
+        onUnequip:  (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const onUnequipFunc = cardVFuncMap.onUnequip;
+                if (onUnequipFunc !== undefined) {
+                    onUnequipFunc(thisPtr);
                 }
             }
         },
@@ -164,9 +175,17 @@ export class AbstractRelic extends NativeClassWrapper {
         onLoseGold: new NativeFunctionInfo(0xC8, 'void', ['pointer']),
         //void AbstractRelic::onSpendGold(STS::AbstractRelic* this)
         onSpendGold: new NativeFunctionInfo(0xD0, 'void', ['pointer']),
-        //void AbstractRelic::onEquip(STS::AbstractRelic* this)
+        /**
+         * ```c
+         * void AbstractRelic::onEquip(STS::AbstractRelic* this)
+         * ```
+        */
         onEquip: new NativeFunctionInfo(0xD8, 'void', ['pointer']),
-        //void AbstractRelic::onUnequip(STS::AbstractRelic* this)
+        /**
+         * ```c
+         * void AbstractRelic::onUnequip(STS::AbstractRelic* this)
+         * ```
+        */
         onUnequip: new NativeFunctionInfo(0xE0, 'void', ['pointer']),
         //void AbstractRelic::atPreBattle(STS::AbstractRelic* this)
         atPreBattle: new NativeFunctionInfo(0xE8, 'void', ['pointer']),
@@ -283,6 +302,8 @@ export class AbstractRelic extends NativeClassWrapper {
             wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), AbstractRelic.#vfunctionMap.onPlayCard, AbstractRelic.#NewRelicVFuncProxys.onPlayCard);
             funcName = "AbstractRelic_BasicNewRelic_onEquip";
             wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onEquip, AbstractRelic.#NewRelicVFuncProxys.onEquip);
+            funcName = "AbstractRelic_BasicNewRelic_onUnequip";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onUnequip, AbstractRelic.#NewRelicVFuncProxys.onUnequip);
             funcName = "AbstractRelic_BasicNewRelic_atBattleStart";
             wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.atBattleStart, AbstractRelic.#NewRelicVFuncProxys.atBattleStart);
             funcName = "AbstractRelic_BasicNewRelic_atTurnStart";
@@ -317,6 +338,11 @@ export class AbstractRelic extends NativeClassWrapper {
     OverrideonEquip(newVFunc: (thisPtr: NativePointer) => void) {
         let funcName = (AbstractRelic.#vFuncNamePrefix + this.relicId + "_onEquip").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onEquip, newVFunc);
+    }
+
+    OverrideonUnequip(newVFunc: (thisPtr: NativePointer) => void) {
+        let funcName = (AbstractRelic.#vFuncNamePrefix + this.relicId + "_onUnequip").replace(/\s+/g, "");
+        this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onUnequip, newVFunc);
     }
 
     OverrideatBattleStart(newVFunc: (thisPtr: NativePointer) => void) {

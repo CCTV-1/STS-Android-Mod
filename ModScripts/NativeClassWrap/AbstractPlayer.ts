@@ -5,6 +5,7 @@ import { CardGroup } from "./CardGroup.js";
 import { PlayerClass } from "../enums.js";
 import { JString } from "./JString.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
+import { EnergyManager } from "./EnergyManager.js";
 
 export class AbstractPlayer extends AbstractCreature {
     //NativePointer AbstractPlayer *
@@ -152,6 +153,10 @@ export class AbstractPlayer extends AbstractCreature {
      */
     get potions() {
         return new ArrayList(this.readOffsetPointer(0x138));
+    }
+
+    get energy() {
+        return new EnergyManager(this.readOffsetPointer(0x13C));
     }
 
     get masterMaxOrbs() {
