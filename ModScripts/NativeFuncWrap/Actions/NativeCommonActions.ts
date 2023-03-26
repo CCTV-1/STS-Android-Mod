@@ -42,6 +42,12 @@ import { RelicAboveCreatureAction } from "./common/RelicAboveCreatureAction.js";
 import { RemoveAllBlockAction } from "./common/RemoveAllBlockAction.js";
 import { RemoveSpecificPowerAction } from "./common/RemoveSpecificPowerAction.js";
 import { RollMoveAction } from "./common/RollMoveAction.js";
+import { SetDontTriggerAction } from "./common/SetDontTriggerAction.js";
+import { SetMoveAction } from "./common/SetMoveAction.js";
+import { ShuffleAction } from "./common/ShuffleAction.js";
+import { SpawnMonsterAction } from "./common/SpawnMonsterAction.js";
+import { SuicideAction } from "./common/SuicideAction.js";
+import { UpgradeRandomCardAction } from "./common/UpgradeRandomCardAction.js";
 
 export const NativeCommonActions = {
     ApplyPower: ApplyPowerAction,
@@ -88,4 +94,10 @@ export const NativeCommonActions = {
     RemoveAllBlock: RemoveAllBlockAction,
     RemoveSpecificPower: RemoveSpecificPowerAction,
     RollMove: RollMoveAction,
+    SetDontTrigger: SetDontTriggerAction,
+    SetMove: SetMoveAction,
+    Shuffle: ShuffleAction,
+    SpawnMonster: SpawnMonsterAction,
+    Suicide: SuicideAction,
+    UpgradeRandomCard: UpgradeRandomCardAction,
 };

@@ -540,31 +540,54 @@ export const NativeActionInfo = {
             Ctor: new NativeFunctionInfo(0x168A219, 'pointer', ['pointer', 'pointer']),
         },
         SetDontTrigger: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::SetDontTrigger(STS::AbstractGameAction* thisPtr, STS::AbstractCard* cardPtr, bool dontTrigger)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x168A2ED, 'pointer', ['pointer', 'pointer', 'bool']),
         },
         SetMove: {
-
-        },
-        ShowMoveName: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::SetMoveAction(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* monster, JString* moveName,
+             *      bool nextMove, MonsterIntent intent, int32_t baseDamage, int32_t multiplierAmt, bool multiplier)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x168A3BD, 'pointer', ['pointer', 'pointer', 'pointer', 'bool', 'uint32', 'int32', 'int32', 'bool']),
         },
         Shuffle: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Shuffle(STS::AbstractGameAction* thisPtr, CardGroup* theGroup, bool trigger)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x168AB21, 'pointer', ['pointer', 'pointer', 'bool']),
+            
         },
         SpawnMonster: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::SpawnMonster(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* monster, bool isMinion)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x168AD4D, 'pointer', ['pointer', 'pointer', 'bool']),
         },
         Suicide: {
-
-        },
-        TransformCardInHand: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::SuicideAction(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* monster, bool triggerRelics)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x168B43D, 'pointer', ['pointer', 'pointer', 'bool']),
         },
         UpgradeRandomCard: {
-
-        },
-        UpgradeSpecificCard: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::UpgradeRandomCard(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x168B5BD, 'pointer', ['pointer']),
         },
     },
     defect: {
