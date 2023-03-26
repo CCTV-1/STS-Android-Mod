@@ -313,7 +313,7 @@ export const NativeActionInfo = {
         InstantKill: {
             /**
              * ```c
-             * AbstractGameAction* HealAction(AbstractGameAction* this, STS::AbstractCreature* target)
+             * AbstractGameAction* InstantKill(AbstractGameAction* this, STS::AbstractCreature* target)
              * ```
              */
             Ctor: new NativeFunctionInfo(0x1682C21, 'pointer', ['pointer', 'pointer']),
@@ -330,16 +330,47 @@ export const NativeActionInfo = {
             Ctor: new NativeFunctionInfo(0x1682DFD, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'uint32']),
         },
         MakeTempCardAtBottomOfDeck: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::MakeTempCardAtBottomOfDeck(AbstractGameAction* this, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1683139, 'pointer', ['pointer', 'int32']),
         },
         MakeTempCardInDiscard: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::MakeTempCardInDiscard(AbstractGameAction* this, STS::AbstractCard* card, bool sameUUID)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1683665, 'pointer', ['pointer', 'pointer', 'bool']),
+            /**
+             * ```c
+             * AbstractGameAction* Actions::MakeTempCardInDiscard(AbstractGameAction* this, STS::AbstractCard* card, int32_t amount)
+             * ```
+             */
+            Ctor2: new NativeFunctionInfo(0x1683509, 'pointer', ['pointer', 'pointer', 'int']),
         },
         MakeTempCardInDiscardAndDeck: {
-
+            /**
+             * ```c
+             * AbstractGameAction* MakeTempCardInDiscardAndDeck(AbstractGameAction* this, STS::AbstractCard* card)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1683A25, 'pointer', ['pointer', 'pointer']),
         },
         MakeTempCardInDrawPile: {
-
+            /**
+             * ```c
+             * AbstractGameAction* MakeTempCardInDrawPileAction(AbstractGameAction* this, STS::AbstractCard* card, int32_t amount, bool randomSpot,
+             *      bool autoPosition, bool toBottom, float cardX, float cardY)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1683E01, 'pointer', ['pointer', 'pointer', 'int32', 'bool', 'bool', 'bool', 'float', 'float']),
+            /**
+             * just call `Ctor(card, amount, shuffleInto, autoPosition, false, Settings.WIDTH / 2.0f, Settings.HEIGHT / 2.0f);
+             */
+            Ctor2: new NativeFunctionInfo(0x168408D, 'pointer', ['pointer', 'pointer', 'int32', 'bool', 'bool']),
         },
         MakeTempCardInHand: {
             /**
@@ -368,7 +399,12 @@ export const NativeActionInfo = {
             Ctor3: new NativeFunctionInfo(0x1684A59, 'pointer', ['pointer', 'pointer', 'bool', 'bool']),
         },
         Mill: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Mill(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target, STS::AbstractCreature* source, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16866E1, 'pointer', ['pointer', 'pointer', 'pointer', 'int32']),
         },
         ModifyBlock: {
 

@@ -23,7 +23,12 @@ import { GainGoldAction } from "./common/GainGoldAction.js";
 import { HealAction } from "./common/HealAction.js";
 import { InstantKillAction } from "./common/InstantKillAction.js";
 import { LoseHPAction } from "./common/LoseHPAction.js";
+import { MakeTempCardAtBottomOfDeckAction } from "./common/MakeTempCardAtBottomOfDeckAction.js";
+import { MakeTempCardInDiscardAction } from "./common/MakeTempCardInDiscardAction.js";
+import { MakeTempCardInDiscardAndDeckAction } from "./common/MakeTempCardInDiscardAndDeckAction.js";
+import { MakeTempCardInDrawPileAction } from "./common/MakeTempCardInDrawPileAction.js";
 import { MakeTempCardInHandAction } from "./common/MakeTempCardInHandAction.js";
+import { MillAction } from "./common/MillAction.js";
 import { RelicAboveCreatureAction } from "./common/RelicAboveCreatureAction.js";
 
 export const NativeCommonActions = {
@@ -52,7 +57,11 @@ export const NativeCommonActions = {
     Heal: HealAction,
     InstantKill: InstantKillAction,
     LoseHP: LoseHPAction,
-    
+    MakeTempCardAtBottomOfDeck: MakeTempCardAtBottomOfDeckAction,
+    MakeTempCardInDiscard: MakeTempCardInDiscardAction,
+    MakeTempCardInDiscardAndDeck: MakeTempCardInDiscardAndDeckAction,
+    MakeTempCardInDrawPile: MakeTempCardInDrawPileAction,
     MakeTempCardInHand: MakeTempCardInHandAction,
+    Mill: MillAction,
     RelicAboveCreature: RelicAboveCreatureAction,
 };
