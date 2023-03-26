@@ -34,8 +34,6 @@ export const NativeActionInfo = {
         },
     },
     common: {
-        //not implement in android sts
-        //ApplyPoisonOnRandomMonster {},
         ApplyPower: {
             /**
              * ```c
@@ -254,9 +252,6 @@ export const NativeActionInfo = {
              */
             Ctor: new NativeFunctionInfo(0x16818E1, 'pointer', ['pointer', 'pointer', 'pointer', 'bool']),
         },
-        FastDrawCard: {
-
-        },
         GainBlock: {
             /**
              * ```c
@@ -284,13 +279,28 @@ export const NativeActionInfo = {
             Ctor4: new NativeFunctionInfo(0x1681E09, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'bool']),
         },
         GainEnergy: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::GainEnergy(STS::AbstractGameAction* thisPtr, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1682455, 'pointer', ['pointer', 'int32']),
         },
         GainEnergyAndEnableControls: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::GainEnergyAndEnableControls(STS::AbstractGameAction* thisPtr, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1682455, 'pointer', ['pointer', 'int32']),
         },
         GainGold: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::GainGold(STS::AbstractGameAction* thisPtr, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x168290D, 'pointer', ['pointer', 'int32']),
         },
         Heal: {
             /**
@@ -301,7 +311,13 @@ export const NativeActionInfo = {
             Ctor: new NativeFunctionInfo(0x1682A11, 'pointer', ['pointer', 'pointer', 'pointer', 'int32']),
         },
         InstantKill: {
-
+            /**
+             * ```c
+             * AbstractGameAction* HealAction(AbstractGameAction* this, STS::AbstractCreature* target)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1682C21, 'pointer', ['pointer', 'pointer']),
+            
         },
         LoseHP: {
             /**
@@ -312,9 +328,6 @@ export const NativeActionInfo = {
              * Ctor2 just call ```Ctor(target, source, amount, AttackEffect.NONE);```
              */
             Ctor: new NativeFunctionInfo(0x1682DFD, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'uint32']),
-        },
-        LosePercentHP: {
-
         },
         MakeTempCardAtBottomOfDeck: {
 

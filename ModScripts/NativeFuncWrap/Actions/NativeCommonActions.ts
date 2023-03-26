@@ -17,7 +17,11 @@ import { EscapeAction } from "./common/EscapeAction.js";
 import { ExhaustAction } from "./common/ExhaustAction.js";
 import { ExhaustSpecificCardAction } from "./common/ExhaustSpecificCard.js";
 import { GainBlockAction } from "./common/GainBlock.js";
+import { GainEnergyAction } from "./common/GainEnergyAction.js";
+import { GainEnergyAndEnableControlsAction } from "./common/GainEnergyAndEnableControlsAction.js";
+import { GainGoldAction } from "./common/GainGoldAction.js";
 import { HealAction } from "./common/HealAction.js";
+import { InstantKillAction } from "./common/InstantKillAction.js";
 import { LoseHPAction } from "./common/LoseHPAction.js";
 import { MakeTempCardInHandAction } from "./common/MakeTempCardInHandAction.js";
 import { RelicAboveCreatureAction } from "./common/RelicAboveCreatureAction.js";
@@ -41,9 +45,14 @@ export const NativeCommonActions = {
     Escape: EscapeAction,
     Exhaust: ExhaustAction,
     ExhaustSpecificCard: ExhaustSpecificCardAction,
+    GainBlock: GainBlockAction,
+    GainEnergy: GainEnergyAction,
+    GainEnergyAndEnableControls: GainEnergyAndEnableControlsAction,
+    GainGold: GainGoldAction,
     Heal: HealAction,
+    InstantKill: InstantKillAction,
+    LoseHP: LoseHPAction,
+    
     MakeTempCardInHand: MakeTempCardInHandAction,
     RelicAboveCreature: RelicAboveCreatureAction,
-    GainBlock: GainBlockAction,
-    LoseHP: LoseHPAction,
 };
