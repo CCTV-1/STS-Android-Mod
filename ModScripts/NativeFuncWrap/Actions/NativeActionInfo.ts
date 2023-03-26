@@ -90,7 +90,12 @@ export const NativeActionInfo = {
             Ctor: new NativeFunctionInfo(0x16792CD, 'pointer', ['pointer', 'int32', 'bool']),
         },
         ChangeState: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ChangeState::Ctor(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* monster, JString* stateName)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x167A079, 'pointer', ['pointer', 'pointer', 'pointer']),
         },
         Damage: {
             /**
