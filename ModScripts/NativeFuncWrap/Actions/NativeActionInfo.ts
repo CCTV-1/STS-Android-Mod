@@ -54,7 +54,7 @@ export const NativeActionInfo = {
              * 
              * default args call: `ApplyPowerToRandomEnemyAction::Ctor(this, source, powerPtr, -1, false, AttackEffect.NONE);`
              */
-            Ctor: new NativeFunctionInfo(0x16777D1, 'pointer', ['pointer', 'pointer', 'pointer',  'int32', 'bool', 'uint32']),
+            Ctor: new NativeFunctionInfo(0x16777D1, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'bool', 'uint32']),
         },
         AttackDamageRandomEnemy: {
             /**
@@ -219,7 +219,7 @@ export const NativeActionInfo = {
              * ```
              */
             Ctor: new NativeFunctionInfo(0x167FAD1, 'pointer', ['pointer']),
-            
+
         },
         Escape: {
             /**
@@ -228,7 +228,7 @@ export const NativeActionInfo = {
              * ```
              */
             Ctor: new NativeFunctionInfo(0x1680A5D, 'pointer', ['pointer', 'pointer']),
-            
+
         },
         Exhaust: {
             /**
@@ -317,7 +317,7 @@ export const NativeActionInfo = {
              * ```
              */
             Ctor: new NativeFunctionInfo(0x1682C21, 'pointer', ['pointer', 'pointer']),
-            
+
         },
         LoseHP: {
             /**
@@ -563,7 +563,7 @@ export const NativeActionInfo = {
              * ```
              */
             Ctor: new NativeFunctionInfo(0x168AB21, 'pointer', ['pointer', 'pointer', 'bool']),
-            
+
         },
         SpawnMonster: {
             /**
@@ -724,11 +724,90 @@ export const NativeActionInfo = {
 
         },
         TriggerEndOfTurnOrbs: {
-            
+
         }
     },
     unique: {
-
+        AddCardToDeck: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ScryAction(STS::AbstractGameAction* thisPtr, STS::AbstractCard* cardPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1699E2D, 'pointer', ['pointer', 'pointer']),
+        },
+        Apotheosis: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Apotheosis(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1699FA5, 'pointer', ['pointer']),
+        },
+        ApplyBulletTime: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ApplyBulletTime(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169A281, 'pointer', ['pointer']),
+        },
+        ApplyStasis: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ApplyBulletTime(STS::AbstractGameAction* thisPtr, STSLLAbstractCreature* owner)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169A495, 'pointer', ['pointer', 'pointer']),
+        },
+        Armaments: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Armaments(STS::AbstractGameAction* thisPtr, bool armamentsPlus)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169AE1D, 'pointer', ['pointer', 'bool']),
+        },
+        AttackFromDeckToHand: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::AttackFromDeckToHand(STS::AbstractGameAction* thisPtr, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169BBF1, 'pointer', ['pointer', 'int32']),
+        },
+        Bane: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::BaneAction(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* target, DamageInfo* info)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169C94D, 'pointer', ['pointer', 'pointer', 'pointer']),
+        },
+        BladeFury: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::BaneAction(STS::AbstractGameAction* thisPtr, bool upgraded)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169CCA5, 'pointer', ['pointer', 'bool']),
+        },
+        BlockPerNonAttack: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::BlockPerNonAttack(STS::AbstractGameAction* thisPtr, int32_t blockAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169CE9D, 'pointer', ['pointer', 'int32']),
+        },
+        BouncingFlask: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::BouncingFlask(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* targetCreature, int32_t amount, int32_t numTimes)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169D245, 'pointer', ['pointer', 'pointer', 'int32', 'int32']),
+        },
     },
     utility: {
         Scry: {
