@@ -48,6 +48,22 @@ export const NativePowerInfo = {
         },
     },
     watcher: {
+        BattleHymn: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::BattleHymnPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197C2BD, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        BlockReturn: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::BlockReturnPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197C749, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
         Deva: {
             /**
              * ```c
@@ -56,6 +72,46 @@ export const NativePowerInfo = {
              */
             Ctor: new NativeFunctionInfo(0x197CC09, 'pointer', ['pointer', 'pointer', 'int32'])
         },
+        Devotion: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::DevotionPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197D42D, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        EndTurnDeath: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::EndTurnDeathPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197D8CD, 'pointer', ['pointer', 'pointer'])
+        },
+        EnergyDown: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::EnergyDownPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount, bool isFasting)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197DC79, 'pointer', ['pointer', 'pointer', 'int32', 'bool'])
+        },
+        Establishment: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::EstablishmentPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197E14D, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        Foresight: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::ForesightPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t scryAmt)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197E529, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
         FreeAttack: {
             /**
              * ```c
@@ -63,6 +119,102 @@ export const NativePowerInfo = {
              * ```
              */
             Ctor: new NativeFunctionInfo(0x197E9B1, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        LikeWater: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::LikeWater(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197EE45, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        Mantra: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::Mantra(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197F399, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        Mark: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::Mark(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197F8BD, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        MasterReality: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::MasterRealityPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197FD01, 'pointer', ['pointer', 'pointer'])
+        },
+        MentalFortress: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::MentalFortress(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197FFBD, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        Nirvana: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::MentalFortress(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1980429, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        Omega: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::Omega(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1980805, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        Rushdown: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::Rushdown(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1980DF5, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        Study: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::Rushdown(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x19812BD, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        Vigor: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::Vigor(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x19816C9, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        WaveOfTheHand: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::WaveOfTheHand(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1981B0D, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        WrathNextTurn: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::WrathNextTurn(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1982061, 'pointer', ['pointer', 'pointer'])
         },
     },
 };

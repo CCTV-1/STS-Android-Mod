@@ -1,0 +1,1 @@
+//    public OmnisciencePower(final AbstractCreature owner, final int newAmount) {
