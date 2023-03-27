@@ -11,10 +11,10 @@ import { NativeActions } from "./NativeFuncWrap/Actions/NativeActions.js";
 import { NativeCards } from "./NativeFuncWrap/NativeCards.js";
 import { NativeHelpers } from "./NativeFuncWrap/NativeHelpers.js";
 import { NativeCharacters } from "./NativeFuncWrap/NativeCharacters.js";
-import { NativePowers } from "./NativeFuncWrap/NativePowers.js";
 import { NativeRelics } from "./NativeFuncWrap/NativeRelics.js";
 import { NativePotions } from "./NativeFuncWrap/NativePotions.js";
 import { NativeVFX } from "./NativeFuncWrap/NativeVFX.js";
+import { NativePowers } from "./NativeFuncWrap/Powers/NativePowers.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -100,7 +100,7 @@ function PatchRedCards() {
     });
     let origDemonFormUse = NativeCards.Red.DemonForm.OverridUse((thisPtr: NativePointer, caster: NativePointer, target: NativePointer) => {
         origDemonFormUse(thisPtr, caster, target);
-        let freeAttackPower = NativePowers.FreeAttack.Ctor(caster, 1);
+        let freeAttackPower = NativePowers.Watcher.FreeAttack.Ctor(caster, 1);
         let ApplyPowerActionObj = NativeActions.common.ApplyPower.Ctor2(caster, caster, freeAttackPower, 1);
         let wrapCard = new AbstractCard(thisPtr);
         wrapCard.addToBot(ApplyPowerActionObj);
@@ -266,7 +266,7 @@ function Patchcharacters() {
 
 function PatchPowers() {
     //let origOnCardDrawFunc = 
-    NativePowers.Confusion.OverrideonCardDraw((thisPtr: NativePointer, cardPtr: NativePointer) => {
+    NativePowers.Common.Confusion.OverrideonCardDraw((thisPtr: NativePointer, cardPtr: NativePointer) => {
         //    origOnCardDrawFunc(thisPtr, cardPtr)
         let baseCard = new AbstractCard(cardPtr);
         if (baseCard.cost >= 0) {
@@ -313,19 +313,19 @@ function PatchRelics() {
                 let formPowerObj = null;
                 switch (currentPlayer.chosenClass) {
                     case PlayerClass.IRONCLAD: {
-                        formPowerObj = NativePowers.DemonForm.Ctor(currentPlayer.rawPtr, 2);
+                        formPowerObj = NativePowers.Ironclad.DemonForm.Ctor(currentPlayer.rawPtr, 2);
                         break;
                     }
                     case PlayerClass.THE_SILENT: {
-                        formPowerObj = NativePowers.IntangiblePlayer.Ctor(currentPlayer.rawPtr, 2);
+                        formPowerObj = NativePowers.Common.IntangiblePlayer.Ctor(currentPlayer.rawPtr, 2);
                         break;
                     }
                     case PlayerClass.DEFECT: {
-                        formPowerObj = NativePowers.Echo.Ctor(currentPlayer.rawPtr, 1);
+                        formPowerObj = NativePowers.Defect.Echo.Ctor(currentPlayer.rawPtr, 1);
                         break;
                     }
                     case PlayerClass.WATCHER: {
-                        formPowerObj = NativePowers.Deva.Ctor(currentPlayer.rawPtr, 1);
+                        formPowerObj = NativePowers.Watcher.Deva.Ctor(currentPlayer.rawPtr, 1);
                         break;
                     }
                     default: {
