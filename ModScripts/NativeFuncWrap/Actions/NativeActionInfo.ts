@@ -317,7 +317,6 @@ export const NativeActionInfo = {
              * ```
              */
             Ctor: new NativeFunctionInfo(0x1682C21, 'pointer', ['pointer', 'pointer']),
-
         },
         LoseHP: {
             /**
@@ -918,7 +917,6 @@ export const NativeActionInfo = {
              * ```
              */
             Ctor: new NativeFunctionInfo(0x16A05C9, 'pointer', ['pointer', 'pointer', 'pointer']),
-            
         },
         DualWield: {
             /**
@@ -927,8 +925,358 @@ export const NativeActionInfo = {
              * ```
              */
             Ctor: new NativeFunctionInfo(0x16A0715, 'pointer', ['pointer', 'pointer', 'int32']),
-            
         },
+        Enlightenment: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DualWieldAction(STS::AbstractGameAction* thisPtr, bool forRestOfCombat)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A1589, 'pointer', ['pointer', 'bool']),
+        },
+        EscapePlan: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::EscapePlan(STS::AbstractGameAction* thisPtr, int32_t blockGain)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A1801, 'pointer', ['pointer', 'int32']),
+        },
+        EstablishmentPower: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::EstablishmentPower(STS::AbstractGameAction* thisPtr, int32_t discountAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A1A1D, 'pointer', ['pointer', 'int32']),
+        },
+        ExhaustAllNonAttack: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ExhaustAllNonAttack(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A1C11, 'pointer', ['pointer']),
+        },
+        Exhume: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::EstablishmentPower(STS::AbstractGameAction* thisPtr, bool upgrade)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A1F1C, 'pointer', ['pointer', 'bool']),
+        },
+        Expertise: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Expertise(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* sourceCR, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A3369, 'pointer', ['pointer', 'pointer', 'int32']),
+        },
+        Feed: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::FeedAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::DamageInfo* dmgInfo, int32_t maxHPAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A34DD, 'pointer', ['pointer', 'pointer', 'pointer', 'int32']),
+        },
+        FiendFire: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::FiendFireAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::DamageInfo* dmgInfo)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A396D, 'pointer', ['pointer', 'pointer', 'pointer']),
+        },
+        Flechette: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Flechette(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::DamageInfo* dmgInfo)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A3BED, 'pointer', ['pointer', 'pointer', 'pointer']),
+        },
+        Forethought: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Forethought(STS::AbstractGameAction* thisPtr, bool upgraded)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A3E4D, 'pointer', ['pointer', 'bool']),
+        },
+        GainBlockRandomMonster: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::GainBlockRandomMonster(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* sourceCR, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A4685, 'pointer', ['pointer', 'pointer', 'int32']),
+        },
+        GainEnergyIfDiscard: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::GainEnergyIfDiscard(STS::AbstractGameAction* thisPtr, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A4F51, 'pointer', ['pointer', 'int32']),
+        },
+        GamblingChip: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::GamblingChip(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* sourceCR)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A525D, 'pointer', ['pointer', 'pointer']),
+            /**
+             * ```c
+             * AbstractGameAction* Actions::GamblingChip(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* sourceCR, bool notChip)
+             * ```
+             */
+            Ctor2: new NativeFunctionInfo(0x16A5355, 'pointer', ['pointer', 'pointer', 'bool']),
+        },
+        Greed: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Greed(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::DamageInfo* dmgInfo, int32_t goldAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A59A9, 'pointer', ['pointer', 'pointer', 'pointer', 'int32']),
+        },
+        HeelHook: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::HeelHook(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::DamageInfo* dmgInfo)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A5EBD, 'pointer', ['pointer', 'pointer', 'pointer']),
+        },
+        IncreaseMaxHp: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::HeelHook(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* target,
+             *      float increasePercent, bool showEffect)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A6009, 'pointer', ['pointer', 'pointer', 'float', 'bool']),
+        },
+        LimitBreak: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::LimitBreak(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A61D5, 'pointer', ['pointer']),
+        },
+        LoseEnergy: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::LoseEnergy(STS::AbstractGameAction* thisPtr, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A6409, 'pointer', ['pointer', 'int32']),
+        },
+        Madness: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Madness(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A65D5, 'pointer', ['pointer']),
+        },
+        Malaise: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Malaise(STS::AbstractGameAction* thisPtr, STS::AbstractPlayer* playerPtr, STS::AbstractMonster* monsterPtr,
+             *      bool upgraded, bool freeToPlayOnce, int energyOnUse)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A6AA5, 'pointer', ['pointer', 'pointer', 'pointer', 'bool', 'bool', 'int32']),
+        },
+        Multicast: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Multicast(STS::AbstractGameAction* thisPtr, STS::AbstractPlayer* playerPtr, int energyOnUse,
+             *      bool upgraded, bool freeToPlayOnce)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A6D81, 'pointer', ['pointer', 'pointer', 'int32', 'bool', 'bool']),
+        },
+        Nightmare: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Nightmare(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target, STS::AbstractCreature* source,
+             *      int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A70C5, 'pointer', ['pointer', 'pointer', 'pointer', 'int32']),
+        },
+        PoisonLoseHp: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::PoisonLoseHp(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target, STS::AbstractCreature* source,
+             *      int32_t amount, AttackEffect effect)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A77DD, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'uint32']),
+        },
+        RandomizeHandCost: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::RandomizeHandCost(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A7DDD, 'pointer', ['pointer']),
+        },
+        Regen: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Regen(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target, int32_t goldAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A80D5, 'pointer', ['pointer', 'pointer', 'int32']),
+        },
+        RemoveDebuffs: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::RemoveDebuffs(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A84E1, 'pointer', ['pointer', 'pointer']),
+        },
+        RestoreRetainedCards: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::RemoveDebuffs(STS::AbstractGameAction* thisPtr, CardGroup* group)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A8685, 'pointer', ['pointer', 'pointer']),
+        },
+        RetainCards: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Regen(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* source, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A8A29, 'pointer', ['pointer', 'pointer', 'int32']),
+        },
+        RitualDagger: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Regen(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target, DamageInfo* dmgInfo,
+             *      int32_t incAmount, UUID targetUUID)
+             * ```
+             * 
+             * `struct UUID { uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4 }`
+             */
+            Ctor: new NativeFunctionInfo(0x16A8F29, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'uint32', 'uint32', 'uint32', 'uint32']),
+        },
+        Setup: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Setup(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A9435, 'pointer', ['pointer']),
+        },
+        Skewer: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Multicast(STS::AbstractGameAction* thisPtr, STS::AbstractPlayer* playerPtr, STS::AbstractMonster* monsterPtr,
+             *      int32_t damage, DamageType damageTypeForTurn, bool freeToPlayOnce, int32_t energyOnUse)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A9C45, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'uint32', 'bool', 'int32']),
+        },
+        SkillFromDeckToHand: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::SkillFromDeckToHand(STS::AbstractGameAction* thisPtr, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A9EF9, 'pointer', ['pointer', 'int32']),
+        },
+        SpotWeakness: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::SpotWeakness(STS::AbstractGameAction* thisPtr, int32_t damageIncrease, STS::AbstractMonster* monsterPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16AAC55, 'pointer', ['pointer', 'int32', 'pointer']),
+        },
+        SummonGremlin: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::SummonGremlin(STS::AbstractGameAction* thisPtr, JObjectArray<STS::AbstractMonster>* gremlins)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16AAFF5, 'pointer', ['pointer', 'pointer']),
+        },
+        Tempest: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Tempest(STS::AbstractGameAction* thisPtr, STS::AbstractPlayer* playerPtr, int32_t energyOnUse, bool upgraded, bool freeToPlayOnce)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16ABCE9, 'pointer', ['pointer', 'pointer', 'int32', 'bool', 'bool']),
+        },
+        Transmutation: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Transmutation(STS::AbstractGameAction* thisPtr, STS::AbstractPlayer* playerPtr, bool upgraded, bool freeToPlayOnce, int32_t energyOnUse)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16ABF89, 'pointer', ['pointer', 'pointer', 'bool', 'bool', 'int32']),
+        },
+        TriplePoison: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::TriplePoison(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* targetCR, STS::AbstractCreature* sourceCR)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16AC305, 'pointer', ['pointer', 'pointer', 'pointer']),
+        },
+        Unload: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::TriplePoison(STS::AbstractGameAction* thisPtrSTS::AbstractCreature* sourceCR)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16AC4F9, 'pointer', ['pointer', 'pointer']),
+        },
+        VampireDamage: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::VampireDamage(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::DamageInfo* dmgInfo, AttackEffect effect)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16AC761, 'pointer', ['pointer', 'pointer', 'pointer', 'uint32']),
+        },
+        VampireDamageAllEnemies: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::VampireDamageAllEnemies(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* source,
+             *      JObjectArray<int32_t> amount, DamageType type, AttackEffect effect)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16ACA45, 'pointer', ['pointer', 'pointer', 'pointer', 'uint32', 'uint32']),
+        },
+        Whirlwind: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Whirlwind(STS::AbstractGameAction* thisPtr, STS::AbstractPlayer* plyaerPtr,
+             *      JObjectArray<int32_t> multiDamage, DamageType type, bool freeToPlayOnce, int32_t energyOnUse)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16AD6DD, 'pointer', ['pointer', 'pointer', 'pointer', 'uint32', 'bool', 'int32']),
+        }
     },
     utility: {
         Scry: {
