@@ -808,6 +808,127 @@ export const NativeActionInfo = {
              */
             Ctor: new NativeFunctionInfo(0x169D245, 'pointer', ['pointer', 'pointer', 'int32', 'int32']),
         },
+        BurnIncrease: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::BurnIncrease(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169D5DD, 'pointer', ['pointer']),
+        },
+        CalculatedGamble: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::CalculatedGamble(STS::AbstractGameAction* thisPtr, bool upgraded)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169DB8D, 'pointer', ['pointer', 'bool']),
+        },
+        CanLose: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::CanLoseAction(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169DDAD, 'pointer', ['pointer']),
+        },
+        CannotLose: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::CannotLoseAction(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169DE9D, 'pointer', ['pointer']),
+        },
+        Codex: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::CodexAction(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169DF89, 'pointer', ['pointer']),
+        },
+        DamagePerAttackPlayed: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DamagePerAttackPlayedAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* target,
+             *      STS::DamageInfo* dmgInfo, AttackEffect effect)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169E515, 'pointer', ['pointer', 'pointer', 'pointer', 'uint32']),
+        },
+        DiscardPileToTopOfDeck: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DiscardPileToTopOfDeck(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* source)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169E735, 'pointer', ['pointer', 'pointer']),
+        },
+        Discovery: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DiscoveryAction(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169EFD5, 'pointer', ['pointer']),
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DiscoveryAction(STS::AbstractGameAction* thisPtr, bool colorless, int32_t amount)
+             * ```
+             */
+            Ctor2: new NativeFunctionInfo(0x169F16D, 'pointer', ['pointer', 'bool', 'int32']),
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DiscoveryAction(STS::AbstractGameAction* thisPtr, CardType type, int32_t amount)
+             * ```
+             */
+            Ctor3: new NativeFunctionInfo(0x169F095, 'pointer', ['pointer', 'uint32', 'int32']),
+        },
+        Doppelganger: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DiscardPileToTopOfDeck(STS::AbstractGameAction* thisPtr, STS::AbstractPlayer* playerPtr,
+             *      bool upgraded, bool freeToPlayOnce, int32_t energyOnUse)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x169FF79, 'pointer', ['pointer', 'pointer', 'bool', 'bool', 'int32']),
+        },
+        DoublePoison: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DoublePoison(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* targetCR,
+             *      STS::AbstractCreature sourceCR)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A023D, 'pointer', ['pointer', 'pointer', 'pointer']),
+        },
+        DoubleYourBlock: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DoubleYourBlock(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* targetCR)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A040D, 'pointer', ['pointer', 'pointer']),
+        },
+        Dropkick: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DropkickAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* targetCR, DamageInfo* dmgInfo)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A05C9, 'pointer', ['pointer', 'pointer', 'pointer']),
+            
+        },
+        DualWield: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::DualWieldAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature* targetCR, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16A0715, 'pointer', ['pointer', 'pointer', 'int32']),
+            
+        },
     },
     utility: {
         Scry: {
