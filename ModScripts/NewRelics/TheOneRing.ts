@@ -20,7 +20,7 @@ export const TheOneRing = (thisPtr: NativePointer): NativePointer => {
         },
         atBattleStart: (thisPtr: NativePointer) => {
             let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
-            currentPlayer.heal(-currentPlayer.currentHealth / 2, true);
+            currentPlayer.heal(-currentPlayer.currentHealth / 3, true);
         },
         makeCopy: (thisPtr: NativePointer) => {
             let copyObj = TheOneRing(thisPtr);
