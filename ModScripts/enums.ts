@@ -169,23 +169,27 @@ export enum PotionSize {
     ANVIL
 };
 
-export enum MonsterIntent
-{
-    ATTACK = 0x0, 
-    ATTACK_BUFF, 
-    ATTACK_DEBUFF, 
-    ATTACK_DEFEND, 
-    BUFF, 
-    DEBUFF, 
-    STRONG_DEBUFF, 
-    DEBUG, 
-    DEFEND, 
-    DEFEND_DEBUFF, 
-    DEFEND_BUFF, 
-    ESCAPE, 
-    MAGIC, 
-    NONE, 
-    SLEEP, 
-    STUN, 
+export enum MonsterIntent {
+    ATTACK = 0x0,
+    ATTACK_BUFF,
+    ATTACK_DEBUFF,
+    ATTACK_DEFEND,
+    BUFF,
+    DEBUFF,
+    STRONG_DEBUFF,
+    DEBUG,
+    DEFEND,
+    DEFEND_DEBUFF,
+    DEFEND_BUFF,
+    ESCAPE,
+    MAGIC,
+    NONE,
+    SLEEP,
+    STUN,
     UNKNOWN
+};
+
+export enum PowerType {
+    BUFF = 0x0,
+    DEBUFF
 };

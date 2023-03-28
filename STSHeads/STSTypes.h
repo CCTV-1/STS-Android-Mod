@@ -260,6 +260,12 @@ namespace STS
         UNKNOWN
     };
 
+    enum class PowerType:uint32_t
+    {
+        BUFF = 0x0,
+        DEBUFF
+    };
+
     struct JString
     {
         uint32_t unk;
