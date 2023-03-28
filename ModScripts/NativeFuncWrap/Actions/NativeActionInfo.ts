@@ -1290,5 +1290,13 @@ export const NativeActionInfo = {
     },
     watcher: {
 
-    }
+    },
+    AbstractGame: {
+        /**
+         * ```c
+         * AbstractGameAction* STS::AbstractGameAction::Ctor(STS::AbstractGameAction * thisPtr)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x166FA41, 'pointer', ['pointer']),
+    },
 };

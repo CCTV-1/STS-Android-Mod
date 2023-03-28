@@ -1,6 +1,7 @@
 import { STSCardCtor } from "./NativeClassWrap/AbstractCard.js";
 import { BasicAttackRed } from "./NewCards/BasicAttackRed.js";
 import { BasicDefendRed } from "./NewCards/BasicDefendRed.js";
+import { BigScore } from "./NewCards/BigScore.js";
 
 /**
  * if you plan register a new card, add a function property to NewCardLibrary,the function code like follow:
@@ -41,4 +42,5 @@ import { BasicDefendRed } from "./NewCards/BasicDefendRed.js";
 export const newCardLibrary: STSCardCtor[] = [
     BasicAttackRed,
     BasicDefendRed,
+    BigScore,
 ];

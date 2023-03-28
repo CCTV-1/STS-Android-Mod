@@ -239,7 +239,7 @@ namespace STS
         ANVIL
     };
 
-    enum class MonsterIntent:unt32_t
+    enum class MonsterIntent:uint32_t
     {
         ATTACK = 0x1, 
         ATTACK_BUFF, 
@@ -725,6 +725,40 @@ namespace STS
     } __attribute__((aligned(4)));
     
 
+    struct AbstractGameActionVFuncMap
+    {
+        void *baseClassPtr;
+        void *vFuncMap;
+        uint8_t unk[24];
+        dummyFunc_t setValues;
+        bool byte24;
+        uint8_t gap25[3];
+        dummyFunc_t setValues2;
+        bool byte2C;
+        uint8_t gap2D[3];
+        dummyFunc_t setValues3;
+        bool byte34;
+        uint8_t gap35[3];
+        dummyFunc_t isDeadOrEscaped;
+        bool InitisDeadOrEscaped;
+        uint8_t gap3D[3];
+        dummyFunc_t addToBot;
+        bool byte44;
+        bool gap45[3];
+        dummyFunc_t addToTop;
+        bool byte4C;
+        bool gap4D[3];
+        dummyFunc_t update;
+        bool Initupdate;
+        uint8_t gap55[3];
+        dummyFunc_t tickDuration;
+        bool byte5C;
+        uint8_t gap5D[3];
+        dummyFunc_t shouldCancelAction;
+        bool byte64;
+    } __attribute__((aligned(4)));
+
+
     struct AbstractGameAction
     {
         void *basePtr;
@@ -748,7 +782,7 @@ namespace STS
 
     //see System::Internal::__CreateRuntimeType<AbstractCard *>()
     //offset 0x25EA5C0
-    struct AbstractCardVFuncs
+    struct AbstractCardVFuncMap
     {
         uint8_t gap1[24];
         dummyFunc_t ToString;
