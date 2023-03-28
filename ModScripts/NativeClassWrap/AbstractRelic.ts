@@ -15,7 +15,7 @@ import { PowerTip } from "./PowerTip.js";
 export type STSRelicCtor = (thisPtr: NativePointer) => NativePointer;
 
 export interface NewRelicVFuncType {
-    getUpdatedDescription: (thisPtr: NativePointer) => NativePointer,
+    getUpdatedDescription?: (thisPtr: NativePointer) => NativePointer,
     onPlayCard?: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => void,
     onEquip?: (thisPtr: NativePointer) => void,
     onUnequip?: (thisPtr: NativePointer) => void,
