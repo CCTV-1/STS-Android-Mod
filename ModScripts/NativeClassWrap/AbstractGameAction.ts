@@ -84,13 +84,13 @@ export class AbstractGameAction extends NativeClassWrapper {
         shouldCancelAction: new NativeFunctionInfo(0x60, 'bool', ['pointer']),
     };
 
-    static NewActionCtor(actionId: string, newFuncs: NewGameActionVFuncType): NativePointer {
+    static NewActionCtor(newFuncs: NewGameActionVFuncType): NativePointer {
         let origActionPtr = NativeActions.Abstract.Ctor();
 
         let wrapAction = new AbstractGameAction(origActionPtr);
-        if (!AbstractGameAction.#rewriteVFuncMap.has(actionId)) {
-            AbstractGameAction.#rewriteVFuncMap.set(origActionPtr.toString(), newFuncs);
-        }
+        let actionId = origActionPtr.toString();
+        //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
+        AbstractGameAction.#rewriteVFuncMap.set(actionId, newFuncs);
 
         if (!AbstractGameAction.#rewriteVFuncMap.has("AbstractGameActionProxy")) {
             let funcName = "AbstractGameAction_BasicNewAction_update";

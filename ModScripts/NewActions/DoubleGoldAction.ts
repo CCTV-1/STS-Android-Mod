@@ -10,7 +10,7 @@ export const DoubleGoldAction = () => {
             wrapAction.isDone = true;
         }
     };
-    let actionObj = AbstractGameAction.NewActionCtor("DoubleGoldAction", vfuncs);
+    let actionObj = AbstractGameAction.NewActionCtor(vfuncs);
 
     return actionObj;
 }
