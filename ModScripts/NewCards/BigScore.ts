@@ -1,7 +1,7 @@
 import { AbstractCard } from "../NativeClassWrap/AbstractCard.js";
 import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
 import { DoubleGoldAction } from "../NewActions/DoubleGoldAction.js";
-import { NativeActions } from "../NativeFuncWrap/Actions/NativeActions.js";
+import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 
 export const BigScore = (thisPtr: NativePointer): NativePointer => {
     const vfuncs = {

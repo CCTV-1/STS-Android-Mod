@@ -7,14 +7,14 @@ import { AbstractGameAction } from "./NativeClassWrap/AbstractGameAction.js";
 import { newCardLibrary } from "./NewCardLibrary.js";
 import { newRelicLibrary } from "./NewRelicLibrary.js";
 import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
-import { NativeActions } from "./NativeFuncWrap/Actions/NativeActions.js";
+import { NativeActions } from "./NativeFuncWrap/NativeActions.js";
 import { NativeCards } from "./NativeFuncWrap/NativeCards.js";
 import { NativeHelpers } from "./NativeFuncWrap/NativeHelpers.js";
 import { NativeCharacters } from "./NativeFuncWrap/NativeCharacters.js";
 import { NativeRelics } from "./NativeFuncWrap/NativeRelics.js";
 import { NativePotions } from "./NativeFuncWrap/NativePotions.js";
 import { NativeVFX } from "./NativeFuncWrap/NativeVFX.js";
-import { NativePowers } from "./NativeFuncWrap/Powers/NativePowers.js";
+import { NativePowers } from "./NativeFuncWrap/NativePowers.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;

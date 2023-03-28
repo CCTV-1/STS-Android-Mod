@@ -1,6 +1,6 @@
 import { AbstractCard } from "../NativeClassWrap/AbstractCard.js";
 import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
-import { NativeActions } from "../NativeFuncWrap/Actions/NativeActions.js";
+import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
 
 export const BasicAttackRed = (thisPtr: NativePointer): NativePointer => {

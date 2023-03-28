@@ -1,4 +1,4 @@
-import { NativeActions } from "../NativeFuncWrap/Actions/NativeActions.js";
+import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";

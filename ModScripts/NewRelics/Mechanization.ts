@@ -1,9 +1,9 @@
 import { AbstractRelic, NewRelicVFuncType } from "../NativeClassWrap/AbstractRelic.js";
 import { LandingSound, RelicTier } from "../enums.js";
 import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
-import { NativeActions } from "../NativeFuncWrap/Actions/NativeActions.js";
+import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { PatchHelper } from "../PatchHelper.js";
-import { NativePowers } from "../NativeFuncWrap/Powers/NativePowers.js";
+import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
 
 export const Mechanization = (thisPtr: NativePointer): NativePointer => {
     const vfuncs: NewRelicVFuncType = {
