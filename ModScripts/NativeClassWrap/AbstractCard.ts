@@ -10,7 +10,7 @@ import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
  */
 export type STSCardCtor = (thisPtr: NativePointer) => NativePointer;
 
-interface NewCardVFuncType {
+export interface NewCardVFuncType {
     use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => void,
     upgrade: (thisPtr: NativePointer) => void,
     makeCopy: (thisPtr: NativePointer) => NativePointer,

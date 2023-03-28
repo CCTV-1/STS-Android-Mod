@@ -1,10 +1,10 @@
-import { AbstractCard } from "../NativeClassWrap/AbstractCard.js";
+import { AbstractCard, NewCardVFuncType } from "../NativeClassWrap/AbstractCard.js";
 import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
 import { DoubleGoldAction } from "../NewActions/DoubleGoldAction.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 
 export const BigScore = (thisPtr: NativePointer): NativePointer => {
-    const vfuncs = {
+    const vfuncs: NewCardVFuncType = {
         use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
             let wrapCard = new AbstractCard(thisPtr);
             let loseHPAction = NativeActions.common.LoseHP.Ctor(playerPtr, playerPtr, wrapCard.magicNumber, AttackEffect.NONE);

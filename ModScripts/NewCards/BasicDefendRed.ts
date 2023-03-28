@@ -1,9 +1,9 @@
-import { AbstractCard } from "../NativeClassWrap/AbstractCard.js";
+import { AbstractCard, NewCardVFuncType } from "../NativeClassWrap/AbstractCard.js";
 import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 
 export const BasicDefendRed = (thisPtr: NativePointer): NativePointer => {
-    const vfuncs = {
+    const vfuncs: NewCardVFuncType = {
         use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
             let wrapCard = new AbstractCard(thisPtr);
             let damageAction = NativeActions.common.GainBlock.Ctor2(playerPtr, playerPtr, wrapCard.block);
