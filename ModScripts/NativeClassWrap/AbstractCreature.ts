@@ -99,6 +99,16 @@ export class AbstractCreature extends NativeClassWrapper {
         healFunc(this.rawPtr, amount, Number(showEffect));
     }
 
+    loseGold(goldAmount: number) {
+        let loseGoldFunc = this.getVirtualFunction(AbstractCreature.#vfunctionMap.loseGold);
+        loseGoldFunc(this.rawPtr, goldAmount);
+    }
+
+    gainGold(goldAmount: number) {
+        let gainGoldFunc = this.getVirtualFunction(AbstractCreature.#vfunctionMap.gainGold);
+        gainGoldFunc(this.rawPtr, goldAmount);
+    }
+
     get name() {
         return this.readOffsetJString(0x8).content;
     }

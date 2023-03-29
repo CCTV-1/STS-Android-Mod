@@ -6,7 +6,7 @@ export const DoubleGoldAction = () => {
         update: (thisPtr: NativePointer) => {
             let wrapAction = new AbstractGameAction(thisPtr);
             let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
-            currentPlayer.gold *= 2;
+            currentPlayer.gainGold(currentPlayer.gold);
             wrapAction.isDone = true;
         }
     };
