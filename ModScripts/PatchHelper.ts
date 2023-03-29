@@ -64,16 +64,54 @@ export class PatchHelper {
         V_PPP_Func(funcName: string) {
             return "void " + funcName + "(void * arg1, void* arg2, void* arg3) { return ; }";
         },
+        /** CModule compile don't support stdc20,if want use bool need include header file. */
+        V_PB_Func(funcName: string) {
+            return "void " + funcName + "(void * arg1, char arg2) { return ; }";
+        },
+        /**if int != int32_t, this func not work. */
+        V_PI32_Func(funcName: string) {
+            return "void " + funcName + "(void * arg1, int arg2) { return ; }";
+        },
+        V_PF_Func(funcName: string) {
+            return "void " + funcName + "(void * arg1, float arg2) { return ; }";
+        },
+        V_PP_Func(funcName: string) {
+            return "void " + funcName + "(void * arg1, void* arg2) { return ; }";
+        },
         V_P_Func(funcName: string) {
             return "void " + funcName + "(void * arg1) { return ; }";
+        },
+        /**if int != int32_t, this func not work. */
+        V_PPI32_Func(funcName: string) {
+            return "void " + funcName + "(void * arg1, void * arg2, int arg3) { return ; }";
+        },
+        V_PPI32P_Func(funcName: string) {
+            return "void " + funcName + "(void * arg1, void * arg2, int arg3, void * arg4) { return ; }";
+        },
+        V_PPPP_Func(funcName: string) {
+            return "void " + funcName + "(void * arg1, void * arg2, void * arg3, void * arg4) { return ; }";
         },
         P_P_Func(funcName: string) {
             return "void* " + funcName + "(void * arg1) { return (void *)0; }";
         },
+        /** CModule compile don't support stdc20,if want use bool need include header file. */
+        B_PP_Func(funcName: string) {
+            return "char " + funcName + "(void * arg1, void * arg2) { return 0; }";
+        },
         /**if int != int32_t, this func not work. */
         I32_PI32_Func(funcName: string) {
             return "int " + funcName + "(void * arg1, int arg2) { return 0; }";
-        }
+        },
+        /**if int != int32_t, this func not work. */
+        F_PI32_Func(funcName: string) {
+            return "float " + funcName + "(void * arg1, int arg2) { return 0; }";
+        },
+        I32_PI32P_Func(funcName: string) {
+            return "int " + funcName + "(void * arg1, int arg2, void * arg3) { return 0; }";
+        },
+        I32_PPI32_Func(funcName: string) {
+            return "int " + funcName + "(void * arg1, void * arg2, int arg3) { return 0; }";
+        },
     };
 
     static #GetOffsetPtr(offset: number): NativePointer {
