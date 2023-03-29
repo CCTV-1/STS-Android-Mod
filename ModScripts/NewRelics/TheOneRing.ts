@@ -28,7 +28,7 @@ export const TheOneRing = (thisPtr: NativePointer): NativePointer => {
         },
     };
 
-    let relicObj = AbstractRelic.NewRelicCtor("TheOneRing", "至尊魔戒", "在每场战斗开始时失去一半的生命，在每回合开始时获得 [E]  [E]  [E] 。", "无穷无尽的力量令人沉醉。", "redCirclet.png", RelicTier.BOSS, LandingSound.HEAVY, vfuncs);
+    let relicObj = AbstractRelic.NewRelicCtor("TheOneRing", "至尊魔戒", "在每场战斗开始时失去三分之一的生命，在每回合开始时获得 [E]  [E]  [E] 。", "无穷无尽的力量令人沉醉。", "redCirclet.png", RelicTier.BOSS, LandingSound.HEAVY, vfuncs);
 
     return relicObj;
 };
