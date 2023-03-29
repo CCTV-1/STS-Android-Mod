@@ -1,4 +1,8 @@
 import { PowerType } from "../enums.js";
+import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
+import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
+import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
+import { PatchHelper } from "../PatchHelper.js";
 import { ArrayList } from "./ArrayList.js";
 import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
@@ -40,8 +44,10 @@ export interface NewPowerVFuncType {
     modifyBlock2?: (thisPtr: NativePointer, blockAmount: number, cardPtr: NativePointer) => number,
     modifyBlockLast?: (thisPtr: NativePointer, blockAmount: number) => number,
     onGainedBlock?: (thisPtr: NativePointer, blockAmount: number) => void,
-    /**`int (*func)(float)` `int (*func)(int)` */
+    /**`int (*func)(float)`*/
     onPlayerGainedBlock?: (thisPtr: NativePointer, blockAmount: number) => number,
+    /**  `int (*func)(int)`  */
+    onPlayerGainedBlock2?: (thisPtr: NativePointer, blockAmount: number) => number,
     onGainCharge?: (thisPtr: NativePointer, chargeAmount: number) => void,
     onRemove?: (thisPtr: NativePointer) => void,
     onEnergyRecharge?: (thisPtr: NativePointer) => void,
@@ -51,7 +57,7 @@ export interface NewPowerVFuncType {
     onApplyPower?: (thisPtr: NativePointer, powerPtr: NativePointer, targetCreature: NativePointer, sourceCreature: NativePointer) => void,
     onLoseHp?: (thisPtr: NativePointer, damageAmount: number) => number,
     onVictory?: (thisPtr: NativePointer) => void,
-    canPlayCard?: (thisPtr: NativePointer, cardPtr: NativePointer) => boolean,
+    canPlayCard?: (thisPtr: NativePointer, cardPtr: NativePointer) => number,
 };
 
 export class AbstractPower extends NativeClassWrapper {
@@ -65,12 +71,998 @@ export class AbstractPower extends NativeClassWrapper {
      */
     static #rewriteVFuncMap = new Map<string, NewPowerVFuncType>();
     static readonly #NewRelicVFuncProxys: NewPowerVFuncType = {
+        updateParticles: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.updateParticles;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        updateDescription: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.updateDescription;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        atStartOfTurn: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atStartOfTurn;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        duringTurn: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.duringTurn;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        atStartOfTurnPostDraw: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atStartOfTurnPostDraw;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        atEndOfTurn: (thisPtr: NativePointer, isPlayer: boolean) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atEndOfTurn;
+                if (Func !== undefined) {
+                    Func(thisPtr, isPlayer);
+                }
+            }
+        },
+        atEndOfTurnPreEndTurnCards: (thisPtr: NativePointer, isPlayer: boolean) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atEndOfTurnPreEndTurnCards;
+                if (Func !== undefined) {
+                    Func(thisPtr, isPlayer);
+                }
+            }
+        },
+        atEndOfRound: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atStartOfTurnPostDraw;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onScry: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onScry;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onDamageAllEnemies: (thisPtr: NativePointer, damageArray: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onDamageAllEnemies;
+                if (Func !== undefined) {
+                    Func(thisPtr, damageArray);
+                }
+            }
+        },
+        onHeal: (thisPtr: NativePointer, healAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onHeal;
+                if (Func !== undefined) {
+                    return Func(thisPtr, healAmount);
+                }
+            }
+            return healAmount;
+        },
+        onAttacked: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onAttacked;
+                if (Func !== undefined) {
+                    return Func(thisPtr, dmgInfo, damageAmount);
+                }
+            }
+            return damageAmount;
+        },
+        onAttack: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number, targetCreature: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onAttack;
+                if (Func !== undefined) {
+                    Func(thisPtr, dmgInfo, damageAmount, targetCreature);
+                }
+            }
+        },
+        onAttackedToChangeDamage: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onAttackedToChangeDamage;
+                if (Func !== undefined) {
+                    return Func(thisPtr, dmgInfo, damageAmount);
+                }
+            }
+            return damageAmount;
+        },
+        onAttackToChangeDamage: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onAttackToChangeDamage;
+                if (Func !== undefined) {
+                    return Func(thisPtr, dmgInfo, damageAmount);
+                }
+            }
+            return damageAmount;
+        },
+        onInflictDamage: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number, targetCreature: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onInflictDamage;
+                if (Func !== undefined) {
+                    Func(thisPtr, dmgInfo, damageAmount, targetCreature);
+                }
+            }
+        },
+        onEvokeOrb: (thisPtr: NativePointer, orbPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onEvokeOrb;
+                if (Func !== undefined) {
+                    Func(thisPtr, orbPtr);
+                }
+            }
+        },
+        onCardDraw: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onCardDraw;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr);
+                }
+            }
+        },
+        onPlayCard: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onPlayCard;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr, monsterPtr);
+                }
+            }
+        },
+        onUseCard: (thisPtr: NativePointer, cardPtr: NativePointer, useCardActionPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onUseCard;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr, useCardActionPtr);
+                }
+            }
+        },
+        onAfterUseCard: (thisPtr: NativePointer, cardPtr: NativePointer, useCardActionPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onAfterUseCard;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr, useCardActionPtr);
+                }
+            }
+        },
+        wasHPLost: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.wasHPLost;
+                if (Func !== undefined) {
+                    Func(thisPtr, dmgInfo, damageAmount);
+                }
+            }
+        },
+        onSpecificTrigger: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onSpecificTrigger;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        triggerMarks: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerMarks;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr);
+                }
+            }
+        },
+        onDeath: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onDeath;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onChannel: (thisPtr: NativePointer, orbPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onChannel;
+                if (Func !== undefined) {
+                    Func(thisPtr, orbPtr);
+                }
+            }
+        },
+        atEnergyGain: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atEnergyGain;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onExhaust: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onExhaust;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr);
+                }
+            }
+        },
+        onChangeStance: (thisPtr: NativePointer, oldStance: NativePointer, newStance: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onChangeStance;
+                if (Func !== undefined) {
+                    Func(thisPtr, oldStance, newStance);
+                }
+            }
+        },
+        modifyBlock: (thisPtr: NativePointer, blockAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.modifyBlock;
+                if (Func !== undefined) {
+                    return Func(thisPtr, blockAmount);
+                }
+            }
+            return blockAmount;
+        },
+        modifyBlock2: (thisPtr: NativePointer, blockAmount: number, cardPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.modifyBlock2;
+                if (Func !== undefined) {
+                    return Func(thisPtr, blockAmount, cardPtr);
+                }
+            }
+            return blockAmount;
+        },
+        modifyBlockLast: (thisPtr: NativePointer, blockAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.modifyBlockLast;
+                if (Func !== undefined) {
+                    return Func(thisPtr, blockAmount);
+                }
+            }
+            return blockAmount;
+        },
+        onGainedBlock: (thisPtr: NativePointer, blockAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onGainedBlock;
+                if (Func !== undefined) {
+                    Func(thisPtr, blockAmount);
+                }
+            }
+        },
+        onPlayerGainedBlock: (thisPtr: NativePointer, blockAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onPlayerGainedBlock;
+                if (Func !== undefined) {
+                    return Func(thisPtr, blockAmount);
+                }
+            }
+            return blockAmount;
+        },
+        onPlayerGainedBlock2: (thisPtr: NativePointer, blockAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onPlayerGainedBlock2;
+                if (Func !== undefined) {
+                    return Func(thisPtr, blockAmount);
+                }
+            }
+            return blockAmount;
+        },
+        onGainCharge: (thisPtr: NativePointer, chargeAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onGainCharge;
+                if (Func !== undefined) {
+                    Func(thisPtr, chargeAmount);
+                }
+            }
+        },
+        onRemove: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onRemove;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onEnergyRecharge: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onEnergyRecharge;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onDrawOrDiscard: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onDrawOrDiscard;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onAfterCardPlayed: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onAfterCardPlayed;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr);
+                }
+            }
+        },
+        onInitialApplication: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onInitialApplication;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onApplyPower: (thisPtr: NativePointer, powerPtr: NativePointer, targetCreature: NativePointer, sourceCreature: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onApplyPower;
+                if (Func !== undefined) {
+                    Func(thisPtr, powerPtr, targetCreature, sourceCreature);
+                }
+            }
+        },
+        onLoseHp: (thisPtr: NativePointer, damageAmount: number) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onPlayerGainedBlock2;
+                if (Func !== undefined) {
+                    return Func(thisPtr, damageAmount);
+                }
+            }
+            return damageAmount;
+        },
+        onVictory: (thisPtr: NativePointer) => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onVictory;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        canPlayCard: (thisPtr: NativePointer, cardPtr: NativePointer): number => {
+            let wrapPower = new AbstractPower(thisPtr);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.canPlayCard;
+                if (Func !== undefined) {
+                    return Number(Func(thisPtr, cardPtr));
+                }
+            }
+
+            return Number(true);
+        },
     };
 
     static readonly #vfunctionMap = {
+        /**
+         * ```c
+        * void AbstractPower::loadRegion(STS::AbstractPower* thisPtr, JString* fileName)
+         * ```
+         */
+        loadRegion: new NativeFunctionInfo(0x20, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::playApplyPowerSfx(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        playApplyPowerSfx: new NativeFunctionInfo(0x28, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::updateParticles(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        updateParticles: new NativeFunctionInfo(0x30, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractPower::addToTop(STS::AbstractPower* this, STS::AbstractGameAction* actionPtr)
+         * ```
+         */
+        addToBot: new NativeFunctionInfo(0x40, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  void AbstractPower::addToTop(STS::AbstractPower* this, STS::AbstractGameAction* actionPtr)
+         * ```
+         */
+        addToTop: new NativeFunctionInfo(0x48, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::updateDescription(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        updateDescription: new NativeFunctionInfo(0x50, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::stackPower(STS::AbstractPower* thisPtr, int32_t stackAmount)
+         * ```
+         */
+        stackPower: new NativeFunctionInfo(0x58, 'void', ['pointer', 'int32']),
+        /**
+         * ```c
+         * void AbstractPower::reducePower(STS::AbstractPower* thisPtr, int32_t reduceAmount)
+         * ```
+         */
+        reducePower: new NativeFunctionInfo(0x60, 'void', ['pointer', 'int32']),
+        /**
+         * ```c
+         * float AbstractPower::atDamageGive(STS::AbstractPower* thisPtr, float damage, DamageType type)
+         * ```
+         */
+        atDamageGive: new NativeFunctionInfo(0x80, 'float', ['pointer', 'float', 'uint32']),
+        /**
+         * ```c
+         * float AbstractPower::atDamageFinalGive(STS::AbstractPower* thisPtr, float damage, DamageType type)
+         * ```
+         */
+        atDamageFinalGive: new NativeFunctionInfo(0x88, 'float', ['pointer', 'float', 'uint32']),
+        /**
+         * ```c
+         * float AbstractPower::atDamageFinalReceive(STS::AbstractPower* thisPtr, float damage, DamageType type)
+         * ```
+         */
+        atDamageFinalReceive: new NativeFunctionInfo(0x90, 'float', ['pointer', 'float', 'uint32']),
+        /**
+         * ```c
+         * float AbstractPower::atDamageReceive(STS::AbstractPower* thisPtr, float damage, DamageType type)
+         * ```
+         */
+        atDamageReceive: new NativeFunctionInfo(0x98, 'float', ['pointer', 'float', 'uint32']),
+        /**
+         * ```c
+         * float AbstractPower::atDamageGive(STS::AbstractPower* thisPtr, float damage, DamageType type, STS::AbstractCard card * cardPtr)
+         * ```
+         */
+        atDamageGive2: new NativeFunctionInfo(0xA0, 'float', ['pointer', 'float', 'uint32', 'pointer']),
+        /**
+         * ```c
+         * float AbstractPower::atDamageFinalGive(STS::AbstractPower* thisPtr, float damage, DamageType type, STS::AbstractCard card * cardPtr)
+         * ```
+         */
+        atDamageFinalGive2: new NativeFunctionInfo(0xA8, 'float', ['pointer', 'float', 'uint32', 'pointer']),
+        /**
+         * ```c
+         * float AbstractPower::atDamageFinalReceive(STS::AbstractPower* thisPtr, float damage, DamageType type, STS::AbstractCard card * cardPtr)
+         * ```
+         */
+        atDamageFinalReceive2: new NativeFunctionInfo(0xB0, 'float', ['pointer', 'float', 'uint32', 'pointer']),
+        /**
+         * ```c
+         * float AbstractPower::atDamageReceive(STS::AbstractPower* thisPtr, float damage, DamageType type, STS::AbstractCard card * cardPtr)
+         * ```
+         */
+        atDamageReceive2: new NativeFunctionInfo(0xB8, 'float', ['pointer', 'float', 'uint32', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::atStartOfTurn(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        atStartOfTurn: new NativeFunctionInfo(0xC0, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::duringTurn(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        duringTurn: new NativeFunctionInfo(0xC8, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::atStartOfTurnPostDraw(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        atStartOfTurnPostDraw: new NativeFunctionInfo(0xD0, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::atEndOfTurn(STS::AbstractPower* thisPtr, bool isPlayer)
+         * ```
+         */
+        atEndOfTurn: new NativeFunctionInfo(0xD8, 'void', ['pointer', 'bool']),
+        /**
+         * ```c
+         * void AbstractPower::atEndOfTurnPreEndTurnCards(STS::AbstractPower* thisPtr, bool isPlayer)
+         * ```
+         */
+        atEndOfTurnPreEndTurnCards: new NativeFunctionInfo(0xE0, 'void', ['pointer', 'bool']),
+        /**
+         * ```c
+         * void AbstractPower::atEndOfRound(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        atEndOfRound: new NativeFunctionInfo(0xE8, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onScry(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        onScry: new NativeFunctionInfo(0xF0, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onDamageAllEnemies(STS::AbstractPower* thisPtr, JObjectArray<int32_t>* damageArray)
+         * ```
+         */
+        onDamageAllEnemies: new NativeFunctionInfo(0xF8, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * int32_t AbstractPower::onHeal(STS::AbstractPower* thisPtr, int32_t healAmount)
+         * ```
+         */
+        onHeal: new NativeFunctionInfo(0x100, 'int32', ['pointer', 'int32']),
+        /**
+         * ```c
+         * int32_t AbstractPower::onAttacked(STS::AbstractPower* thisPtr, DamageInfo* dmgInfo, int32_t damageAmount)
+         * ```
+         */
+        onAttacked: new NativeFunctionInfo(0x108, 'int32', ['pointer', 'pointer', 'int32']),
+        /**
+         * ```c
+         * void AbstractPower::onAttack(STS::AbstractPower* thisPtr, DamageInfo* dmgInfo, int32_t damageAmount, STS::AbstractCreature* targetCreature)
+         * ```
+         */
+        onAttack: new NativeFunctionInfo(0x110, 'void', ['pointer', 'pointer', 'int32', 'pointer']),
+        /**
+         * ```c
+         * int32_t AbstractPower::onAttackedToChangeDamage(STS::AbstractPower* thisPtr, DamageInfo* dmgInfo, int32_t damageAmount)
+         * ```
+         */
+        onAttackedToChangeDamage: new NativeFunctionInfo(0x118, 'int32', ['pointer', 'pointer', 'int32']),
+        /**
+         * ```c
+         * int32_t AbstractPower::onAttackToChangeDamage(STS::AbstractPower* thisPtr, DamageInfo* dmgInfo, int32_t damageAmount)
+         * ```
+         */
+        onAttackToChangeDamage: new NativeFunctionInfo(0x120, 'int32', ['pointer', 'pointer', 'int32']),
+        /**
+         * ```c
+         * void AbstractPower::onInflictDamage(STS::AbstractPower* thisPtr, DamageInfo* dmgInfo, int32_t damageAmount, STS::AbstractCreature* targetCreature)
+         * ```
+         */
+        onInflictDamage: new NativeFunctionInfo(0x128, 'void', ['pointer', 'pointer', 'int32', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onEvokeOrb(STS::AbstractPower* thisPtr, STS::AbstractOrb* orb)
+         * ```
+         */
+        onEvokeOrb: new NativeFunctionInfo(0x130, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onCardDraw(STS::AbstractPower* thisPtr, STS::AbstractCard* cardPtr)
+         * ```
+         */
+        onCardDraw: new NativeFunctionInfo(0x138, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onPlayCard(STS::AbstractPower* thisPtr, STS::AbstractCard* cardPtr, STS::UseCardAction* action)
+         * ```
+         * 
+         * `class UseCardAction : public AbstractGameAction {};`
+         */
+        onPlayCard: new NativeFunctionInfo(0x140, 'void', ['pointer', 'pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onUseCard(STS::AbstractPower* thisPtr, STS::AbstractCard* cardPtr, STS::UseCardAction* action)
+         * ```
+         * 
+         * `class UseCardAction : public AbstractGameAction {};`
+         */
+        onUseCard: new NativeFunctionInfo(0x148, 'void', ['pointer', 'pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onAfterUseCard(STS::AbstractPower* thisPtr, STS::AbstractCard* cardPtr, STS::UseCardAction* action)
+         * ```
+         * 
+         * `class UseCardAction : public AbstractGameAction {};`
+         */
+        onAfterUseCard: new NativeFunctionInfo(0x150, 'void', ['pointer', 'pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::wasHPLost(STS::AbstractPower* thisPtr, DamageInfo* dmgInfo, int32_t damageAmount)
+         * ```
+         */
+        wasHPLost: new NativeFunctionInfo(0x158, 'void', ['pointer', 'pointer', 'int32']),
+        /**
+         * ```c
+         * void AbstractPower::onSpecificTrigger(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        onSpecificTrigger: new NativeFunctionInfo(0x160, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::triggerMarks(STS::AbstractPower* thisPtr, STS::AbstractCard* cardPtr)
+         * ```
+         */
+        triggerMarks: new NativeFunctionInfo(0x168, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onDeath(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        onDeath: new NativeFunctionInfo(0x170, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onChannel(STS::AbstractPower* thisPtr, STS::AbstractOrb* orb)
+         * ```
+         */
+        onChannel: new NativeFunctionInfo(0x178, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::atEnergyGain(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        atEnergyGain: new NativeFunctionInfo(0x180, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onExhaust(STS::AbstractPower* thisPtr, STS::AbstractCard* cardPtr)
+         * ```
+         */
+        onExhaust: new NativeFunctionInfo(0x188, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onChangeStance(STS::AbstractPower* thisPtr, STS::AbstractStance* oldStance, STS::AbstractStance* newStance)
+         * ```
+         */
+        onChangeStance: new NativeFunctionInfo(0x190, 'void', ['pointer', 'pointer', 'pointer']),
+        /**
+         * ```c
+         * float AbstractPower::modifyBlock(STS::AbstractPower* thisPtr, float blockAmount)
+         * ```
+         */
+        modifyBlock: new NativeFunctionInfo(0x198, 'float', ['pointer', 'float']),
+        /**
+         * ```c
+         * float AbstractPower::modifyBlock2(STS::AbstractPower* thisPtr, float blockAmount, STS::AbstractCard* cardPtr)
+         * ```
+         */
+        modifyBlock2: new NativeFunctionInfo(0x1A0, 'float', ['pointer', 'float', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::modifyBlockLast(STS::AbstractPower* thisPtr, float blockAmount)
+         * ```
+         */
+        modifyBlockLast: new NativeFunctionInfo(0x1A8, 'void', ['pointer', 'float']),
+        /**
+         * ```c
+         * void AbstractPower::onGainedBlock(STS::AbstractPower* thisPtr, float blockAmount)
+         * ```
+         */
+        onGainedBlock: new NativeFunctionInfo(0x1B0, 'void', ['pointer', 'float']),
+        /**
+         * ```c
+         * int32_t AbstractPower::onPlayerGainedBlock(STS::AbstractPower* thisPtr, float blockAmount)
+         * ```
+         */
+        onPlayerGainedBlock: new NativeFunctionInfo(0x1B8, 'int32', ['pointer', 'float']),
+        /**
+         * ```c
+         * int32_t AbstractPower::onPlayerGainedBlock(STS::AbstractPower* thisPtr, int32_t blockAmount)
+         * ```
+         */
+        onPlayerGainedBlock2: new NativeFunctionInfo(0x1C0, 'int32', ['pointer', 'int32']),
+        /**
+         * ```c
+         * void AbstractPower::onGainCharge(STS::AbstractPower* thisPtr, int32_t blockAmount)
+         * ```
+         */
+        onGainCharge: new NativeFunctionInfo(0x1C8, 'void', ['pointer', 'int32']),
+        /**
+         * ```c
+         * void AbstractPower::onRemove(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        onRemove: new NativeFunctionInfo(0x1D0, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onEnergyRecharge(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        onEnergyRecharge: new NativeFunctionInfo(0x1D0, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onDrawOrDiscard(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        onDrawOrDiscard: new NativeFunctionInfo(0x1D8, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onAfterCardPlayed(STS::AbstractPower* thisPtr, STS::AbstractCard* cardPtr)
+         * ```
+         */
+        onAfterCardPlayed: new NativeFunctionInfo(0x1E0, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onInitialApplication(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        onInitialApplication: new NativeFunctionInfo(0x1E8, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::flash(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        flash: new NativeFunctionInfo(0x1F8, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::flash(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        flashWithoutSound: new NativeFunctionInfo(0x200, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPower::onApplyPower(STS::AbstractPower* thisPtr, STS::AbstractPower* powerPtr, STS::AbstractCreature targetCreature, STS::AbstractCreature* sourceCreature)
+         * ```
+         */
+        onApplyPower: new NativeFunctionInfo(0x208, 'void', ['pointer', 'pointer', 'pointer', 'pointer']),
+        /**
+         * ```c
+         * int32_t AbstractPower::onLoseHp(STS::AbstractPower* thisPtr, int32_t damageAmount)
+         * ```
+         */
+        onLoseHp: new NativeFunctionInfo(0x210, 'int32', ['pointer', 'int32']),
+        /**
+         * ```c
+         * void AbstractPower::onVictory(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        onVictory: new NativeFunctionInfo(0x218, 'void', ['pointer']),
+        /**
+         * ```c
+         * bool AbstractPower::canPlayCard(STS::AbstractPower* thisPtr, STS::AbstractCard cardPtr)
+         * ```
+         */
+        canPlayCard: new NativeFunctionInfo(0x220, 'bool', ['pointer', 'pointer']),
     };
 
     static readonly #vFuncNamePrefix = "AbstractPower_";
+
+    static NewPowerCtor(powerId: string, powerName: string, description: string, ownerCreature: NativePointer, amount: number, newVFuncs: NewPowerVFuncType): NativePointer {
+        let origPowerPtr = NativePowers.Abstract.Ctor();
+
+        let wrapPower = new AbstractPower(origPowerPtr);
+        if (!AbstractPower.#rewriteVFuncMap.has(powerId)) {
+            AbstractPower.#rewriteVFuncMap.set(powerId, newVFuncs);
+        }
+
+        wrapPower.ID = powerId;
+        wrapPower.name = powerName;
+        wrapPower.description = description;
+        wrapPower.owner = ownerCreature;
+        wrapPower.amount = amount;
+        wrapPower.loadRegion("afterImage");
+
+        if (!AbstractPower.#rewriteVFuncMap.has("AbstractPowerProxy")) {
+            const VFuncMap = AbstractPower.#vfunctionMap;
+            const VFuncProxys = AbstractPower.#NewRelicVFuncProxys;
+            let funcName = "AbstractPower_BasicNewPower_updateDescription";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.updateDescription, VFuncProxys.updateDescription);
+            funcName = "AbstractPower_BasicNewPower_updateParticles";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.updateParticles, VFuncProxys.updateParticles);
+            funcName = "AbstractPower_BasicNewPower_atStartOfTurn";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atStartOfTurn, VFuncProxys.atStartOfTurn);
+            funcName = "AbstractPower_BasicNewPower_duringTurn";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.duringTurn, VFuncProxys.duringTurn);
+            funcName = "AbstractPower_BasicNewPower_atStartOfTurnPostDraw";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atStartOfTurnPostDraw, VFuncProxys.atStartOfTurnPostDraw);
+            funcName = "AbstractPower_BasicNewPower_atEndOfTurn";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PB_Func(funcName), VFuncMap.atEndOfTurn, VFuncProxys.atEndOfTurn);
+            funcName = "AbstractPower_BasicNewPower_atEndOfTurnPreEndTurnCards";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PB_Func(funcName), VFuncMap.atEndOfTurnPreEndTurnCards, VFuncProxys.atEndOfTurnPreEndTurnCards);
+            funcName = "AbstractPower_BasicNewPower_atEndOfRound";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atEndOfRound, VFuncProxys.atEndOfRound);
+            funcName = "AbstractPower_BasicNewPower_onScry";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onScry, VFuncProxys.onScry);
+            funcName = "AbstractPower_BasicNewPower_onDamageAllEnemies";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onDamageAllEnemies, VFuncProxys.onDamageAllEnemies);
+            funcName = "AbstractPower_BasicNewPower_onHeal";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PI32_Func(funcName), VFuncMap.onHeal, VFuncProxys.onHeal);
+            funcName = "AbstractPower_BasicNewPower_onAttacked";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PPI32_Func(funcName), VFuncMap.onAttacked, VFuncProxys.onAttacked);
+            funcName = "AbstractPower_BasicNewPower_onAttack";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPI32P_Func(funcName), VFuncMap.onAttack, VFuncProxys.onAttack);
+            funcName = "AbstractPower_BasicNewPower_onAttackedToChangeDamage";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PPI32_Func(funcName), VFuncMap.onAttackedToChangeDamage, VFuncProxys.onAttackedToChangeDamage);
+            funcName = "AbstractPower_BasicNewPower_onAttackToChangeDamage";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PPI32_Func(funcName), VFuncMap.onAttackToChangeDamage, VFuncProxys.onAttackToChangeDamage);
+            funcName = "AbstractPower_BasicNewPower_onInflictDamage";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPI32P_Func(funcName), VFuncMap.onInflictDamage, VFuncProxys.onInflictDamage);
+            funcName = "AbstractPower_BasicNewPower_onEvokeOrb";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onEvokeOrb, VFuncProxys.onEvokeOrb);
+            funcName = "AbstractPower_BasicNewPower_onCardDraw";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onCardDraw, VFuncProxys.onCardDraw);
+            funcName = "AbstractPower_BasicNewPower_onPlayCard";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), VFuncMap.onPlayCard, VFuncProxys.onPlayCard);
+            funcName = "AbstractPower_BasicNewPower_onUseCard";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), VFuncMap.onUseCard, VFuncProxys.onUseCard);
+            funcName = "AbstractPower_BasicNewPower_onAfterUseCard";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), VFuncMap.onAfterUseCard, VFuncProxys.onAfterUseCard);
+            funcName = "AbstractPower_BasicNewPower_wasHPLost";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPI32_Func(funcName), VFuncMap.wasHPLost, VFuncProxys.wasHPLost);
+            funcName = "AbstractPower_BasicNewPower_onSpecificTrigger";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onSpecificTrigger, VFuncProxys.onSpecificTrigger);
+            funcName = "AbstractPower_BasicNewPower_triggerMarks";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.triggerMarks, VFuncProxys.triggerMarks);
+            funcName = "AbstractPower_BasicNewPower_onDeath";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onDeath, VFuncProxys.onDeath);
+            funcName = "AbstractPower_BasicNewPower_onChannel";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onChannel, VFuncProxys.onChannel);
+            funcName = "AbstractPower_BasicNewPower_atEnergyGain";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atEnergyGain, VFuncProxys.atEnergyGain);
+            funcName = "AbstractPower_BasicNewPower_onExhaust";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onExhaust, VFuncProxys.onExhaust);
+            funcName = "AbstractPower_BasicNewPower_onChangeStance";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), VFuncMap.onChangeStance, VFuncProxys.onChangeStance);
+            funcName = "AbstractPower_BasicNewPower_modifyBlock";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.modifyBlock, VFuncProxys.modifyBlock);
+            funcName = "AbstractPower_BasicNewPower_modifyBlock2";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32P_Func(funcName), VFuncMap.modifyBlock2, VFuncProxys.modifyBlock2);
+            funcName = "AbstractPower_BasicNewPower_modifyBlockLast";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.modifyBlockLast, VFuncProxys.modifyBlockLast);
+            funcName = "AbstractPower_BasicNewPower_onGainedBlock";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PF_Func(funcName), VFuncMap.onGainedBlock, VFuncProxys.onGainedBlock);
+            funcName = "AbstractPower_BasicNewPower_onPlayerGainedBlock";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.onPlayerGainedBlock, VFuncProxys.onPlayerGainedBlock);
+            funcName = "AbstractPower_BasicNewPower_onPlayerGainedBlock2";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.F_PI32_Func(funcName), VFuncMap.onPlayerGainedBlock2, VFuncProxys.onPlayerGainedBlock2);
+            funcName = "AbstractPower_BasicNewPower_onGainCharge";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PI32_Func(funcName), VFuncMap.onGainCharge, VFuncProxys.onGainCharge);
+            funcName = "AbstractPower_BasicNewPower_onRemove";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onRemove, VFuncProxys.onRemove);
+            funcName = "AbstractPower_BasicNewPower_onEnergyRecharge";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onEnergyRecharge, VFuncProxys.onEnergyRecharge);
+            funcName = "AbstractPower_BasicNewPower_onDrawOrDiscard";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onDrawOrDiscard, VFuncProxys.onDrawOrDiscard);
+            funcName = "AbstractPower_BasicNewPower_onAfterCardPlayed";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onAfterCardPlayed, VFuncProxys.onAfterCardPlayed);
+            funcName = "AbstractPower_BasicNewPower_onInitialApplication";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onInitialApplication, VFuncProxys.onInitialApplication);
+            funcName = "AbstractPower_BasicNewPower_onApplyPower";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPPP_Func(funcName), VFuncMap.onApplyPower, VFuncProxys.onApplyPower);
+            funcName = "AbstractPower_BasicNewPower_onLoseHp";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.onLoseHp, VFuncProxys.onLoseHp);
+            funcName = "AbstractPower_BasicNewPower_onVictory";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onVictory, VFuncProxys.onVictory);
+            funcName = "AbstractPower_BasicNewPower_canPlayCard";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_PP_Func(funcName), VFuncMap.canPlayCard, VFuncProxys.canPlayCard);
+            AbstractPower.#rewriteVFuncMap.set("AbstractPowerProxy", AbstractPower.#NewRelicVFuncProxys);
+        }
+
+        return origPowerPtr;
+    }
+
+    OverrideonCardDraw(newVFunc: (thisPtr: NativePointer, cardPtr: NativePointer) => void) {
+        let funcName = (AbstractPower.#vFuncNamePrefix + this.ID + "_onCardDraw").replace(/\s+/g, "");
+        this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractPower.#vfunctionMap.onCardDraw, newVFunc);
+    }
+
+    loadRegion(fileName: string) {
+        let nativeFileName = NativeSTSLib.JString.Ctor(fileName);
+        this.getVirtualFunction(AbstractPower.#vfunctionMap.loadRegion)(this.rawPtr, nativeFileName);
+    }
+
+    playApplyPowerSfx() {
+        this.getVirtualFunction(AbstractPower.#vfunctionMap.playApplyPowerSfx)(this.rawPtr);
+    }
+
+    addToBot(actionPtr: NativePointer): void {
+        this.getVirtualFunction(AbstractPower.#vfunctionMap.addToBot)(this.rawPtr, actionPtr);
+    }
+
+    addToTop(actionPtr: NativePointer): void {
+        this.getVirtualFunction(AbstractPower.#vfunctionMap.addToTop)(this.rawPtr, actionPtr);
+    }
+
+    stackPower(stackAmount: number): void {
+        this.getVirtualFunction(AbstractPower.#vfunctionMap.stackPower)(this.rawPtr, stackAmount);
+    }
+
+    reducePower(reduceAmount: number): void {
+        this.getVirtualFunction(AbstractPower.#vfunctionMap.reducePower)(this.rawPtr, reduceAmount);
+    }
+
+    flash(): void {
+        this.getVirtualFunction(AbstractPower.#vfunctionMap.flash)(this.rawPtr);
+    }
+
+    flashWithoutSound(): void {
+        this.getVirtualFunction(AbstractPower.#vfunctionMap.flashWithoutSound)(this.rawPtr);
+    }
 
     get region48() {
         return this.readOffsetPointer(0x8);
@@ -113,6 +1105,9 @@ export class AbstractPower extends NativeClassWrapper {
      */
     get owner() {
         return this.readOffsetPointer(0x24);
+    }
+    set owner(value) {
+        this.writeOffsetPointer(0x24, value);
     }
 
     get name() {

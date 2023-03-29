@@ -1,6 +1,14 @@
 import { NativeFunctionInfo } from "../NativeFunctionInfo.js";
 
 export const NativePowerInfo = {
+    Abstract: {
+        /**
+         * ```c
+         * STS::AbstractPower* Powers::AbstractPower::Ctor(STS::AbstractPower* thisPtr)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x1955B3D, 'pointer', ['pointer']),
+    },
     common: {
         Artifact: {
             /**
