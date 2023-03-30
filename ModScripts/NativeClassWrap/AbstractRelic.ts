@@ -1,4 +1,4 @@
-import { LandingSound, RelicTier } from "../enums.js";
+import { GDXFileType, LandingSound, RelicTier } from "../enums.js";
 import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
@@ -8,6 +8,7 @@ import { NativeRelics } from "../NativeFuncWrap/NativeRelics.js";
 import { JObjectArray } from "./JObjectArray.js";
 import { ArrayList } from "./ArrayList.js";
 import { PowerTip } from "./PowerTip.js";
+import { NativeGDXLib } from "../NativeFuncWrap/NativeGDXLib.js";
 
 /**
  * thisPtr will is ```nullptr```.
@@ -84,7 +85,7 @@ export class AbstractRelic extends NativeClassWrapper {
                 }
             }
         },
-        onUnequip:  (thisPtr: NativePointer) => {
+        onUnequip: (thisPtr: NativePointer) => {
             let wrapRelic = new AbstractRelic(thisPtr);
             let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
             if (cardVFuncMap !== undefined) {
@@ -276,7 +277,7 @@ export class AbstractRelic extends NativeClassWrapper {
     static readonly #vFuncNamePrefix = "AbstractRelic_";
 
     static NewRelicCtor(relicId: string, relicName: string, description: string, flavorText: string, imgName: string, tier: RelicTier, sfx: LandingSound, newVFuncs: NewRelicVFuncType): NativePointer {
-        let origRelicPtr = NativeRelics.AbstractRelic.Ctor("Black Blood", imgName, tier, sfx);
+        let origRelicPtr = NativeRelics.AbstractRelic.Ctor("Black Blood", "blackBlood.png", tier, sfx);
 
         let wrapRelic = new AbstractRelic(origRelicPtr);
         if (!AbstractRelic.#rewriteVFuncMap.has(relicId)) {
@@ -289,9 +290,23 @@ export class AbstractRelic extends NativeClassWrapper {
         wrapRelic.flavorText = flavorText;
 
         let wrapTips = new ArrayList(wrapRelic.tips);
-        let wrapTip = new PowerTip(NativeSTDLib.PowerTip.get(wrapTips, 0));
+        let wrapTip = new PowerTip(NativeSTDLib.ArrayList.PowerTip.get(wrapTips, 0));
         wrapTip.header = relicName;
         wrapTip.body = description;
+
+        const imgPath = PatchHelper.ResourceDir + imgName;
+        try {
+            let imgHandle = NativeGDXLib.Files.FileHandle.Ctor2(imgPath, GDXFileType.Absolute);
+            PatchHelper.LogV(imgHandle.toString());
+            if (NativeGDXLib.Files.FileHandle.exists(imgHandle)) {
+                let newRelicImg = NativeGDXLib.Graphics.Texture.Ctor2(imgHandle);
+                wrapRelic.img = newRelicImg;
+                wrapRelic.largeImg = newRelicImg;
+                wrapTip.img = newRelicImg;
+            }
+        } catch (error) {
+            PatchHelper.LogV("" + (error as Error).stack);
+        }
 
         if (!AbstractRelic.#rewriteVFuncMap.has("AbstractRelicProxy")) {
             let funcName = "AbstractRelic_BasicNewRelic_getUpdatedDescription";
@@ -472,5 +487,25 @@ export class AbstractRelic extends NativeClassWrapper {
     }
     set tips(tipsPtr: NativePointer) {
         this.writeOffsetPointer(0x30, tipsPtr);
+    }
+
+    /**
+     * GDX::graphics::Texture *
+     */
+    get img() {
+        return this.readOffsetPointer(0x34);
+    }
+    set img(value) {
+        this.writeOffsetPointer(0x34, value);
+    }
+
+    /**
+     * GDX::graphics::Texture *
+     */
+    get largeImg() {
+        return this.readOffsetPointer(0x38);
+    }
+    set largeImg(value) {
+        this.writeOffsetPointer(0x38, value);
     }
 }
