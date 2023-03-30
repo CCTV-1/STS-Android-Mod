@@ -193,3 +193,21 @@ export enum PowerType {
     BUFF = 0x0,
     DEBUFF
 };
+
+export enum GDXFileType {
+    Classpath = 0x0,
+    Internal,
+    External,
+    Absolute,
+    Local,
+};
+
+export enum GDXPixMapFormat {
+    Alpha = 0x0, 
+    Intensity, 
+    LuminanceAlpha, 
+    RGB565, 
+    RGBA4444, 
+    RGB888, 
+    RGBA8888
+};
