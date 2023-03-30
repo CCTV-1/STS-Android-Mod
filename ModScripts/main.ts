@@ -15,6 +15,8 @@ import { NativeRelics } from "./NativeFuncWrap/NativeRelics.js";
 import { NativePotions } from "./NativeFuncWrap/NativePotions.js";
 import { NativeVFX } from "./NativeFuncWrap/NativeVFX.js";
 import { NativePowers } from "./NativeFuncWrap/NativePowers.js";
+import { NativeGDXLib } from "./NativeFuncWrap/NativeGDXLib.js";
+import { JString } from "./NativeClassWrap/JString.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -42,6 +44,22 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
         NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
         NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
     }
+}
+
+function PatchNativeExceptions() {
+    let origRunExceptCtor = NativeGDXLib.Utils.RuntimeException.OverrideCtor((thisPtr: NativePointer, message: NativePointer) => {
+        let wrapJStr = new JString(message);
+        PatchHelper.LogV("GDX::RuntimeException error message: " + wrapJStr.content);
+        return origRunExceptCtor(thisPtr, message);
+    });
+    let origRunExcept2Ctor = NativeGDXLib.Utils.RuntimeException.OverrideCtor2((thisPtr: NativePointer, message: NativePointer, exceptPtr: NativePointer) => {
+        let wrapRunTimeExceptStr = new JString(message);
+        let exceptMessage = NativeSTDLib.Exception.getMessage(exceptPtr);
+        let wrapExceptStr = new JString(exceptMessage);
+        PatchHelper.LogV("STD::Exception error message: " + wrapExceptStr.content);
+        PatchHelper.LogV("GDX::RuntimeException error message: " + wrapRunTimeExceptStr.content);
+        return origRunExcept2Ctor(thisPtr, message, exceptPtr);
+    });
 }
 
 function PatchRedCards() {
@@ -456,6 +474,8 @@ function RegisterNewRelic() {
 }
 
 function main() {
+    PatchNativeExceptions();
+
     PatchRedCards();
     PatchPurpleCards();
     Patchcharacters();
@@ -469,5 +489,5 @@ function main() {
 try {
     main();
 } catch (error) {
-    PatchHelper.LogV("error message:" + error);
+    PatchHelper.LogV((error as Error).stack + "");
 }
