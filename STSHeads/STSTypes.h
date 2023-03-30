@@ -4,6 +4,58 @@
 
 #include <stdint.h>
 
+namespace GDX
+{
+    enum class FileType:uint32_t
+    {
+        Classpath = 0x1, 
+        Internal, 
+        External, 
+        Absolute, 
+        Local,
+    };
+
+    enum class PixMapFormat:uint32_t
+    {
+        Alpha = 0x1, 
+        Intensity, 
+        LuminanceAlpha, 
+        RGB565, 
+        RGBA4444, 
+        RGB888, 
+        RGBA8888,
+    };
+
+    namespace Files
+    {
+        class FileHandle;
+    };
+
+    namespace Graphics
+    {
+        struct Color
+        {
+            float r;
+            float g;
+            float b;
+            float a;
+        };
+
+        struct Texture
+        {
+
+        };
+
+        namespace G2D
+        {
+            struct TextureRegion
+            {
+
+            };
+        }
+    };
+}
+
 namespace STS
 {
     typedef void* (*dummyFunc_t)(void *);
@@ -280,14 +332,6 @@ namespace STS
         uint64_t leastSigBits;
     };
 
-    struct Color
-    {
-        float r;
-        float g;
-        float b;
-        float a;
-    };
-
     struct DamageInfo
     {
         void *basePtr;
@@ -367,7 +411,7 @@ namespace STS
         void * outlineImg;
         float posX;
         float posY;
-        Color* labOutlineColor;
+        GDX::Graphics::Color * labOutlineColor;
         ArrayList<void *>* effect;
         float scale;
         bool isObtained;
@@ -377,9 +421,9 @@ namespace STS
         float flashTimer;
         PotionEffect p_effect;
         PotionColor color;
-        Color* liquidColor;
-        Color* hybridColor;
-        Color* spotsColor;
+        GDX::Graphics::Color * liquidColor;
+        GDX::Graphics::Color * hybridColor;
+        GDX::Graphics::Color * spotsColor;
         PotionRarity rarity;
         PotionSize size;
         int32_t potency;
@@ -589,16 +633,16 @@ namespace STS
         float blockScale;
         float hbAlpha;
         float hbYOffset;
-        Color *hbBgColor;
-        Color *hbShadowColor;
-        Color *blockColor;
-        Color *blockOutlineColor;
-        Color *blockTextColor;
-        Color *redHbBarColor;
-        Color *greenHbBarColor;
-        Color *blueHbBarColor;
-        Color *orangeHbBarColor;
-        Color *hbTextColor;
+        GDX::Graphics::Color *hbBgColor;
+        GDX::Graphics::Color *hbShadowColor;
+        GDX::Graphics::Color *blockColor;
+        GDX::Graphics::Color *blockOutlineColor;
+        GDX::Graphics::Color *blockTextColor;
+        GDX::Graphics::Color *redHbBarColor;
+        GDX::Graphics::Color *greenHbBarColor;
+        GDX::Graphics::Color *blueHbBarColor;
+        GDX::Graphics::Color *orangeHbBarColor;
+        GDX::Graphics::Color *hbTextColor;
         void *TintEffect;
         bool shakeToggle;
         uint8_t gapC1[3];
@@ -613,8 +657,8 @@ namespace STS
         void *state;
         void *stateData;
         float reticleAlpha;
-        Color *reticleColor;
-        Color *reticleShadowColor;
+        GDX::Graphics::Color *reticleColor;
+        GDX::Graphics::Color *reticleShadowColor;
         bool reticleRendered;
         uint8_t gap19[3];
         float reticleOffset;
@@ -967,7 +1011,7 @@ namespace STS
         JString *rawDescription;
         JString *cardID;
         uint8_t gap140[48];
-        Color glowColor;
+        GDX::Graphics::Color * glowColor;
         uint8_t unk[0];
     } __attribute__((aligned(4)));
 
@@ -1298,8 +1342,8 @@ namespace STS
         float currentY;
         float targetX;
         float targetY;
-        Color *flashColor;
-        Color *goldOutlineColor;
+        GDX::Graphics::Color *flashColor;
+        GDX::Graphics::Color *goldOutlineColor;
         bool isSeen;
         uint8_t pad5D[3];
         float animationTimer;
@@ -1411,7 +1455,7 @@ namespace STS
         void * outlineImg;
         float posX;
         float posY;
-        Color * labOutlineColor;
+        GDX::Graphics::Color * labOutlineColor;
         ArrayList<void *> effect;
         float scale;
         bool isObtained;
@@ -1421,9 +1465,9 @@ namespace STS
         float flashTimer;
         PotionEffect p_effect;
         PotionColor color;
-        Color * liquidColor;
-        Color * hybridColor;
-        Color * spotsColor;
+        GDX::Graphics::Color * liquidColor;
+        GDX::Graphics::Color * hybridColor;
+        GDX::Graphics::Color * spotsColor;
         PotionRarity rarity;
         PotionSize size;
         int32_t potency;
