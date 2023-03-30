@@ -24,7 +24,7 @@ export const Mechanization = (thisPtr: NativePointer): NativePointer => {
         },
     };
 
-    let relicObj = AbstractRelic.NewRelicCtor("Mechanization", "机械化", "你每次将抽牌堆洗牌时，获得一层人工制品。", "血肉痛苦，机械飞升", "burningBlood.png", RelicTier.SHOP, LandingSound.HEAVY, vfuncs);
+    let relicObj = AbstractRelic.NewRelicCtor("Mechanization", "机械化", "你每次将抽牌堆洗牌时，获得一层人工制品。", "血肉痛苦，机械飞升", "Mechanization.png", RelicTier.SHOP, LandingSound.HEAVY, vfuncs);
 
     return relicObj;
 };
