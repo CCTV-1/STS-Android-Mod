@@ -10,10 +10,10 @@ export class NativeClassWrapper {
     //NativePointer AbstractCreature *
     constructor(CthisPtr: NativePointer) {
         if (!(CthisPtr instanceof NativePointer)) {
-            throw "need a NativePointer";
+            throw new Error("need a NativePointer");
         }
         if (CthisPtr.isNull()) {
-            throw "need a non-nullptr";
+            throw new Error("need a non-nullptr");
         }
         this.rawPtr = CthisPtr;
         this.#vfuncMapPtr = CthisPtr.readPointer().add(0x4).readPointer();
@@ -35,7 +35,7 @@ export class NativeClassWrapper {
      * @param newVFunc a javascript function
      * @returns origin virtual function pointer
      */
-    protected setVirtualFunction(funcName: string, fakecode: string, funcInfo: NativeFunctionInfo, newVFunc: any): NativePointer  {
+    protected setVirtualFunction(funcName: string, fakecode: string, funcInfo: NativeFunctionInfo, newVFunc: any): NativePointer {
         let tmpFunc = NativeClassWrapper.#overridMap.get(funcName)
         if (tmpFunc === undefined) {
             tmpFunc = new CModule(fakecode);
