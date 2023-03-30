@@ -2,7 +2,7 @@ import { CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enum
 import { STSCardCtor } from "../NativeClassWrap/AbstractCard.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
-import { NativeSTSLib } from "./NativeSTSLib.js";
+import { NativeSTDLib } from "./NativeSTDLib.js";
 
 const Cards = {
     AbstractCard: {
@@ -142,10 +142,10 @@ export const NativeCards = {
     AbstractCard: {
         Ctor(id: string, name: string, imgUrl: string, cost: number, rawDescription: string,
             type: CardType, color: CardColor, rarity: CardRarity, target: CardTarget, dType: DamageType): NativePointer {
-            let nativeId = NativeSTSLib.JString.Ctor(id);
-            let nativeName = NativeSTSLib.JString.Ctor(name);
-            let nativeimgUrl = NativeSTSLib.JString.Ctor(imgUrl);
-            let nativerawDescription = NativeSTSLib.JString.Ctor(rawDescription);
+            let nativeId = NativeSTDLib.JString.Ctor(id);
+            let nativeName = NativeSTDLib.JString.Ctor(name);
+            let nativeimgUrl = NativeSTDLib.JString.Ctor(imgUrl);
+            let nativerawDescription = NativeSTDLib.JString.Ctor(rawDescription);
             return PatchHelper.GetNativeFunction(Cards.AbstractCard.Ctor)(PatchHelper.nullptr, nativeId, nativeName,
                 nativeimgUrl, cost, nativerawDescription, Number(type), Number(color), Number(rarity), Number(target), Number(dType));
         },

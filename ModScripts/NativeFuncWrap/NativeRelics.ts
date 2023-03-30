@@ -1,7 +1,7 @@
 import { LandingSound, RelicTier } from "../enums.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
-import { NativeSTSLib } from "./NativeSTSLib.js";
+import { NativeSTDLib } from "./NativeSTDLib.js";
 
 const Relics = {
     AbstractRelic: {
@@ -73,8 +73,8 @@ const Relics = {
 export const NativeRelics = {
     AbstractRelic: {
         Ctor(relicId: string, imgName: string, tier: RelicTier, sfx: LandingSound): NativePointer {
-            let nativeRelicId = NativeSTSLib.JString.Ctor(relicId);
-            let nativeImgUrl = NativeSTSLib.JString.Ctor(imgName);
+            let nativeRelicId = NativeSTDLib.JString.Ctor(relicId);
+            let nativeImgUrl = NativeSTDLib.JString.Ctor(imgName);
             return PatchHelper.GetNativeFunction(Relics.AbstractRelic.Ctor)(PatchHelper.nullptr, nativeRelicId, nativeImgUrl, Number(tier), Number(sfx));
         },
         OverrideCtor(newCtor: (thisPtr: NativePointer, relicId: string, imgName: string, tier: RelicTier, sfx: LandingSound) => NativePointer):

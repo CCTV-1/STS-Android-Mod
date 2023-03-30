@@ -6,7 +6,7 @@ import { PlayerClass } from "./enums.js";
 import { AbstractGameAction } from "./NativeClassWrap/AbstractGameAction.js";
 import { newCardLibrary } from "./NewCardLibrary.js";
 import { newRelicLibrary } from "./NewRelicLibrary.js";
-import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
+import { NativeSTDLib } from "./NativeFuncWrap/NativeSTDLib.js";
 import { NativeActions } from "./NativeFuncWrap/NativeActions.js";
 import { NativeCards } from "./NativeFuncWrap/NativeCards.js";
 import { NativeHelpers } from "./NativeFuncWrap/NativeHelpers.js";
@@ -25,7 +25,7 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
     let deckSize = masterDeckGroup.size;
     let canUpgradeCards = new Array<AbstractCard>();
     for (let i = 0; i < deckSize - 1; i++) {
-        let randCard = NativeSTSLib.ArrayList.AbstractCard.get(masterDeckGroup, i);
+        let randCard = NativeSTDLib.ArrayList.AbstractCard.get(masterDeckGroup, i);
         let wrapCard = new AbstractCard(randCard);
         if (wrapCard.canUpgrade()) {
             canUpgradeCards.push(wrapCard);
@@ -39,8 +39,8 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
         let statCopyCard = upgradeCard.makeStatEquivalentCopy();
         let cardBrieflyEffectObj = NativeVFX.ShowCardBrieflyEffect.Ctor(statCopyCard);
         let upgradeShineEffectObj = NativeVFX.UpgradeShineEffect.Ctor(PatchHelper.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchHelper.STSGlobalVars.STSSetting_HEIGHT * 0.5);
-        NativeSTSLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
-        NativeSTSLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
+        NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
+        NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
     }
 }
 
@@ -126,11 +126,11 @@ function PatchPurpleCards() {
 
 function Patchcharacters() {
     NativeCharacters.Ironclad.OverridegetStartingDeck((thisPtr: NativePointer) => {
-        let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
+        let startDeck = NativeSTDLib.ArrayList.JString.Ctor();
 
-        const baseStrike = NativeSTSLib.JString.Ctor("Strike_R");
-        const baseDefend = NativeSTSLib.JString.Ctor("Defend_R");
-        const addNativeStr = NativeSTSLib.ArrayList.JString.AddNativeStr;
+        const baseStrike = NativeSTDLib.JString.Ctor("Strike_R");
+        const baseDefend = NativeSTDLib.JString.Ctor("Defend_R");
+        const addNativeStr = NativeSTDLib.ArrayList.JString.AddNativeStr;
 
         addNativeStr(startDeck, baseStrike);
         addNativeStr(startDeck, baseStrike);
@@ -144,13 +144,13 @@ function Patchcharacters() {
 
         switch (FakeRandom(0, 1)) {
             case 0: {
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "BasicAttack_R");
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "BasicDefend_R");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "BasicAttack_R");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "BasicDefend_R");
                 break;
             }
             default: {
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "Infernal Blade");
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "True Grit");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Infernal Blade");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "True Grit");
                 break;
             }
         }
@@ -158,11 +158,11 @@ function Patchcharacters() {
         return startDeck;
     });
     NativeCharacters.TheSilent.OverridegetStartingDeck((thisPtr: NativePointer) => {
-        let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
+        let startDeck = NativeSTDLib.ArrayList.JString.Ctor();
 
-        const baseStrike = NativeSTSLib.JString.Ctor("Strike_G");
-        const baseDefend = NativeSTSLib.JString.Ctor("Defend_G");
-        const addNativeStr = NativeSTSLib.ArrayList.JString.AddNativeStr;
+        const baseStrike = NativeSTDLib.JString.Ctor("Strike_G");
+        const baseDefend = NativeSTDLib.JString.Ctor("Defend_G");
+        const addNativeStr = NativeSTDLib.ArrayList.JString.AddNativeStr;
 
         addNativeStr(startDeck, baseStrike);
         addNativeStr(startDeck, baseStrike);
@@ -178,11 +178,11 @@ function Patchcharacters() {
 
         switch (FakeRandom(0, 1)) {
             case 0: {
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "Distraction");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Distraction");
                 break;
             }
             default: {
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "Discovery");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Discovery");
                 break;
             }
         }
@@ -190,11 +190,11 @@ function Patchcharacters() {
         return startDeck;
     });
     NativeCharacters.Defect.OverridegetStartingDeck((thisPtr: NativePointer) => {
-        let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
+        let startDeck = NativeSTDLib.ArrayList.JString.Ctor();
 
-        const baseStrike = NativeSTSLib.JString.Ctor("Strike_B");
-        const baseDefend = NativeSTSLib.JString.Ctor("Defend_B");
-        const addNativeStr = NativeSTSLib.ArrayList.JString.AddNativeStr;
+        const baseStrike = NativeSTDLib.JString.Ctor("Strike_B");
+        const baseDefend = NativeSTDLib.JString.Ctor("Defend_B");
+        const addNativeStr = NativeSTDLib.ArrayList.JString.AddNativeStr;
 
         addNativeStr(startDeck, baseStrike);
         addNativeStr(startDeck, baseStrike);
@@ -208,13 +208,13 @@ function Patchcharacters() {
 
         switch (FakeRandom(0, 1)) {
             case 0: {
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "Ball Lightning");
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "Distraction");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Ball Lightning");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Distraction");
                 break;
             }
             default: {
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "Dualcast");
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "White Noise");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Dualcast");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "White Noise");
                 break;
             }
         }
@@ -222,11 +222,11 @@ function Patchcharacters() {
         return startDeck;
     });
     NativeCharacters.Watcher.OverridegetStartingDeck((thisPtr: NativePointer) => {
-        let startDeck = NativeSTSLib.ArrayList.JString.Ctor();
+        let startDeck = NativeSTDLib.ArrayList.JString.Ctor();
 
-        const baseStrike = NativeSTSLib.JString.Ctor("Strike_P");
-        const baseDefend = NativeSTSLib.JString.Ctor("Defend_P");
-        const addNativeStr = NativeSTSLib.ArrayList.JString.AddNativeStr;
+        const baseStrike = NativeSTDLib.JString.Ctor("Strike_P");
+        const baseDefend = NativeSTDLib.JString.Ctor("Defend_P");
+        const addNativeStr = NativeSTDLib.ArrayList.JString.AddNativeStr;
 
         addNativeStr(startDeck, baseStrike);
         addNativeStr(startDeck, baseStrike);
@@ -240,13 +240,13 @@ function Patchcharacters() {
 
         switch (FakeRandom(0, 1)) {
             case 0: {
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "ForeignInfluence");
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "Discovery");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "ForeignInfluence");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Discovery");
                 break;
             }
             default: {
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "Eruption");
-                NativeSTSLib.ArrayList.JString.Add(startDeck, "Vigilance");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Eruption");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Vigilance");
                 break;
             }
         }
@@ -352,7 +352,7 @@ function PatchRelics() {
             let playerPotions = currentPlayer.potions;
             for (let index = 2; index > 0; index--) {
                 let newPotionSlot = NativePotions.PotionSlot.Ctor(currentPlayer.potionSlots - index);
-                NativeSTSLib.ArrayList.AbstractPotion.Add(playerPotions.rawPtr, newPotionSlot);
+                NativeSTDLib.ArrayList.AbstractPotion.Add(playerPotions.rawPtr, newPotionSlot);
             }
             let wrapSacredBark = new AbstractRelic(sacredBarkObj);
             wrapSacredBark.flash();

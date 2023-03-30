@@ -3,7 +3,7 @@ import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { PatchHelper } from "../PatchHelper.js";
-import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
+import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
 import { NativeRelics } from "../NativeFuncWrap/NativeRelics.js";
 import { JObjectArray } from "./JObjectArray.js";
 import { ArrayList } from "./ArrayList.js";
@@ -49,7 +49,7 @@ export class AbstractRelic extends NativeClassWrapper {
                     return getUpdatedDescriptionFunc(thisPtr);
                 }
             }
-            return NativeSTSLib.JString.Ctor("");
+            return NativeSTDLib.JString.Ctor("");
         },
         makeCopy: (thisPtr: NativePointer) => {
             let wrapRelic = new AbstractRelic(thisPtr);
@@ -289,7 +289,7 @@ export class AbstractRelic extends NativeClassWrapper {
         wrapRelic.flavorText = flavorText;
 
         let wrapTips = new ArrayList(wrapRelic.tips);
-        let wrapTip = new PowerTip(NativeSTSLib.PowerTip.get(wrapTips, 0));
+        let wrapTip = new PowerTip(NativeSTDLib.PowerTip.get(wrapTips, 0));
         wrapTip.header = relicName;
         wrapTip.body = description;
 

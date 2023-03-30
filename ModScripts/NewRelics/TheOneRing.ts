@@ -1,12 +1,12 @@
 import { AbstractRelic, NewRelicVFuncType } from "../NativeClassWrap/AbstractRelic.js";
 import { LandingSound, RelicTier } from "../enums.js";
-import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
+import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
 import { PatchHelper } from "../PatchHelper.js";
 
 export const TheOneRing = (thisPtr: NativePointer): NativePointer => {
     const vfuncs: NewRelicVFuncType = {
         getUpdatedDescription: (thisPtr: NativePointer) => {
-            return NativeSTSLib.JString.Ctor("在每场战斗开始时失去三分之一的生命，在每回合开始时获得 [E]  [E]  [E] 。");
+            return NativeSTDLib.JString.Ctor("在每场战斗开始时失去三分之一的生命，在每回合开始时获得 [E]  [E]  [E] 。");
         },
         onEquip: (thisPtr: NativePointer) => {
             let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;

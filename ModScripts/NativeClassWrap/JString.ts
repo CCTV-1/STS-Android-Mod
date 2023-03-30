@@ -1,4 +1,4 @@
-import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
+import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 
 export class JString extends NativeClassWrapper {    
@@ -8,7 +8,7 @@ export class JString extends NativeClassWrapper {
     }
 
     static CreateJString(str:string) {
-        return new JString(NativeSTSLib.JString.Ctor(str));
+        return new JString(NativeSTDLib.JString.Ctor(str));
     }
 
     get len() {

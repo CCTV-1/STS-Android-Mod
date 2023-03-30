@@ -1,7 +1,7 @@
 import { PowerType } from "../enums.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
-import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
+import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { ArrayList } from "./ArrayList.js";
 import { JString } from "./JString.js";
@@ -1032,7 +1032,7 @@ export class AbstractPower extends NativeClassWrapper {
     }
 
     loadRegion(fileName: string) {
-        let nativeFileName = NativeSTSLib.JString.Ctor(fileName);
+        let nativeFileName = NativeSTDLib.JString.Ctor(fileName);
         this.getVirtualFunction(AbstractPower.#vfunctionMap.loadRegion)(this.rawPtr, nativeFileName);
     }
 

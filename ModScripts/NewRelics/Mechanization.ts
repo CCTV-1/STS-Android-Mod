@@ -1,6 +1,6 @@
 import { AbstractRelic, NewRelicVFuncType } from "../NativeClassWrap/AbstractRelic.js";
 import { LandingSound, RelicTier } from "../enums.js";
-import { NativeSTSLib } from "../NativeFuncWrap/NativeSTSLib.js";
+import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
@@ -8,7 +8,7 @@ import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
 export const Mechanization = (thisPtr: NativePointer): NativePointer => {
     const vfuncs: NewRelicVFuncType = {
         getUpdatedDescription: (thisPtr: NativePointer) => {
-            return NativeSTSLib.JString.Ctor("你每次将抽牌堆洗牌时，获得一层人工制品。");
+            return NativeSTDLib.JString.Ctor("你每次将抽牌堆洗牌时，获得一层人工制品。");
         },
         onShuffle: (thisPtr: NativePointer) => {
             let wrapRelic = new AbstractRelic(thisPtr);

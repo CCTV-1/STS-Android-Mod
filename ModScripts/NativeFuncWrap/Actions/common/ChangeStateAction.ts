@@ -1,10 +1,10 @@
 import { PatchHelper } from "../../../PatchHelper.js";
-import { NativeSTSLib } from "../../NativeSTSLib.js";
+import { NativeSTDLib } from "../../NativeSTDLib.js";
 import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const ChangeStateAction = {
     Ctor(monster: NativePointer, stateName: string): NativePointer {
-        let nativeStateName = NativeSTSLib.JString.Ctor(stateName);
+        let nativeStateName = NativeSTDLib.JString.Ctor(stateName);
         return PatchHelper.GetNativeFunction(NativeActionInfo.common.ChangeState.Ctor)(PatchHelper.nullptr, monster, nativeStateName);
     },
 };

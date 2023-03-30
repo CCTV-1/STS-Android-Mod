@@ -1,9 +1,8 @@
 import { ArrayList } from "../NativeClassWrap/ArrayList.js";
-import { PowerTip } from "../NativeClassWrap/PowerTip.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 
-const STSLib = {
+const STDLib = {
     ArrayList: {
         JString: {
             /**
@@ -102,36 +101,36 @@ const STSLib = {
     },
 };
 
-export const NativeSTSLib = {
+export const NativeSTDLib = {
     ArrayList: {
         JString: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(STSLib.ArrayList.JString.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.JString.Ctor)(PatchHelper.nullptr);
             },
             AddNativeStr(thisPtr: NativePointer, JStringPtr: NativePointer): boolean {
-                return PatchHelper.GetNativeFunction(STSLib.ArrayList.JString.Add)(thisPtr, JStringPtr);
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.JString.Add)(thisPtr, JStringPtr);
             },
             Add(thisPtr: NativePointer, str: string): boolean {
-                let nativeStr = NativeSTSLib.JString.Ctor(str);
-                return NativeSTSLib.ArrayList.JString.AddNativeStr(thisPtr, nativeStr);
+                let nativeStr = NativeSTDLib.JString.Ctor(str);
+                return NativeSTDLib.ArrayList.JString.AddNativeStr(thisPtr, nativeStr);
             },
         },
         AbstractGameEffect: {
             Add(thisPtr: NativePointer, effectPtr: NativePointer): boolean {
-                return PatchHelper.GetNativeFunction(STSLib.ArrayList.AbstractGameEffect.Add)(thisPtr, effectPtr);
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractGameEffect.Add)(thisPtr, effectPtr);
             },
         },
         AbstractPotion: {
             Add(thisPtr: NativePointer, potionPtr: NativePointer): boolean {
-                return PatchHelper.GetNativeFunction(STSLib.ArrayList.AbstractPotion.Add)(thisPtr, potionPtr);
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractPotion.Add)(thisPtr, potionPtr);
             },
         },
         AbstractCard: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(STSLib.ArrayList.AbstractCard.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.Ctor)(PatchHelper.nullptr);
             },
             get(arrayListPtr: ArrayList, index: number): NativePointer {
-                return PatchHelper.GetNativeFunction(STSLib.ArrayList.AbstractCard.get)(arrayListPtr.rawPtr, index);
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.get)(arrayListPtr.rawPtr, index);
             }
         },
     },
@@ -139,27 +138,27 @@ export const NativeSTSLib = {
         /** UTF-16 string ctor*/
         Ctor(str: string): NativePointer {
             let nativeMem = Memory.allocUtf16String(str);
-            return PatchHelper.GetNativeFunction(STSLib.JString.Ctor)(PatchHelper.nullptr, nativeMem);
+            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor)(PatchHelper.nullptr, nativeMem);
         },
         /** UTF-16 string ctor*/
         Ctor2(str: string, start: number, len: number): NativePointer {
             let nativeMem = Memory.allocUtf16String(str);
-            return PatchHelper.GetNativeFunction(STSLib.JString.Ctor2)(PatchHelper.nullptr, nativeMem, start, len);
+            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor2)(PatchHelper.nullptr, nativeMem, start, len);
         },
         /** C string ctor, don't use this*/
         Ctor3(str: string): NativePointer {
             let nativeMem = Memory.allocAnsiString(str);
-            return PatchHelper.GetNativeFunction(STSLib.JString.Ctor3)(PatchHelper.nullptr, nativeMem);
+            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor3)(PatchHelper.nullptr, nativeMem);
         },
         /** C string ctor, don't use this*/
         Ctor4(str: string, start: number, len: number): NativePointer {
             let nativeMem = Memory.allocAnsiString(str);
-            return PatchHelper.GetNativeFunction(STSLib.JString.Ctor4)(PatchHelper.nullptr, nativeMem, start, len);
+            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor4)(PatchHelper.nullptr, nativeMem, start, len);
         },
     },
     PowerTip: {
         get(arrayListPtr: ArrayList, index: number): NativePointer {
-            return PatchHelper.GetNativeFunction(STSLib.ArrayList.PowerTip.get)(arrayListPtr.rawPtr, index);
+            return PatchHelper.GetNativeFunction(STDLib.ArrayList.PowerTip.get)(arrayListPtr.rawPtr, index);
         }
     }
 };
