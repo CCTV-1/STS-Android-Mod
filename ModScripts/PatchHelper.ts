@@ -4,8 +4,10 @@ import { AbstractPlayer } from "./NativeClassWrap/AbstractPlayer.js";
 export class PatchHelper {
     static readonly nullptr = new NativePointer(0);
     static readonly STSModuleBaseAddress = Module.findBaseAddress("libSpire_ANDROID.so") || PatchHelper.nullptr;
+    static readonly ScriptDir = "/sdcard/Android/data/com.humble.SlayTheSpire/files/ModScripts/";
+    static readonly ResourceDir = "/sdcard/Android/data/com.humble.SlayTheSpire/files/ModResources/";
 
-    static readonly #STSLogger = new File("/sdcard/Android/data/com.humble.SlayTheSpire/files/ModScripts/ModLog.txt", "w+");
+    static readonly #STSLogger = new File(PatchHelper.ScriptDir + "ModLog.txt", "w+");
     static readonly RewriteVFuncMap = new Map<string, NativePointer>();
     static readonly #NativeFuncCache = new Map<string, NativeFunction<any, any>>();
     static readonly #GlobalVarCache = new Map<number, NativePointer>();
