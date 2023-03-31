@@ -17,6 +17,7 @@ import { NativeVFX } from "./NativeFuncWrap/NativeVFX.js";
 import { NativePowers } from "./NativeFuncWrap/NativePowers.js";
 import { NativeGDXLib } from "./NativeFuncWrap/NativeGDXLib.js";
 import { JString } from "./NativeClassWrap/JString.js";
+import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -44,6 +45,32 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
         NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
         NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
     }
+}
+
+function FixGDXFileHandlereadBytes() {
+    let origOpenAssetFile = NativeSTSLib.OverrideopenAssestFile((thisPtr: NativePointer) => {
+        let origBytesArr = origOpenAssetFile(thisPtr);
+        try {
+            if (origBytesArr.isNull()) {
+                let wrapPath = thisPtr.readCString();
+                if (wrapPath === null) {
+                    return origBytesArr;
+                }
+                let fridaFileHandle = new File(wrapPath, "rb");
+                let fileBytes = fridaFileHandle.readBytes();
+
+                let newBytesArr = NativeSTDLib.Array.CreateByteArray(fileBytes.byteLength);
+                let newBytesArrDataPtr = newBytesArr.add(0x8).readPointer();
+                newBytesArrDataPtr.writeByteArray(fileBytes);
+                fridaFileHandle.close();
+                origBytesArr = newBytesArr;
+            }
+        } catch (error) {
+            PatchHelper.LogV("" + (error as Error).stack);
+        }
+
+        return origBytesArr;
+    });
 }
 
 function PatchNativeExceptions() {
@@ -474,6 +501,8 @@ function RegisterNewRelic() {
 }
 
 function main() {
+    FixGDXFileHandlereadBytes();
+
     PatchNativeExceptions();
 
     PatchRedCards();
