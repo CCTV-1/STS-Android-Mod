@@ -53,10 +53,22 @@ export const NativeGDXLibInfo = {
             length: new NativeFunctionInfo(0x15DEDDD, 'int64', ['pointer']),
             /**
              * ```c
-             * JString* GDX::Files::path::exists(FileHandle* thisPtr)
+             * JString* GDX::Files::FileHandle::exists(FileHandle* thisPtr)
              * ```
              */
             path: new NativeFunctionInfo(0x15DDD11, 'pointer', ['pointer']),
+            /**
+             * ```c
+             * JObjectArray<byte>* GDX::Files::FileHandle::readBytes(FileHandle* thisPtr)
+             * ```
+             */
+            readBytes: new NativeFunctionInfo(0x15DE991, 'pointer', ['pointer']),
+            /**
+             * ```c
+             * InputStream* GDX::Files::FileHandle::read(FileHandle* thisPtr)
+             * ```
+             */
+            read: new NativeFunctionInfo(0x15DE059, 'pointer', ['pointer']),
         },
     },
     graphics: {
@@ -101,6 +113,27 @@ export const NativeGDXLibInfo = {
             Ctor4: new NativeFunctionInfo(0x2753531, 'pointer', ['pointer', 'uint32']),
         },
         G2D: {
+            G2DPixmap: {
+                /**
+                 * ```c
+                 * G2DPixmap* GDX::Graphics::G2D::2DPixmap::Ctor(G2DPixmap* thisPtr, JObjectArray<byte> encodedData, int32_t offset,
+                 *      int32_t len, int32_t requestedFormat)
+                 * ```
+                 */
+                Ctor: new NativeFunctionInfo(0x15EF565, 'pointer', ['pointer', 'pointer', 'int32', 'int32', 'int32']),
+                /**
+                 * ```c
+                 * G2DPixmap* GDX::Graphics::G2D::2DPixmap::Ctor(G2DPixmap* thisPtr, int32_t width, int32_t height, int32_t format)
+                 * ```
+                 */
+                Ctor2: new NativeFunctionInfo(0x15EF99D, 'pointer', ['pointer', 'int32', 'int32', 'int32']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::G2D::2DPixmap::dispose(G2DPixmap* thisPtr)
+                 * ```
+                 */
+                dispose: new NativeFunctionInfo(0x15EFCF9, 'void', ['pointer']),
+            },
             TextureAtlas: {
                 /**
                  * ```c
@@ -165,6 +198,17 @@ export const NativeGDXLibInfo = {
                 setRegion2: new NativeFunctionInfo(0x1603111, 'void', ['pointer', 'int32', 'int32', 'int32', 'int32']),
             },
         },
+        Glutils: {
+            PixmapTextureData: {
+                /**
+                 * ```c
+                 * PixMap* GDX::Graphics::PixMap::Ctor(PixMap* thisPtr, GDX::graphics::Pixmap* pixmapPtr, GDX::PixmapFormat format,
+                 *      bool useMipMaps, bool disposePixmap)
+                 * ```
+                 */
+                Ctor: new NativeFunctionInfo(0x160F949, 'pointer', ['pointer', 'pointer', 'uint32', 'bool', 'bool']),
+            }
+        },
         PixMap: {
             /**
              * ```c
@@ -174,10 +218,10 @@ export const NativeGDXLibInfo = {
             Ctor: new NativeFunctionInfo(0x161C065, 'pointer', ['pointer', 'pointer']),
             /**
              * ```c
-             * PixMap* GDX::Graphics::PixMap::Ctor(PixMap* thisPtr, int32_t width, int32_t height, GDXPixMapFormat format)
+             * PixMap* GDX::Graphics::PixMap::Ctor(PixMap* thisPtr, int32_t width, int32_t height, GDXPixMap::Format formatPtr)
              * ```
              */
-            Ctor2: new NativeFunctionInfo(0x161BF65, 'pointer', ['pointer', 'int32', 'int32', 'uint32']),
+            Ctor2: new NativeFunctionInfo(0x161BF65, 'pointer', ['pointer', 'int32', 'int32', 'pointer']),
         },
         Texture: {
             /**
@@ -200,10 +244,16 @@ export const NativeGDXLibInfo = {
             Ctor3: new NativeFunctionInfo(0x161E69D, 'pointer', ['pointer', 'pointer', 'bool']),
             /**
              * ```c
-             * Texture* GDX::Graphics::Texture::Ctor(Texture* thisPtr, GDX::Files::FileHandle* fileHandle, GDX::PixMapFormat format, bool useMipMaps)
+             * Texture* GDX::Graphics::Texture::Ctor(Texture* thisPtr, GDX::Files::FileHandle* fileHandle, GDX::PixMap::Format formatPtr, bool useMipMaps)
              * ```
              */
-            Ctor4: new NativeFunctionInfo(0x161E5E1, 'pointer', ['pointer', 'pointer', 'uint32', 'bool']),
+            Ctor4: new NativeFunctionInfo(0x161E5E1, 'pointer', ['pointer', 'pointer', 'pointer', 'bool']),
+            /**
+             * ```c
+             * Texture* GDX::Graphics::Texture::Ctor(Texture* thisPtr, GDX::Graphics::TextureData* dataPtr)
+             * ```
+             */
+            Ctor5: new NativeFunctionInfo(0x161E74D, 'pointer', ['pointer', 'pointer']),
         },
     },
     utils: {

@@ -28,18 +28,26 @@ namespace GDX
 
     namespace Files
     {
-        class FileHandle;
+        class FileHandle
+        {
+            void *basePtr;
+            void *vfuncMap;
+            void * JavaFileHandle;
+            FileType type;
+        } __attribute__((aligned(4)));
     };
 
     namespace Graphics
     {
         struct Color
         {
+            void *basePtr;
+            void *vfuncMap;
             float r;
             float g;
             float b;
             float a;
-        };
+        } __attribute__((aligned(4)));
 
         struct Texture
         {
@@ -52,7 +60,34 @@ namespace GDX
             {
 
             };
+            struct Gdx2DPixmap
+            {
+                
+            };
         }
+
+        namespace Glutils
+        {
+            struct PixmapTextureData
+            {
+                void *basePtr;
+                void *vfuncMap;
+                Pixmap* pixmap;
+                PixMapFormat format;
+                bool useMipMaps;
+                bool disposePixmap;
+                bool managed;
+            } __attribute__((aligned(4)));
+        };
+
+        struct Pixmap
+        {
+            void *basePtr;
+            void *vfuncMap;
+            G2D::Gdx2DPixmap * pixmap;
+            int32_t color;
+            bool disposed;
+        } __attribute__((aligned(4)));
     };
 }
 

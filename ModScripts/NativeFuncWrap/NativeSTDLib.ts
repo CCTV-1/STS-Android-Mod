@@ -57,6 +57,14 @@ const STDLib = {
             get: new NativeFunctionInfo(0x208CAAD, 'pointer', ['pointer', 'uint32']),
         },
     },
+    Array: {
+        /**
+         * ```c
+         * Array<T> STD::Array::CreateInternal(RumTimeType_t * typePtr, uint32_t , int *, int)
+         * ```
+         */
+        CreateInternal: new NativeFunctionInfo(0x1384DD1, 'pointer', ['pointer', 'uint32', 'pointer', 'int32']),
+    },
     JString: {
         /**
          * ```c
@@ -132,6 +140,11 @@ const STDLib = {
          * ```
          */
         getMessage: new NativeFunctionInfo(0x13E4EE5, 'pointer', ['pointer']),
+    },
+    Internal: {
+        CreateRuntimeType: {
+            Array_uint8_T: new NativeFunctionInfo(0x247E8DD, 'pointer', []),
+        },
     }
 };
 
@@ -171,6 +184,18 @@ export const NativeSTDLib = {
             get(arrayListPtr: ArrayList, index: number): NativePointer {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.PowerTip.get)(arrayListPtr.rawPtr, index);
             }
+        },
+    },
+    Array: {
+        CreateInternal(typePtr: NativePointer, elementSize: number, arrSizeInfo: NativePointer, len: number): NativePointer {
+            return PatchHelper.GetNativeFunction(STDLib.Array.CreateInternal)(typePtr, elementSize, arrSizeInfo, len);
+        },
+
+        CreateByteArray(arrLen: number): NativePointer {
+            let sizeMem = Memory.alloc(4*3);
+            sizeMem.writeS32(arrLen);
+            let typePtr = NativeSTDLib.Internal.CreateRuntimeType.Array_uint8_T();
+            return NativeSTDLib.Array.CreateInternal(typePtr, 1, sizeMem, 1);
         },
     },
     JString: {
@@ -223,4 +248,11 @@ export const NativeSTDLib = {
             return PatchHelper.HookSTSFunction(STDLib.IOException.Ctor4, newCtor);
         },
     },
+    Internal: {
+        CreateRuntimeType: {
+            Array_uint8_T() {
+                return PatchHelper.GetNativeFunction(STDLib.Internal.CreateRuntimeType.Array_uint8_T)();
+            }
+        },
+    }
 };
