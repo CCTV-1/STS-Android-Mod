@@ -274,6 +274,8 @@ export class AbstractRelic extends NativeClassWrapper {
         addToTop: new NativeFunctionInfo(0x330, 'void', ['pointer', 'pointer']),
     };
 
+    static readonly #NewRelicImageTextureCache = new Map<string, NativePointer>();
+
     static readonly #vFuncNamePrefix = "AbstractRelic_";
 
     static NewRelicCtor(relicId: string, relicName: string, description: string, flavorText: string, imgName: string, tier: RelicTier, sfx: LandingSound, newVFuncs: NewRelicVFuncType): NativePointer {
@@ -295,17 +297,23 @@ export class AbstractRelic extends NativeClassWrapper {
         wrapTip.body = description;
 
         const imgPath = PatchHelper.ResourceDir + imgName;
-        try {
-            let imgHandle = NativeGDXLib.Files.FileHandle.Ctor2(imgPath, GDXFileType.Absolute);
-            PatchHelper.LogV(imgHandle.toString());
-            if (NativeGDXLib.Files.FileHandle.exists(imgHandle)) {
-                let newRelicImg = NativeGDXLib.Graphics.Texture.Ctor2(imgHandle);
-                wrapRelic.img = newRelicImg;
-                wrapRelic.largeImg = newRelicImg;
-                wrapTip.img = newRelicImg;
+        let newRelicImg = AbstractRelic.#NewRelicImageTextureCache.get(imgPath);
+        if (newRelicImg === undefined) {
+            try {
+                let imgHandle = NativeGDXLib.Files.FileHandle.Ctor2(imgPath, GDXFileType.Absolute);
+                if (NativeGDXLib.Files.FileHandle.exists(imgHandle)) {
+                    newRelicImg = NativeGDXLib.Graphics.Texture.Ctor2(imgHandle);
+                    wrapRelic.img = newRelicImg;
+                    wrapRelic.largeImg = newRelicImg;
+                    wrapTip.img = newRelicImg;
+                }
+            } catch (error) {
+                PatchHelper.LogV("" + (error as Error).stack);
             }
-        } catch (error) {
-            PatchHelper.LogV("" + (error as Error).stack);
+        } else {
+            wrapRelic.img = newRelicImg;
+            wrapRelic.largeImg = newRelicImg;
+            wrapTip.img = newRelicImg;
         }
 
         if (!AbstractRelic.#rewriteVFuncMap.has("AbstractRelicProxy")) {
