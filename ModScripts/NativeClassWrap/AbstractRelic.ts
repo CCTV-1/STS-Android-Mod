@@ -304,16 +304,12 @@ export class AbstractRelic extends NativeClassWrapper {
                 if (NativeGDXLib.Files.FileHandle.exists(imgHandle)) {
                     newRelicImg = NativeGDXLib.Graphics.Texture.Ctor2(imgHandle);
                     wrapRelic.img = newRelicImg;
-                    wrapRelic.largeImg = newRelicImg;
-                    wrapTip.img = newRelicImg;
                 }
             } catch (error) {
                 PatchHelper.LogV("" + (error as Error).stack);
             }
         } else {
             wrapRelic.img = newRelicImg;
-            wrapRelic.largeImg = newRelicImg;
-            wrapTip.img = newRelicImg;
         }
 
         if (!AbstractRelic.#rewriteVFuncMap.has("AbstractRelicProxy")) {
@@ -515,5 +511,12 @@ export class AbstractRelic extends NativeClassWrapper {
     }
     set largeImg(value) {
         this.writeOffsetPointer(0x38, value);
+    }
+
+    get outlineImg() {
+        return this.readOffsetPointer(0x3C);
+    }
+    set outlineImg(value) {
+        this.writeOffsetPointer(0x3C, value);
     }
 }
