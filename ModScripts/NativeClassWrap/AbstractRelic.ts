@@ -279,7 +279,7 @@ export class AbstractRelic extends NativeClassWrapper {
     static readonly #vFuncNamePrefix = "AbstractRelic_";
 
     static NewRelicCtor(relicId: string, relicName: string, description: string, flavorText: string, imgName: string, tier: RelicTier, sfx: LandingSound, newVFuncs: NewRelicVFuncType): NativePointer {
-        let origRelicPtr = NativeRelics.AbstractRelic.Ctor("Black Blood", "blackBlood.png", tier, sfx);
+        let origRelicPtr = NativeRelics.AbstractRelic.Ctor("Circlet", "Circlet.png", tier, sfx);
 
         let wrapRelic = new AbstractRelic(origRelicPtr);
         if (!AbstractRelic.#rewriteVFuncMap.has(relicId)) {
