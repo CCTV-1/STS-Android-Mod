@@ -1,4 +1,4 @@
-import { GDXFileType, LandingSound, RelicTier } from "../enums.js";
+import { GDXFileType, LandingSound, PlayerClass, RelicTier } from "../enums.js";
 import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
@@ -16,17 +16,69 @@ import { NativeGDXLib } from "../NativeFuncWrap/NativeGDXLib.js";
 export type STSRelicCtor = (thisPtr: NativePointer) => NativePointer;
 
 export interface NewRelicVFuncType {
+    updateDescription?: (thisPtr: NativePointer, playerClass: PlayerClass) => void,
     getUpdatedDescription?: (thisPtr: NativePointer) => NativePointer,
     onPlayCard?: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => void,
+    onPreviewObtainCard?: (thisPtr: NativePointer, cardPtr: NativePointer) => void,
+    onObtainCard?: (thisPtr: NativePointer, cardPtr: NativePointer) => void,
+    onGainGold?: (thisPtr: NativePointer) => void,
+    onLoseGold?: (thisPtr: NativePointer) => void,
+    onSpendGold?: (thisPtr: NativePointer) => void,
     onEquip?: (thisPtr: NativePointer) => void,
     onUnequip?: (thisPtr: NativePointer) => void,
+    atPreBattle?: (thisPtr: NativePointer) => void,
     atBattleStart?: (thisPtr: NativePointer) => void,
+    onSpawnMonster?: (thisPtr: NativePointer, monsterPtr: NativePointer) => void,
+    atBattleStartPreDraw?: (thisPtr: NativePointer) => void,
     atTurnStart?: (thisPtr: NativePointer) => void,
+    atTurnStartPostDraw?: (thisPtr: NativePointer) => void,
     onPlayerEndTurn?: (thisPtr: NativePointer) => void,
+    onBloodied?: (thisPtr: NativePointer) => void,
+    onNotBloodied?: (thisPtr: NativePointer) => void,
+    onManualDiscard?: (thisPtr: NativePointer) => void,
+    onUseCard?: (thisPtr: NativePointer, cardPtr: NativePointer, useCardAction: NativePointer) => void,
     onVictory?: (thisPtr: NativePointer) => void,
+    onMonsterDeath?: (thisPtr: NativePointer, monsterPtr: NativePointer) => void,
+    onBlockBroken?: (thisPtr: NativePointer, creaturePtr: NativePointer) => void,
+    onPlayerGainedBlock?: (thisPtr: NativePointer, blockAmount: number) => number,
+    onPlayerHeal?: (thisPtr: NativePointer, healAmount: number) => number,
+    onEnergyRecharge?: (thisPtr: NativePointer) => void,
+    /** ArrayList\<AbstractCampfireOption\>* options */
+    addCampfireOption?: (thisPtr: NativePointer, options: NativePointer) => void,
+    /** AbstractCampfireOption* option */
+    canUseCampfireOption?: (thisPtr: NativePointer, option: NativePointer) => number,
+    onRest?: (thisPtr: NativePointer) => void,
     onEnterRestRoom?: (thisPtr: NativePointer) => void,
+    onRefreshHand?: (thisPtr: NativePointer) => void,
     onShuffle?: (thisPtr: NativePointer) => void,
+    onSmith?: (thisPtr: NativePointer) => void,
+    onAttack?: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number, targetCreature: NativePointer) => void,
+    onAttacked?: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => number,
+    onAttackedToChangeDamage?: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => number,
+    onAttackToChangeDamage?: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => number,
+    onExhaust?: (thisPtr: NativePointer, cardPtr: NativePointer) => void,
+    onTrigger?: (thisPtr: NativePointer) => void,
+    onTrigger2?: (thisPtr: NativePointer, targetCreature: NativePointer) => void,
+    checkTrigger?: (thisPtr: NativePointer, cardPtr: NativePointer) => number,
+    onEnterRoom?: (thisPtr: NativePointer, roomPtr: NativePointer) => void,
+    justEnteredRoom?: (thisPtr: NativePointer, roomPtr: NativePointer) => void,
+    onCardDraw?: (thisPtr: NativePointer, cardPtr: NativePointer) => void,
+    onChestOpen?: (thisPtr: NativePointer, bossChest: boolean) => void,
+    onChestOpenAfter?: (thisPtr: NativePointer, bossChest: boolean) => void,
+    onDrawOrDiscard?: (thisPtr: NativePointer) => void,
+    onMasterDeckChange?: (thisPtr: NativePointer) => void,
+    atDamageModify?: (thisPtr: NativePointer, damage: number, cardPtr: NativePointer) => number,
+    changeNumberOfCardsInReward?: (thisPtr: NativePointer, numberOfCards: number) => number,
+    changeRareCardRewardChance?: (thisPtr: NativePointer, rareCardChance: number) => number,
+    changeUncommonCardRewardChance?: (thisPtr: NativePointer, uncommonCardChance: number) => number,
+    canPlay?: (thisPtr: NativePointer, cardPtr: NativePointer) => number,
     makeCopy: (thisPtr: NativePointer) => NativePointer,
+    canSpawn?: (thisPtr: NativePointer) => number,
+    onUsePotion?: (thisPtr: NativePointer) => void,
+    onChangeStance?: (thisPtr: NativePointer, oldStance: NativePointer, newStance: NativePointer) => void,
+    onLoseHp?: (thisPtr: NativePointer, damageAmount: number) => void,
+    onLoseHpLast?: (thisPtr: NativePointer, damageAmount: number) => number,
+    wasHPLost?: (thisPtr: NativePointer, damageAmount: number) => void,
 };
 
 export class AbstractRelic extends NativeClassWrapper {
@@ -41,37 +93,85 @@ export class AbstractRelic extends NativeClassWrapper {
     static #rewriteVFuncMap = new Map<string, NewRelicVFuncType>();
 
     static readonly #NewRelicVFuncProxys: NewRelicVFuncType = {
-        getUpdatedDescription: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let relicVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
-            if (relicVFuncMap !== undefined) {
-                const getUpdatedDescriptionFunc = relicVFuncMap.getUpdatedDescription;
-                if (getUpdatedDescriptionFunc !== undefined) {
-                    return getUpdatedDescriptionFunc(thisPtr);
-                }
-            }
-            return NativeSTDLib.JString.Ctor("");
-        },
-        makeCopy: (thisPtr: NativePointer) => {
+        updateDescription: (thisPtr: NativePointer, playerClass: PlayerClass) => {
             let wrapRelic = new AbstractRelic(thisPtr);
             let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
             if (cardVFuncMap !== undefined) {
-                const makeCopyFunc = cardVFuncMap.makeCopy;
-                if (makeCopyFunc !== undefined) {
-                    let copyObj = makeCopyFunc(thisPtr);
-                    return copyObj;
+                const Func = cardVFuncMap.updateDescription;
+                if (Func !== undefined) {
+                    Func(thisPtr, playerClass);
                 }
             }
-            return PatchHelper.nullptr;
         },
+        getUpdatedDescription: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.getUpdatedDescription;
+                if (Func !== undefined) {
+                    return Func(thisPtr);
+                }
+            }
 
+            return NativeSTDLib.JString.Ctor("");
+        },
         onPlayCard: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => {
             let wrapRelic = new AbstractRelic(thisPtr);
             let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
             if (cardVFuncMap !== undefined) {
-                const onPlayCardFunc = cardVFuncMap.onPlayCard;
-                if (onPlayCardFunc !== undefined) {
-                    onPlayCardFunc(thisPtr, cardPtr, monsterPtr);
+                const Func = cardVFuncMap.onPlayCard;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr, monsterPtr);
+                }
+            }
+        },
+        onPreviewObtainCard: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onPreviewObtainCard;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr);
+                }
+            }
+        },
+        onObtainCard: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onObtainCard;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr);
+                }
+            }
+        },
+        onGainGold: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onGainGold;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onLoseGold: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onLoseGold;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onSpendGold: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onSpendGold;
+                if (Func !== undefined) {
+                    Func(thisPtr);
                 }
             }
         },
@@ -79,9 +179,9 @@ export class AbstractRelic extends NativeClassWrapper {
             let wrapRelic = new AbstractRelic(thisPtr);
             let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
             if (cardVFuncMap !== undefined) {
-                const onEquipFunc = cardVFuncMap.onEquip;
-                if (onEquipFunc !== undefined) {
-                    onEquipFunc(thisPtr);
+                const Func = cardVFuncMap.onEquip;
+                if (Func !== undefined) {
+                    Func(thisPtr);
                 }
             }
         },
@@ -89,9 +189,19 @@ export class AbstractRelic extends NativeClassWrapper {
             let wrapRelic = new AbstractRelic(thisPtr);
             let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
             if (cardVFuncMap !== undefined) {
-                const onUnequipFunc = cardVFuncMap.onUnequip;
-                if (onUnequipFunc !== undefined) {
-                    onUnequipFunc(thisPtr);
+                const Func = cardVFuncMap.onUnequip;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        atPreBattle: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atPreBattle;
+                if (Func !== undefined) {
+                    Func(thisPtr);
                 }
             }
         },
@@ -99,9 +209,29 @@ export class AbstractRelic extends NativeClassWrapper {
             let wrapRelic = new AbstractRelic(thisPtr);
             let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
             if (cardVFuncMap !== undefined) {
-                const atBattleStartFunc = cardVFuncMap.atBattleStart;
-                if (atBattleStartFunc !== undefined) {
-                    atBattleStartFunc(thisPtr);
+                const Func = cardVFuncMap.atBattleStart;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onSpawnMonster: (thisPtr: NativePointer, monsterPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onSpawnMonster;
+                if (Func !== undefined) {
+                    Func(thisPtr, monsterPtr);
+                }
+            }
+        },
+        atBattleStartPreDraw: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atBattleStartPreDraw;
+                if (Func !== undefined) {
+                    Func(thisPtr);
                 }
             }
         },
@@ -109,9 +239,19 @@ export class AbstractRelic extends NativeClassWrapper {
             let wrapRelic = new AbstractRelic(thisPtr);
             let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
             if (cardVFuncMap !== undefined) {
-                const atTurnStartFuc = cardVFuncMap.atTurnStart;
-                if (atTurnStartFuc !== undefined) {
-                    atTurnStartFuc(thisPtr);
+                const Func = cardVFuncMap.atTurnStart;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        atTurnStartPostDraw: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atTurnStartPostDraw;
+                if (Func !== undefined) {
+                    Func(thisPtr);
                 }
             }
         },
@@ -119,9 +259,49 @@ export class AbstractRelic extends NativeClassWrapper {
             let wrapRelic = new AbstractRelic(thisPtr);
             let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
             if (cardVFuncMap !== undefined) {
-                const onPlayerEndTurnFuc = cardVFuncMap.onPlayerEndTurn;
-                if (onPlayerEndTurnFuc !== undefined) {
-                    onPlayerEndTurnFuc(thisPtr);
+                const Func = cardVFuncMap.onPlayerEndTurn;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onBloodied: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onBloodied;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onNotBloodied: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onNotBloodied;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onManualDiscard: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onManualDiscard;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onUseCard: (thisPtr: NativePointer, cardPtr: NativePointer, useCardAction: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onUseCard;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr, useCardAction);
                 }
             }
         },
@@ -129,9 +309,97 @@ export class AbstractRelic extends NativeClassWrapper {
             let wrapRelic = new AbstractRelic(thisPtr);
             let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
             if (cardVFuncMap !== undefined) {
-                const onVictoryFuc = cardVFuncMap.onVictory;
-                if (onVictoryFuc !== undefined) {
-                    onVictoryFuc(thisPtr);
+                const Func = cardVFuncMap.onVictory;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onMonsterDeath: (thisPtr: NativePointer, monsterPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onMonsterDeath;
+                if (Func !== undefined) {
+                    Func(thisPtr, monsterPtr);
+                }
+            }
+        },
+        onBlockBroken: (thisPtr: NativePointer, creaturePtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onBlockBroken;
+                if (Func !== undefined) {
+                    Func(thisPtr, creaturePtr);
+                }
+            }
+        },
+        onPlayerGainedBlock: (thisPtr: NativePointer, blockAmount: number) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onPlayerGainedBlock;
+                if (Func !== undefined) {
+                    Func(thisPtr, blockAmount);
+                }
+            }
+
+            return blockAmount;
+        },
+        onPlayerHeal: (thisPtr: NativePointer, healAmount: number) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onPlayerHeal;
+                if (Func !== undefined) {
+                    return Func(thisPtr, healAmount);
+                }
+            }
+
+            return healAmount
+        },
+        onEnergyRecharge: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onEnergyRecharge;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        /** ArrayList\<AbstractCampfireOption\>* options */
+        addCampfireOption: (thisPtr: NativePointer, options: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.addCampfireOption;
+                if (Func !== undefined) {
+                    Func(thisPtr, options);
+                }
+            }
+        },
+        /** AbstractCampfireOption* option */
+        canUseCampfireOption: (thisPtr: NativePointer, option: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.canUseCampfireOption;
+                if (Func !== undefined) {
+                    return Func(thisPtr, option);
+                }
+            }
+
+            return Number(true);
+        },
+        onRest: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onRest;
+                if (Func !== undefined) {
+                    Func(thisPtr);
                 }
             }
         },
@@ -139,9 +407,19 @@ export class AbstractRelic extends NativeClassWrapper {
             let wrapRelic = new AbstractRelic(thisPtr);
             let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
             if (cardVFuncMap !== undefined) {
-                const onEnterRestRoomFuc = cardVFuncMap.onEnterRestRoom;
-                if (onEnterRestRoomFuc !== undefined) {
-                    onEnterRestRoomFuc(thisPtr);
+                const Func = cardVFuncMap.onEnterRestRoom;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onRefreshHand: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onRefreshHand;
+                if (Func !== undefined) {
+                    Func(thisPtr);
                 }
             }
         },
@@ -149,15 +427,326 @@ export class AbstractRelic extends NativeClassWrapper {
             let wrapRelic = new AbstractRelic(thisPtr);
             let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
             if (cardVFuncMap !== undefined) {
-                const onShuffleFuc = cardVFuncMap.onShuffle;
-                if (onShuffleFuc !== undefined) {
-                    onShuffleFuc(thisPtr);
+                const Func = cardVFuncMap.onShuffle;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onSmith: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onSmith;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onAttack: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number, targetCreature: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onAttack;
+                if (Func !== undefined) {
+                    Func(thisPtr, dmgInfo, damageAmount, targetCreature);
+                }
+            }
+        },
+        onAttacked: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onAttacked;
+                if (Func !== undefined) {
+                    return Func(thisPtr, dmgInfo, damageAmount);
+                }
+            }
+
+            return damageAmount;
+        },
+        onAttackedToChangeDamage: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onAttackedToChangeDamage;
+                if (Func !== undefined) {
+                    return Func(thisPtr, dmgInfo, damageAmount);
+                }
+            }
+
+            return damageAmount;
+        },
+        onAttackToChangeDamage: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onAttackToChangeDamage;
+                if (Func !== undefined) {
+                    return Func(thisPtr, dmgInfo, damageAmount);
+                }
+            }
+
+            return damageAmount;
+        },
+        onExhaust: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onExhaust;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr);
+                }
+            }
+        },
+        onTrigger: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onTrigger;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onTrigger2: (thisPtr: NativePointer, targetCreature: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onTrigger2;
+                if (Func !== undefined) {
+                    Func(thisPtr, targetCreature);
+                }
+            }
+        },
+        checkTrigger: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.checkTrigger;
+                if (Func !== undefined) {
+                    return Func(thisPtr, cardPtr);
+                }
+            }
+
+            return Number(false);
+        },
+        onEnterRoom: (thisPtr: NativePointer, roomPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onEnterRoom;
+                if (Func !== undefined) {
+                    Func(thisPtr, roomPtr);
+                }
+            }
+        },
+        justEnteredRoom: (thisPtr: NativePointer, roomPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.justEnteredRoom;
+                if (Func !== undefined) {
+                    Func(thisPtr, roomPtr);
+                }
+            }
+        },
+        onCardDraw: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onCardDraw;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr);
+                }
+            }
+        },
+        onChestOpen: (thisPtr: NativePointer, bossChest: boolean) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onChestOpen;
+                if (Func !== undefined) {
+                    Func(thisPtr, bossChest);
+                }
+            }
+        },
+        onChestOpenAfter: (thisPtr: NativePointer, bossChest: boolean) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onChestOpenAfter;
+                if (Func !== undefined) {
+                    Func(thisPtr, bossChest);
+                }
+            }
+        },
+        onDrawOrDiscard: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onDrawOrDiscard;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onMasterDeckChange: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onMasterDeckChange;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        atDamageModify: (thisPtr: NativePointer, damage: number, cardPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atDamageModify;
+                if (Func !== undefined) {
+                    return Func(thisPtr, damage, cardPtr);
+                }
+            }
+
+            return damage;
+        },
+        changeNumberOfCardsInReward: (thisPtr: NativePointer, numberOfCards: number) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.changeNumberOfCardsInReward;
+                if (Func !== undefined) {
+                    return Func(thisPtr, numberOfCards);
+                }
+            }
+
+            return numberOfCards;
+        },
+        changeRareCardRewardChance: (thisPtr: NativePointer, rareCardChance: number) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.changeRareCardRewardChance;
+                if (Func !== undefined) {
+                    return Func(thisPtr, rareCardChance);
+                }
+            }
+
+            return rareCardChance;
+        },
+        changeUncommonCardRewardChance: (thisPtr: NativePointer, uncommonCardChance: number) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.changeUncommonCardRewardChance;
+                if (Func !== undefined) {
+                    return Func(thisPtr, uncommonCardChance);
+                }
+            }
+
+            return uncommonCardChance;
+        },
+        canPlay: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.canPlay;
+                if (Func !== undefined) {
+                    return Func(thisPtr, cardPtr);
+                }
+            }
+
+            return Number(true);
+        },
+        makeCopy: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.makeCopy;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+
+            PatchHelper.LogV(wrapRelic.relicId + " miss register makeCopy vfunc???");
+            return PatchHelper.nullptr;
+        },
+        canSpawn: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.canSpawn;
+                if (Func !== undefined) {
+                    return Func(thisPtr);
+                }
+            }
+
+            return Number(true);
+        },
+        onUsePotion: (thisPtr: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onUsePotion;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onChangeStance: (thisPtr: NativePointer, oldStance: NativePointer, newStance: NativePointer) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onChangeStance;
+                if (Func !== undefined) {
+                    Func(thisPtr, oldStance, newStance);
+                }
+            }
+        },
+        onLoseHp: (thisPtr: NativePointer, damageAmount: number) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onLoseHp;
+                if (Func !== undefined) {
+                    Func(thisPtr, damageAmount);
+                }
+            }
+        },
+        onLoseHpLast: (thisPtr: NativePointer, damageAmount: number) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onLoseHpLast;
+                if (Func !== undefined) {
+                    return Func(thisPtr, damageAmount);
+                }
+            }
+
+            return damageAmount;
+        },
+        wasHPLost: (thisPtr: NativePointer, damageAmount: number) => {
+            let wrapRelic = new AbstractRelic(thisPtr);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.wasHPLost;
+                if (Func !== undefined) {
+                    Func(thisPtr, damageAmount);
                 }
             }
         },
     };
 
     static readonly #vfunctionMap = {
+        /**
+         * ```c
+         * void getUpdatedDescription(STS::AbstractRelic* thisPtr, PlayerClass playerClass)
+         * ```
+         */
+        updateDescription: new NativeFunctionInfo(0x80, 'void', ['pointer', 'uint32']),
         /**
          * ```c
          * STS::JString* getUpdatedDescription(STS::AbstractRelic* thisPtr)
@@ -224,6 +813,18 @@ export class AbstractRelic extends NativeClassWrapper {
         onPlayerHeal: new NativeFunctionInfo(0x168, 'void', ['pointer', 'int32']),
         //void AbstractRelic::onEnergyRecharge(STS::AbstractRelic* this)
         onEnergyRecharge: new NativeFunctionInfo(0x178, 'void', ['pointer']),
+        /**
+         * ```c
+         * void addCampfireOption(STS::AbstractRelic* this, ArrayList<AbstractCampfireOption>* options)
+         * ```
+         */
+        addCampfireOption: new NativeFunctionInfo(0x180, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void canUseCampfireOption(STS::AbstractRelic* this, AbstractCampfireOption* option)
+         * ```
+         */
+        canUseCampfireOption: new NativeFunctionInfo(0x188, 'void', ['pointer', 'pointer']),
         //void AbstractRelic::onRest(STS::AbstractRelic* this)
         onRest: new NativeFunctionInfo(0x190, 'void', ['pointer']),
         //void AbstractRelic::onEnterRestRoom(STS::AbstractRelic* this)
@@ -236,12 +837,94 @@ export class AbstractRelic extends NativeClassWrapper {
         onSmith: new NativeFunctionInfo(0x1B8, 'void', ['pointer']),
         //void AbstractRelic::onAttack(STS::AbstractRelic* this, STS::DamageInfo* info, int32_t damageAmount, STS::AbstractCreature* target)
         onAttack: new NativeFunctionInfo(0x1C0, 'void', ['pointer', 'pointer', 'int32', 'pointer']),
+        /**
+         * ```c
+         * int32_t AbstractRelic::onAttacked(STS::AbstractRelic* this, STS::DamageInfo* info, int32_t damageAmount)
+         * ```
+         */
+        onAttacked: new NativeFunctionInfo(0x1C8, 'int32', ['pointer', 'pointer', 'int32']),
+        /**
+         * ```c
+         * int32_t AbstractRelic::onAttackedToChangeDamage(STS::AbstractRelic* this, STS::DamageInfo* info, int32_t damageAmount)
+         * ```
+         */
+        onAttackedToChangeDamage: new NativeFunctionInfo(0x1D0, 'int32', ['pointer', 'pointer', 'int32']),
+        /**
+         * ```c
+         * int32_t AbstractRelic::onAttackToChangeDamage(STS::AbstractRelic* this, STS::DamageInfo* info, int32_t damageAmount)
+         * ```
+         */
+        onAttackToChangeDamage: new NativeFunctionInfo(0x1D8, 'int32', ['pointer', 'pointer', 'int32']),
+        /**
+         * ```c
+         * void AbstractRelic::onExhaust(STS::AbstractRelic* this, STS::AbstractCard* cardPtr)
+         * ```
+         */
+        onExhaust: new NativeFunctionInfo(0x1E0, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractRelic::onTrigger(STS::AbstractRelic* this)
+         * ```
+         */
+        onTrigger: new NativeFunctionInfo(0x1E8, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractRelic::onTrigger(STS::AbstractRelic* this, STS::AbstractCreature* targetCreature)
+         * ```
+         */
+        onTrigger2: new NativeFunctionInfo(0x1F0, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * bool AbstractRelic::checkTrigger(STS::AbstractRelic* this)
+         * ```
+         */
+        checkTrigger: new NativeFunctionInfo(0x1F8, 'bool', ['pointer']),
         //void AbstractRelic::onEnterRoom(STS::AbstractRelic* this, STS::AbstractRoom* room)
         onEnterRoom: new NativeFunctionInfo(0x200, 'void', ['pointer', 'pointer']),
+        //void AbstractRelic::justEnteredRoom(STS::AbstractRelic* this, STS::AbstractRoom* room)
+        justEnteredRoom: new NativeFunctionInfo(0x208, 'void', ['pointer', 'pointer']),
         //void AbstractRelic::onCardDraw(STS::AbstractRelic* this, STS::AbstractCard* drawnCard)
         onCardDraw: new NativeFunctionInfo(0x210, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractRelic::onChestOpen(STS::AbstractRelic* this, bool bossChest)
+         * ```
+         */
+        onChestOpen: new NativeFunctionInfo(0x218, 'void', ['pointer', 'bool']),
+        /**
+         * ```c
+         * void AbstractRelic::onChestOpen(STS::AbstractRelic* this, bool bool)
+         * ```
+         */
+        onChestOpenAfter: new NativeFunctionInfo(0x220, 'void', ['pointer', 'bool']),
         //void AbstractRelic::onDrawOrDiscard(STS::AbstractRelic* this)
         onDrawOrDiscard: new NativeFunctionInfo(0x228, 'void', ['pointer']),
+        //void AbstractRelic::onMasterDeckChange(STS::AbstractRelic* this)
+        onMasterDeckChange: new NativeFunctionInfo(0x230, 'void', ['pointer']),
+        /**
+         * ```c
+         * float AbstractRelic::atDamageModify(STS::AbstractRelic* this, float damage, STS::AbstractCard* cardPtr)
+         * ```
+         */
+        atDamageModify: new NativeFunctionInfo(0x238, 'float', ['pointer', 'float', 'pointer']),
+        /**
+         * ```c
+         * int32_t AbstractRelic::changeNumberOfCardsInReward(STS::AbstractRelic* this, int32_t numberOfCards)
+         * ```
+         */
+        changeNumberOfCardsInReward: new NativeFunctionInfo(0x240, 'int32', ['pointer', 'int32']),
+        /**
+         * ```c
+         * int32_t AbstractRelic::changeRareCardRewardChance(STS::AbstractRelic* this, int32_t rareCardChance)
+         * ```
+         */
+        changeRareCardRewardChance: new NativeFunctionInfo(0x248, 'int32', ['pointer', 'int32']),
+        /**
+         * ```c
+         * int32_t AbstractRelic::changeUncommonCardRewardChance(STS::AbstractRelic* this, int32_t uncommonCardChance)
+         * ```
+         */
+        changeUncommonCardRewardChance: new NativeFunctionInfo(0x250, 'int32', ['pointer', 'int32']),
         /**
          * ```c
          * void AbstractRelic::flash(STS::AbstractRelic* this)
@@ -252,12 +935,24 @@ export class AbstractRelic extends NativeClassWrapper {
         canPlay: new NativeFunctionInfo(0x2D0, 'bool', ['pointer', 'pointer']),
         /**
          * ```c
-         * STS::AbstractRelic* AbstractRelic::canPlay(STS::AbstractRelic* this)
+         * STS::AbstractRelic* AbstractRelic::makeCopy(STS::AbstractRelic* this)
          * ```
          */
         makeCopy: new NativeFunctionInfo(0x2E8, 'pointer', ['pointer']),
+        /**
+         * ```c
+         * bool AbstractRelic::canSpawn(STS::AbstractRelic* this)
+         * ```
+         */
+        canSpawn: new NativeFunctionInfo(0x300, 'bool', ['pointer']),
         //void AbstractRelic::onUsePotion(STS::AbstractRelic* this)
         onUsePotion: new NativeFunctionInfo(0x308, 'void', ['pointer']),
+        /**
+         * ```c
+         * bool AbstractRelic::canSpawn(STS::AbstractRelic* this, STS::AbstractStance* prevStance, STS::AbstractStance* newStance)
+         * ```
+         */
+        onChangeStance: new NativeFunctionInfo(0x310, 'void', ['pointer', 'pointer', 'pointer']),
         //void AbstractRelic::onLoseHp(STS::AbstractRelic* this, int damageAmount)
         onLoseHp: new NativeFunctionInfo(0x318, 'void', ['pointer', 'int32']),
         /**
@@ -272,6 +967,18 @@ export class AbstractRelic extends NativeClassWrapper {
          * ```
          */
         addToTop: new NativeFunctionInfo(0x330, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  int32_t AbstractRelic::onLoseHpLast(STS::AbstractRelic* this, int32_t damageAmount)
+         * ```
+         */
+        onLoseHpLast: new NativeFunctionInfo(0x338, 'int32', ['pointer', 'int32']),
+        /**
+         * ```c
+         *  void AbstractRelic::wasHPLost(STS::AbstractRelic* this, int32_t damageAmount)
+         * ```
+         */
+        wasHPLost: new NativeFunctionInfo(0x330, 'void', ['pointer', 'int32']),
     };
 
     static readonly #NewRelicImageTextureCache = new Map<string, NativePointer>();
@@ -313,28 +1020,131 @@ export class AbstractRelic extends NativeClassWrapper {
         }
 
         if (!AbstractRelic.#rewriteVFuncMap.has("AbstractRelicProxy")) {
-            let funcName = "AbstractRelic_BasicNewRelic_getUpdatedDescription";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), AbstractRelic.#vfunctionMap.getUpdatedDescription, AbstractRelic.#NewRelicVFuncProxys.getUpdatedDescription);
-            funcName = "AbstractRelic_BasicNewRelic_makeCopy";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), AbstractRelic.#vfunctionMap.makeCopy, AbstractRelic.#NewRelicVFuncProxys.makeCopy);
+            const VFuncMap = AbstractRelic.#vfunctionMap;
+            const VFuncProxys = AbstractRelic.#NewRelicVFuncProxys;
+            let funcName = "AbstractRelic_BasicNewRelic_updateDescription";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PU32_Func(funcName), VFuncMap.updateDescription, VFuncProxys.updateDescription);
+            funcName = "AbstractRelic_BasicNewRelic_getUpdatedDescription";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), VFuncMap.getUpdatedDescription, VFuncProxys.getUpdatedDescription);
             funcName = "AbstractRelic_BasicNewRelic_onPlayCard";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), AbstractRelic.#vfunctionMap.onPlayCard, AbstractRelic.#NewRelicVFuncProxys.onPlayCard);
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), VFuncMap.onPlayCard, VFuncProxys.onPlayCard);
+            funcName = "AbstractRelic_BasicNewRelic_onPreviewObtainCard";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onPreviewObtainCard, VFuncProxys.onPreviewObtainCard);
+            funcName = "AbstractRelic_BasicNewRelic_onObtainCard";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onObtainCard, VFuncProxys.onObtainCard);
+            funcName = "AbstractRelic_BasicNewRelic_onGainGold";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onGainGold, VFuncProxys.onGainGold);
+            funcName = "AbstractRelic_BasicNewRelic_onLoseGold";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onLoseGold, VFuncProxys.onLoseGold);
+            funcName = "AbstractRelic_BasicNewRelic_onSpendGold";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onSpendGold, VFuncProxys.onSpendGold);
             funcName = "AbstractRelic_BasicNewRelic_onEquip";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onEquip, AbstractRelic.#NewRelicVFuncProxys.onEquip);
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onEquip, VFuncProxys.onEquip);
             funcName = "AbstractRelic_BasicNewRelic_onUnequip";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onUnequip, AbstractRelic.#NewRelicVFuncProxys.onUnequip);
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onUnequip, VFuncProxys.onUnequip);
+            funcName = "AbstractRelic_BasicNewRelic_atPreBattle";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atPreBattle, VFuncProxys.atPreBattle);
             funcName = "AbstractRelic_BasicNewRelic_atBattleStart";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.atBattleStart, AbstractRelic.#NewRelicVFuncProxys.atBattleStart);
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atBattleStart, VFuncProxys.atBattleStart);
+            funcName = "AbstractRelic_BasicNewRelic_onSpawnMonster";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onSpawnMonster, VFuncProxys.onSpawnMonster);
+            funcName = "AbstractRelic_BasicNewRelic_atBattleStartPreDraw";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atBattleStartPreDraw, VFuncProxys.atBattleStartPreDraw);
             funcName = "AbstractRelic_BasicNewRelic_atTurnStart";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.atTurnStart, AbstractRelic.#NewRelicVFuncProxys.atTurnStart);
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atTurnStart, VFuncProxys.atTurnStart);
+            funcName = "AbstractRelic_BasicNewRelic_atTurnStartPostDraw";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atTurnStartPostDraw, VFuncProxys.atTurnStartPostDraw);
             funcName = "AbstractRelic_BasicNewRelic_onPlayerEndTurn";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onPlayerEndTurn, AbstractRelic.#NewRelicVFuncProxys.onPlayerEndTurn);
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onPlayerEndTurn, VFuncProxys.onPlayerEndTurn);
+            funcName = "AbstractRelic_BasicNewRelic_onBloodied";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onBloodied, VFuncProxys.onBloodied);
+            funcName = "AbstractRelic_BasicNewRelic_onNotBloodied";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onNotBloodied, VFuncProxys.onNotBloodied);
+            funcName = "AbstractRelic_BasicNewRelic_onManualDiscard";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onManualDiscard, VFuncProxys.onManualDiscard);
+            funcName = "AbstractRelic_BasicNewRelic_onUseCard";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), VFuncMap.onUseCard, VFuncProxys.onUseCard);
             funcName = "AbstractRelic_BasicNewRelic_onVictory";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onVictory, AbstractRelic.#NewRelicVFuncProxys.onVictory);
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onVictory, VFuncProxys.onVictory);
+            funcName = "AbstractRelic_BasicNewRelic_onMonsterDeath";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onMonsterDeath, VFuncProxys.onMonsterDeath);
+            funcName = "AbstractRelic_BasicNewRelic_onBlockBroken";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onBlockBroken, VFuncProxys.onBlockBroken);
+            funcName = "AbstractRelic_BasicNewRelic_onPlayerGainedBlock";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.onPlayerGainedBlock, VFuncProxys.onPlayerGainedBlock);
+            funcName = "AbstractRelic_BasicNewRelic_onPlayerHeal";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.onPlayerHeal, VFuncProxys.onPlayerHeal);
+            funcName = "AbstractRelic_BasicNewRelic_onEnergyRecharge";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onEnergyRecharge, VFuncProxys.onEnergyRecharge);
+            funcName = "AbstractRelic_BasicNewRelic_addCampfireOption";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.addCampfireOption, VFuncProxys.addCampfireOption);
+            funcName = "AbstractRelic_BasicNewRelic_canUseCampfireOption";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_PP_Func(funcName), VFuncMap.canUseCampfireOption, VFuncProxys.canUseCampfireOption);
+            funcName = "AbstractRelic_BasicNewRelic_onRest";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onRest, VFuncProxys.onRest);
             funcName = "AbstractRelic_BasicNewRelic_onEnterRestRoom";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onEnterRestRoom, AbstractRelic.#NewRelicVFuncProxys.onEnterRestRoom);
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onEnterRestRoom, VFuncProxys.onEnterRestRoom);
+            funcName = "AbstractRelic_BasicNewRelic_onRefreshHand";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onRefreshHand, VFuncProxys.onRefreshHand);
             funcName = "AbstractRelic_BasicNewRelic_onShuffle";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractRelic.#vfunctionMap.onShuffle, AbstractRelic.#NewRelicVFuncProxys.onShuffle);
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onShuffle, VFuncProxys.onShuffle);
+            funcName = "AbstractRelic_BasicNewRelic_onSmith";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onSmith, VFuncProxys.onSmith);
+            funcName = "AbstractRelic_BasicNewRelic_onAttack";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPI32P_Func(funcName), VFuncMap.onAttack, VFuncProxys.onAttack);
+            funcName = "AbstractRelic_BasicNewRelic_onAttacked";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PPI32_Func(funcName), VFuncMap.onAttacked, VFuncProxys.onAttacked);
+            funcName = "AbstractRelic_BasicNewRelic_onAttackedToChangeDamage";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PPI32_Func(funcName), VFuncMap.onAttackedToChangeDamage, VFuncProxys.onAttackedToChangeDamage);
+            funcName = "AbstractRelic_BasicNewRelic_onAttackToChangeDamage";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PPI32_Func(funcName), VFuncMap.onAttackToChangeDamage, VFuncProxys.onAttackToChangeDamage);
+            funcName = "AbstractRelic_BasicNewRelic_onExhaust";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onExhaust, VFuncProxys.onExhaust);
+            funcName = "AbstractRelic_BasicNewRelic_onTrigger";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onTrigger, VFuncProxys.onTrigger);
+            funcName = "AbstractRelic_BasicNewRelic_onTrigger2";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onTrigger2, VFuncProxys.onTrigger2);
+            funcName = "AbstractRelic_BasicNewRelic_checkTrigger";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.checkTrigger, VFuncProxys.checkTrigger);
+            funcName = "AbstractRelic_BasicNewRelic_onEnterRoom";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onEnterRoom, VFuncProxys.onEnterRoom);
+            funcName = "AbstractRelic_BasicNewRelic_justEnteredRoom";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.justEnteredRoom, VFuncProxys.justEnteredRoom);
+            funcName = "AbstractRelic_BasicNewRelic_onCardDraw";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onCardDraw, VFuncProxys.onCardDraw);
+            funcName = "AbstractRelic_BasicNewRelic_onChestOpen";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PB_Func(funcName), VFuncMap.onChestOpen, VFuncProxys.onChestOpen);
+            funcName = "AbstractRelic_BasicNewRelic_onChestOpenAfter";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PB_Func(funcName), VFuncMap.onChestOpenAfter, VFuncProxys.onChestOpenAfter);
+            funcName = "AbstractRelic_BasicNewRelic_onDrawOrDiscard";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onDrawOrDiscard, VFuncProxys.onDrawOrDiscard);
+            funcName = "AbstractRelic_BasicNewRelic_onMasterDeckChange";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onMasterDeckChange, VFuncProxys.onMasterDeckChange);
+            funcName = "AbstractRelic_BasicNewRelic_atDamageModify";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32P_Func(funcName), VFuncMap.atDamageModify, VFuncProxys.atDamageModify);
+            funcName = "AbstractRelic_BasicNewRelic_changeNumberOfCardsInReward";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.changeNumberOfCardsInReward, VFuncProxys.changeNumberOfCardsInReward);
+            funcName = "AbstractRelic_BasicNewRelic_changeRareCardRewardChance";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.changeRareCardRewardChance, VFuncProxys.changeRareCardRewardChance);
+            funcName = "AbstractRelic_BasicNewRelic_changeUncommonCardRewardChance";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.changeUncommonCardRewardChance, VFuncProxys.changeUncommonCardRewardChance);
+            funcName = "AbstractRelic_BasicNewRelic_canPlay";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.canPlay, VFuncProxys.canPlay);
+            funcName = "AbstractRelic_BasicNewRelic_makeCopy";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), VFuncMap.makeCopy, VFuncProxys.makeCopy);
+            funcName = "AbstractRelic_BasicNewRelic_canSpawn";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_P_Func(funcName), VFuncMap.canSpawn, VFuncProxys.canSpawn);
+            funcName = "AbstractRelic_BasicNewRelic_onUsePotion";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onUsePotion, VFuncProxys.onUsePotion);
+            funcName = "AbstractRelic_BasicNewRelic_onChangeStance";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), VFuncMap.onChangeStance, VFuncProxys.onChangeStance);
+            funcName = "AbstractRelic_BasicNewRelic_onLoseHp";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PI32_Func(funcName), VFuncMap.onLoseHp, VFuncProxys.onLoseHp);
+            funcName = "AbstractRelic_BasicNewRelic_onLoseHpLast";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.onLoseHpLast, VFuncProxys.onLoseHpLast);
+            funcName = "AbstractRelic_BasicNewRelic_wasHPLost";
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PI32_Func(funcName), VFuncMap.wasHPLost, VFuncProxys.wasHPLost);
+
             AbstractRelic.#rewriteVFuncMap.set("AbstractRelicProxy", AbstractRelic.#NewRelicVFuncProxys);
         }
 

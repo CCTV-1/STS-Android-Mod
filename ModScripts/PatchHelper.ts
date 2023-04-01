@@ -74,6 +74,10 @@ export class PatchHelper {
         V_PI32_Func(funcName: string) {
             return "void " + funcName + "(void * arg1, int arg2) { return ; }";
         },
+        /**if unsigned int != uint32_t, this func not work. */
+        V_PU32_Func(funcName: string) {
+            return "void " + funcName + "(void * arg1, unsigned int arg2) { return ; }";
+        },
         V_PF_Func(funcName: string) {
             return "void " + funcName + "(void * arg1, float arg2) { return ; }";
         },
@@ -95,6 +99,9 @@ export class PatchHelper {
         },
         P_P_Func(funcName: string) {
             return "void* " + funcName + "(void * arg1) { return (void *)0; }";
+        },
+        B_P_Func(funcName: string) {
+            return "char " + funcName + "(void * arg1) { return 0; }";
         },
         /** CModule compile don't support stdc20,if want use bool need include header file. */
         B_PP_Func(funcName: string) {
