@@ -30,6 +30,14 @@ export enum CardRarity {
     CURSE,
 };
 
+export enum CardTags {
+    HEALING = 0x0,
+    STRIKE,
+    EMPTY,
+    STARTER_DEFEND,
+    STARTER_STRIKE
+};
+
 export enum CardColor {
     RED = 0,
     GREEN,
@@ -203,11 +211,11 @@ export enum GDXFileType {
 };
 
 export enum GDXPixMapFormat {
-    Alpha = 0x0, 
-    Intensity, 
-    LuminanceAlpha, 
-    RGB565, 
-    RGBA4444, 
-    RGB888, 
+    Alpha = 0x0,
+    Intensity,
+    LuminanceAlpha,
+    RGB565,
+    RGBA4444,
+    RGB888,
     RGBA8888
 };

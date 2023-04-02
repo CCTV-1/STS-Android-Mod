@@ -1,9 +1,10 @@
-import { CardColor, CardRarity, CardTarget, DamageType, CardType } from "../enums.js";
+import { CardColor, CardRarity, CardTarget, DamageType, CardType, CardTags } from "../enums.js";
 import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
+import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 
 /**
  * thisPtr will is ```nullptr```.
@@ -11,8 +12,34 @@ import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
 export type STSCardCtor = (thisPtr: NativePointer) => NativePointer;
 
 export interface NewCardVFuncType {
-    use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => void,
+    canUpgrade?: (thisPtr: NativePointer) => number,
     upgrade: (thisPtr: NativePointer) => void,
+    onRemoveFromMasterDeck?: (thisPtr: NativePointer) => void,
+    tookDamage?: (thisPtr: NativePointer) => void,
+    didDiscard?: (thisPtr: NativePointer) => void,
+    switchedStance?: (thisPtr: NativePointer) => void,
+    canPlay?: (thisPtr: NativePointer, cardPtr: NativePointer) => number,
+    canUse?: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => number,
+    use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => void,
+    onMoveToDiscard?: (thisPtr: NativePointer) => void,
+    triggerWhenDrawn?: (thisPtr: NativePointer) => void,
+    triggerWhenCopied?: (thisPtr: NativePointer) => void,
+    triggerOnEndOfPlayerTurn?: (thisPtr: NativePointer) => void,
+    triggerOnEndOfTurnForPlayingCard?: (thisPtr: NativePointer) => void,
+    triggerOnOtherCardPlayed?: (thisPtr: NativePointer, cardPtr: NativePointer) => void,
+    triggerOnGainEnergy?: (thisPtr: NativePointer, energyCount: number, dueToCard: boolean) => void,
+    triggerOnManualDiscard?: (thisPtr: NativePointer) => void,
+    triggerOnCardPlayed?: (thisPtr: NativePointer, cardPtr: NativePointer) => void,
+    triggerOnScry?: (thisPtr: NativePointer) => void,
+    triggerExhaustedCardsOnStanceChange?: (thisPtr: NativePointer, newStance: NativePointer) => void,
+    triggerAtStartOfTurn?: (thisPtr: NativePointer) => void,
+    onPlayCard?: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => void,
+    atTurnStart?: (thisPtr: NativePointer) => void,
+    atTurnStartPreDraw?: (thisPtr: NativePointer) => void,
+    onChoseThisOption?: (thisPtr: NativePointer) => void,
+    onRetained?: (thisPtr: NativePointer) => void,
+    triggerOnExhaust?: (thisPtr: NativePointer) => void,
+    triggerOnGlowCheck?: (thisPtr: NativePointer) => void,
     makeCopy: (thisPtr: NativePointer) => NativePointer,
 };
 
@@ -28,6 +55,102 @@ export class AbstractCard extends NativeClassWrapper {
     static #rewriteVFuncMap = new Map<string, NewCardVFuncType>();
 
     static readonly #NewCardVFuncProxys: NewCardVFuncType = {
+        canUpgrade: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.canUpgrade;
+                if (Func !== undefined) {
+                    return Func(thisPtr);
+                }
+            }
+
+            //default logic
+            if ((wrapCard.type != CardType.CURSE) && (wrapCard.type != CardType.STATUS) && (!wrapCard.upgraded)) {
+                return Number(true);
+            }
+
+            return Number(false);
+        },
+        upgrade: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.upgrade;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onRemoveFromMasterDeck: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onRemoveFromMasterDeck;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        tookDamage: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.tookDamage;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        didDiscard: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.didDiscard;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        switchedStance: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.switchedStance;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        canPlay: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.canPlay;
+                if (Func !== undefined) {
+                    return Func(thisPtr, cardPtr);
+                }
+            }
+
+            return Number(true);
+        },
+        canUse: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.canUse;
+                if (Func !== undefined) {
+                    return Func(thisPtr, playerPtr, monsterPtr);
+                }
+            }
+
+            //default logic
+            const currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+            const check1: boolean = (wrapCard.type != CardType.STATUS || wrapCard.costForTurn >= -1 || currentPlayer.hasRelic("Medical Kit"))
+            const check2: boolean = (wrapCard.type != CardType.CURSE || wrapCard.costForTurn >= -1 || currentPlayer.hasRelic("Blue Candle"))
+            const check3: boolean = (wrapCard.cardPlayable(monsterPtr) && wrapCard.hasEnoughEnergy());
+            return Number(check1 && check2 && check3);
+        },
         use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
             let wrapCard = new AbstractCard(thisPtr);
             let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
@@ -38,13 +161,200 @@ export class AbstractCard extends NativeClassWrapper {
                 }
             }
         },
-        upgrade: (thisPtr: NativePointer) => {
+        onMoveToDiscard: (thisPtr: NativePointer) => {
             let wrapCard = new AbstractCard(thisPtr);
             let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
             if (cardVFuncMap !== undefined) {
-                const upgradeFunc = cardVFuncMap.upgrade;
-                if (upgradeFunc !== undefined) {
-                    upgradeFunc(thisPtr);
+                const Func = cardVFuncMap.onMoveToDiscard;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        triggerWhenDrawn: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerWhenDrawn;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        triggerWhenCopied: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerWhenCopied;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        triggerOnEndOfPlayerTurn: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerOnEndOfPlayerTurn;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+
+            //default logic
+            if (wrapCard.isEthereal) {
+                let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+                let axhaustSpecificCardAction = NativeActions.common.ExhaustSpecificCard.Ctor(thisPtr, currentPlayer.hand.rawPtr, true);
+                wrapCard.addToBot(axhaustSpecificCardAction);
+            }
+        },
+        triggerOnEndOfTurnForPlayingCard: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerOnEndOfTurnForPlayingCard;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        triggerOnOtherCardPlayed: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerOnOtherCardPlayed;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr);
+                }
+            }
+        },
+        triggerOnGainEnergy: (thisPtr: NativePointer, energyCount: number, dueToCard: boolean) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerOnGainEnergy;
+                if (Func !== undefined) {
+                    Func(thisPtr, energyCount, dueToCard);
+                }
+            }
+        },
+        triggerOnManualDiscard: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerOnManualDiscard;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        triggerOnCardPlayed: (thisPtr: NativePointer, cardPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerOnCardPlayed;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr);
+                }
+            }
+        },
+        triggerOnScry: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerOnScry;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        triggerExhaustedCardsOnStanceChange: (thisPtr: NativePointer, newStance: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerExhaustedCardsOnStanceChange;
+                if (Func !== undefined) {
+                    Func(thisPtr, newStance);
+                }
+            }
+        },
+        triggerAtStartOfTurn: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerAtStartOfTurn;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onPlayCard: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onPlayCard;
+                if (Func !== undefined) {
+                    Func(thisPtr, cardPtr, monsterPtr);
+                }
+            }
+        },
+        atTurnStart: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atTurnStart;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        atTurnStartPreDraw: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atTurnStartPreDraw;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onChoseThisOption: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onChoseThisOption;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        onRetained: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.onRetained;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        triggerOnExhaust: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerOnExhaust;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        triggerOnGlowCheck: (thisPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.triggerOnGlowCheck;
+                if (Func !== undefined) {
+                    Func(thisPtr);
                 }
             }
         },
@@ -59,10 +369,16 @@ export class AbstractCard extends NativeClassWrapper {
                 }
             }
             return PatchHelper.nullptr;
-        }
+        },
     }
 
     static readonly #vfunctionMap = {
+        /**
+         * ```c
+         * bool AbstractCard::hasTag(STS::AbstractCard* this, CardTags tagToCheck)
+         * ```
+         */
+        hasTag:  new NativeFunctionInfo(0x48, 'bool', ['pointer', 'uint32']),
         /**
          * ```c
          *  bool AbstractCard::canUpgrade(STS::AbstractCard* this)
@@ -113,10 +429,190 @@ export class AbstractCard extends NativeClassWrapper {
         makeStatEquivalentCopy: new NativeFunctionInfo(0x98, 'pointer', ['pointer']),
         /**
          * ```c
+         *  void AbstractCard::onRemoveFromMasterDeck(STS::AbstractCard* this)
+         * ```
+         */
+        onRemoveFromMasterDeck: new NativeFunctionInfo(0xA0, 'void', ['pointer']),
+        /**
+         * ```c
+         *  bool AbstractCard::onRemoveFromMasterDeck(STS::AbstractCard* this, STS::AbstractMonster* monsterPtr)
+         * ```
+         */
+        cardPlayable: new NativeFunctionInfo(0xA8, 'bool', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  bool AbstractCard::hasEnoughEnergy(STS::AbstractCard* this)
+         * ```
+         */
+        hasEnoughEnergy: new NativeFunctionInfo(0xB0, 'bool', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::tookDamage(STS::AbstractCard* this)
+         * ```
+         */
+        tookDamage: new NativeFunctionInfo(0xB8, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::tookDamage(STS::AbstractCard* this)
+         * ```
+         */
+        didDiscard: new NativeFunctionInfo(0xC0, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::switchedStance(STS::AbstractCard* this)
+         * ```
+         */
+        switchedStance: new NativeFunctionInfo(0xC8, 'void', ['pointer']),
+        /**
+         * ```c
+         *  bool AbstractCard::switchedStance(STS::AbstractCard* this, STS::AbstractCard * cardPtr)
+         * ```
+         */
+        canPlay: new NativeFunctionInfo(0xE0, 'bool', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  bool AbstractCard::switchedStance(STS::AbstractCard* this, STS::AbstractPlayer * plyaerPtr, STS::AbstractMonster* MonsterPtr)
+         * ```
+         */
+        canUse: new NativeFunctionInfo(0xE8, 'bool', ['pointer', 'pointer', 'pointer']),
+        /**
+         * ```c
          * void AbstractCard::use(STS::AbstractCard* this, STS::AbstractPlayer* p, STS::AbstractMonster* m)
          * ```
          */
         use: new NativeFunctionInfo(0xF0, 'pointer', ['pointer', 'pointer', 'pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::onMoveToDiscard(STS::AbstractCard* this)
+         * ```
+         */
+        onMoveToDiscard: new NativeFunctionInfo(0x1C0, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerWhenDrawn(STS::AbstractCard* this)
+         * ```
+         */
+        triggerWhenDrawn: new NativeFunctionInfo(0x1E0, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerWhenCopied(STS::AbstractCard* this)
+         * ```
+         */
+        triggerWhenCopied: new NativeFunctionInfo(0x1E8, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerOnEndOfPlayerTurn(STS::AbstractCard* this)
+         * ```
+         */
+        triggerOnEndOfPlayerTurn: new NativeFunctionInfo(0x1F0, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerOnEndOfTurnForPlayingCard(STS::AbstractCard* this)
+         * ```
+         */
+        triggerOnEndOfTurnForPlayingCard: new NativeFunctionInfo(0x1F8, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerOnOtherCardPlayed(STS::AbstractCard* this, STS::AbstractCard* cardPtr)
+         * ```
+         */
+        triggerOnOtherCardPlayed: new NativeFunctionInfo(0x1F8, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * void AbstractCard::triggerOnGainEnergy(STS::AbstractCard* this, int32_t energyCount, bool dueToCard)
+         * ```
+         */
+        triggerOnGainEnergy: new NativeFunctionInfo(0x208, 'void', ['pointer', 'int32', 'bool']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerOnManualDiscard(STS::AbstractCard* this)
+         * ```
+         */
+        triggerOnManualDiscard: new NativeFunctionInfo(0x210, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerOnCardPlayed(STS::AbstractCard* this, STS::AbstractCard* cardPlayed)
+         * ```
+         */
+        triggerOnCardPlayed: new NativeFunctionInfo(0x218, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerOnScry(STS::AbstractCard* this)
+         * ```
+         */
+        triggerOnScry: new NativeFunctionInfo(0x220, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerExhaustedCardsOnStanceChange(STS::AbstractCard* this, STS::AbstractStance* newStance)
+         * ```
+         */
+        triggerExhaustedCardsOnStanceChange: new NativeFunctionInfo(0x228, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerAtStartOfTurn(STS::AbstractCard* this)
+         * ```
+         */
+        triggerAtStartOfTurn: new NativeFunctionInfo(0x230, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerExhaustedCardsOnStanceChange(STS::AbstractCard* this, STS::AbstractCard* cardPtr, STS::AbstractMonster* monsterPtr)
+         * ```
+         */
+        onPlayCard: new NativeFunctionInfo(0x238, 'void', ['pointer', 'pointer', 'pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::atTurnStart(STS::AbstractCard* this)
+         * ```
+         */
+        atTurnStart: new NativeFunctionInfo(0x240, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::atTurnStartPreDraw(STS::AbstractCard* this)
+         * ```
+         */
+        atTurnStartPreDraw: new NativeFunctionInfo(0x248, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::onChoseThisOption(STS::AbstractCard* this)
+         * ```
+         */
+        onChoseThisOption: new NativeFunctionInfo(0x250, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::onRetained(STS::AbstractCard* this)
+         * ```
+         */
+        onRetained: new NativeFunctionInfo(0x258, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerOnExhaust(STS::AbstractCard* this)
+         * ```
+         */
+        triggerOnExhaust: new NativeFunctionInfo(0x260, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::superFlash(STS::AbstractCard* this, GDX::Color* color)
+         * ```
+         */
+        superFlash: new NativeFunctionInfo(0x2B0, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::flash(STS::AbstractCard* this)
+         * ```
+         */
+        superFlash2: new NativeFunctionInfo(0x2B8, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::flash(STS::AbstractCard* this)
+         * ```
+         */
+        flash: new NativeFunctionInfo(0x2C0, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::flash(STS::AbstractCard* this, GDX::Color* color)
+         * ```
+         */
+        flash2: new NativeFunctionInfo(0x2C8, 'void', ['pointer', 'pointer']),
         /**
          * ```c
          *  void AbstractCard::addToTop(STS::AbstractCard* this, STS::AbstractGameAction* actionPtr)
@@ -129,6 +625,12 @@ export class AbstractCard extends NativeClassWrapper {
          * ```
          */
         addToTop: new NativeFunctionInfo(0x300, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::triggerOnGlowCheck(STS::AbstractCard* this)
+         * ```
+         */
+        triggerOnGlowCheck: new NativeFunctionInfo(0x330, 'void', ['pointer']),
         /**
          * ```c
          * STS::AbstractCard* AbstractCard::makeCopy(STS::AbstractCard* this)
@@ -150,17 +652,73 @@ export class AbstractCard extends NativeClassWrapper {
         }
 
         if (!AbstractCard.#rewriteVFuncMap.has("AbstractCardProxy")) {
-            let funcName = "AbstractCard_BasicNewCard_use";
-            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, AbstractCard.#NewCardVFuncProxys.use);
+            const VFuncMap = AbstractCard.#vfunctionMap;
+            const VFuncProxys = AbstractCard.#NewCardVFuncProxys;
+            let funcName = "AbstractCard_BasicNewCard_canUpgrade";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_P_Func(funcName), VFuncMap.canUpgrade, VFuncProxys.canUpgrade);
             funcName = "AbstractCard_BasicNewCard_upgrade";
-            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractCard.#vfunctionMap.upgrade, AbstractCard.#NewCardVFuncProxys.upgrade);
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.upgrade, VFuncProxys.upgrade);
+            funcName = "AbstractCard_BasicNewCard_onRemoveFromMasterDeck";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onRemoveFromMasterDeck, VFuncProxys.onRemoveFromMasterDeck);
+            funcName = "AbstractCard_BasicNewCard_tookDamage";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.tookDamage, VFuncProxys.tookDamage);
+            funcName = "AbstractCard_BasicNewCard_didDiscard";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.didDiscard, VFuncProxys.didDiscard);
+            funcName = "AbstractCard_BasicNewCard_switchedStance";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.switchedStance, VFuncProxys.switchedStance);
+            funcName = "AbstractCard_BasicNewCard_canPlay";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_PP_Func(funcName), VFuncMap.canPlay, VFuncProxys.canPlay);
+            funcName = "AbstractCard_BasicNewCard_use";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), VFuncMap.use, VFuncProxys.use);
+            funcName = "AbstractCard_BasicNewCard_onMoveToDiscard";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onMoveToDiscard, VFuncProxys.onMoveToDiscard);
+            funcName = "AbstractCard_BasicNewCard_triggerWhenDrawn";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.triggerWhenDrawn, VFuncProxys.triggerWhenDrawn);
+            funcName = "AbstractCard_BasicNewCard_triggerWhenCopied";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.triggerWhenCopied, VFuncProxys.triggerWhenCopied);
+            funcName = "AbstractCard_BasicNewCard_triggerOnEndOfPlayerTurn";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.triggerOnEndOfPlayerTurn, VFuncProxys.triggerOnEndOfPlayerTurn);
+            funcName = "AbstractCard_BasicNewCard_triggerOnEndOfTurnForPlayingCard";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.triggerOnEndOfTurnForPlayingCard, VFuncProxys.triggerOnEndOfTurnForPlayingCard);
+            funcName = "AbstractCard_BasicNewCard_triggerOnOtherCardPlayed";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.triggerOnOtherCardPlayed, VFuncProxys.triggerOnOtherCardPlayed);
+            funcName = "AbstractCard_BasicNewCard_triggerOnGainEnergy";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PI32B_Func(funcName), VFuncMap.triggerOnGainEnergy, VFuncProxys.triggerOnGainEnergy);
+            funcName = "AbstractCard_BasicNewCard_triggerOnManualDiscard";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.triggerOnManualDiscard, VFuncProxys.triggerOnManualDiscard);
+            funcName = "AbstractCard_BasicNewCard_triggerOnCardPlayed";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.triggerOnCardPlayed, VFuncProxys.triggerOnCardPlayed);
+            funcName = "AbstractCard_BasicNewCard_triggerOnScry";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.triggerOnScry, VFuncProxys.triggerOnScry);
+            funcName = "AbstractCard_BasicNewCard_triggerExhaustedCardsOnStanceChange";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.triggerExhaustedCardsOnStanceChange, VFuncProxys.triggerExhaustedCardsOnStanceChange);
+            funcName = "AbstractCard_BasicNewCard_triggerAtStartOfTurn";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.triggerAtStartOfTurn, VFuncProxys.triggerAtStartOfTurn);
+            funcName = "AbstractCard_BasicNewCard_onPlayCard";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), VFuncMap.onPlayCard, VFuncProxys.onPlayCard);
+            funcName = "AbstractCard_BasicNewCard_atTurnStart";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atTurnStart, VFuncProxys.atTurnStart);
+            funcName = "AbstractCard_BasicNewCard_atTurnStartPreDraw";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atTurnStartPreDraw, VFuncProxys.atTurnStartPreDraw);
+            funcName = "AbstractCard_BasicNewCard_onChoseThisOption";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onChoseThisOption, VFuncProxys.onChoseThisOption);
+            funcName = "AbstractCard_BasicNewCard_onRetained";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onRetained, VFuncProxys.onRetained);
+            funcName = "AbstractCard_BasicNewCard_triggerOnExhaust";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.triggerOnExhaust, VFuncProxys.triggerOnExhaust);
+            funcName = "AbstractCard_BasicNewCard_triggerOnGlowCheck";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.triggerOnGlowCheck, VFuncProxys.triggerOnGlowCheck);
             funcName = "AbstractCard_BasicNewCard_makeCopy";
-            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeCopy, AbstractCard.#NewCardVFuncProxys.makeCopy);
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), VFuncMap.makeCopy, VFuncProxys.makeCopy);
             AbstractCard.#rewriteVFuncMap.set("AbstractCardProxy", AbstractCard.#NewCardVFuncProxys);
         }
 
         return wrapCard;
     };
+
+    hasTag(tag: CardTags): boolean {
+        return this.getVirtualFunction(AbstractCard.#vfunctionMap.hasTag)(this.rawPtr, Number(tag)); 
+    }
 
     canUpgrade(): boolean {
         let canUpgradeFunc = this.getVirtualFunction(AbstractCard.#vfunctionMap.canUpgrade);
@@ -204,9 +762,31 @@ export class AbstractCard extends NativeClassWrapper {
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeStatEquivalentCopy, newVFunc);
     }
 
+    cardPlayable(monsterPtr: NativePointer): boolean {
+        return this.getVirtualFunction(AbstractCard.#vfunctionMap.cardPlayable)(this.rawPtr, monsterPtr);
+    }
+
+    hasEnoughEnergy(): boolean {
+        return this.getVirtualFunction(AbstractCard.#vfunctionMap.hasEnoughEnergy)(this.rawPtr);
+    }
+
     Overrideuse(newVFunc: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => void) {
         let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_use").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, newVFunc);
+    }
+
+    superFlash(colorPtr: NativePointer)  {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.superFlash)(this.rawPtr, colorPtr);
+    }
+    superFlash2()  {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.superFlash2)(this.rawPtr);
+    }
+
+    flash()  {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.flash)(this.rawPtr);
+    }
+    flash2(colorPtr: NativePointer)  {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.flash2)(this.rawPtr, colorPtr);
     }
 
     addToBot(actionPtr: NativePointer): void {

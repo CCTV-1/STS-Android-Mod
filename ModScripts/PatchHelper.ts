@@ -74,6 +74,9 @@ export class PatchHelper {
         V_PI32_Func(funcName: string) {
             return "void " + funcName + "(void * arg1, int arg2) { return ; }";
         },
+        V_PI32B_Func(funcName: string) {
+            return "void " + funcName + "(void * arg1, int arg2, char arg3) { return ; }";
+        },
         /**if unsigned int != uint32_t, this func not work. */
         V_PU32_Func(funcName: string) {
             return "void " + funcName + "(void * arg1, unsigned int arg2) { return ; }";

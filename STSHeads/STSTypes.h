@@ -166,6 +166,15 @@ namespace STS
         HP_LOSS = 0x2,
     };
 
+    enum class CardTags:uint32_t
+    {
+        HEALING = 0x0,
+        STRIKE,
+        EMPTY,
+        STARTER_DEFEND,
+        STARTER_STRIKE
+    };
+
     enum class CardType:uint32_t
     {
         ATTACK = 0x0,
