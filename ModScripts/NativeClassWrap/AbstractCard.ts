@@ -368,6 +368,8 @@ export class AbstractCard extends NativeClassWrapper {
                     return copyObj;
                 }
             }
+
+            PatchHelper.LogV(wrapCard.cardID + " miss register Card::makeCopy vfunc???");
             return PatchHelper.nullptr;
         },
     }

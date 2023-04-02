@@ -671,7 +671,7 @@ export class AbstractRelic extends NativeClassWrapper {
                 }
             }
 
-            PatchHelper.LogV(wrapRelic.relicId + " miss register makeCopy vfunc???");
+            PatchHelper.LogV(wrapRelic.relicId + " miss register Relic::makeCopy vfunc???");
             return PatchHelper.nullptr;
         },
         canSpawn: (thisPtr: NativePointer) => {
