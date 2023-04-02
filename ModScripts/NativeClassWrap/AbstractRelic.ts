@@ -341,7 +341,7 @@ export class AbstractRelic extends NativeClassWrapper {
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onPlayerGainedBlock;
                 if (Func !== undefined) {
-                    Func(thisPtr, blockAmount);
+                    return Func(thisPtr, blockAmount);
                 }
             }
 
@@ -805,12 +805,12 @@ export class AbstractRelic extends NativeClassWrapper {
         onMonsterDeath: new NativeFunctionInfo(0x148, 'void', ['pointer', 'pointer']),
         //void AbstractRelic::onBlockBroken(STS::AbstractRelic* this, STS::AbstractCreature * monsterPtr)
         onBlockBroken: new NativeFunctionInfo(0x150, 'void', ['pointer', 'pointer']),
-        //void AbstractRelic::onPlayerGainedBlock(STS::AbstractRelic* this, float blockAmount)
-        //onPlayerGainedBlockFloat: new NativeFunctionInfo(0x158, 'void', ['pointer', 'float']),
-        //void AbstractRelic::onPlayerGainedBlock(STS::AbstractRelic* this, int32_t blockAmount)
-        onPlayerGainedBlock: new NativeFunctionInfo(0x160, 'void', ['pointer', 'int32']),
-        //void AbstractRelic::onPlayerHeal(STS::AbstractRelic* this, int32_t healAmount)
-        onPlayerHeal: new NativeFunctionInfo(0x168, 'void', ['pointer', 'int32']),
+        //int32_t AbstractRelic::onPlayerGainedBlock(STS::AbstractRelic* this, int32_t blockAmount)
+        //onPlayerGaineBlock: new NativeFunctionInfo(0x158, 'void', ['pointer', 'int32']),
+        //int32_t AbstractRelic::onPlayerGainedBlock(STS::AbstractRelic* this, float blockAmount)
+        onPlayerGainedBlock: new NativeFunctionInfo(0x160, 'int32', ['pointer', 'float']),
+        //int32_t AbstractRelic::onPlayerHeal(STS::AbstractRelic* this, int32_t healAmount)
+        onPlayerHeal: new NativeFunctionInfo(0x168, 'int32', ['pointer', 'int32']),
         //void AbstractRelic::onEnergyRecharge(STS::AbstractRelic* this)
         onEnergyRecharge: new NativeFunctionInfo(0x178, 'void', ['pointer']),
         /**
@@ -1071,7 +1071,7 @@ export class AbstractRelic extends NativeClassWrapper {
             funcName = "AbstractRelic_BasicNewRelic_onBlockBroken";
             wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onBlockBroken, VFuncProxys.onBlockBroken);
             funcName = "AbstractRelic_BasicNewRelic_onPlayerGainedBlock";
-            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.onPlayerGainedBlock, VFuncProxys.onPlayerGainedBlock);
+            wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PF_Func(funcName), VFuncMap.onPlayerGainedBlock, VFuncProxys.onPlayerGainedBlock);
             funcName = "AbstractRelic_BasicNewRelic_onPlayerHeal";
             wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.onPlayerHeal, VFuncProxys.onPlayerHeal);
             funcName = "AbstractRelic_BasicNewRelic_onEnergyRecharge";
