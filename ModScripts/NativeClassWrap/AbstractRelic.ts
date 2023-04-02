@@ -978,7 +978,7 @@ export class AbstractRelic extends NativeClassWrapper {
          *  void AbstractRelic::wasHPLost(STS::AbstractRelic* this, int32_t damageAmount)
          * ```
          */
-        wasHPLost: new NativeFunctionInfo(0x330, 'void', ['pointer', 'int32']),
+        wasHPLost: new NativeFunctionInfo(0x340, 'void', ['pointer', 'int32']),
     };
 
     static readonly #NewRelicImageTextureCache = new Map<string, NativePointer>();
