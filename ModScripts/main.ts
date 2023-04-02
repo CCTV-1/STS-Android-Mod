@@ -501,7 +501,7 @@ function RegisterNewRelic() {
 }
 
 function main() {
-    FixGDXFileHandlereadBytes();
+    //FixGDXFileHandlereadBytes();
 
     PatchNativeExceptions();
 
