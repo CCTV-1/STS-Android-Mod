@@ -219,3 +219,21 @@ export enum GDXPixMapFormat {
     RGB888,
     RGBA8888
 };
+
+export enum RoomPhase
+{
+    COMBAT = 0x0,
+    EVENT, 
+    COMPLETE, 
+    INCOMPLETE
+};
+
+export enum RoomType
+{
+    SHOP = 0x1, 
+    MONSTER, 
+    SHRINE, 
+    TREASURE, 
+    EVENT, 
+    BOSS
+};
