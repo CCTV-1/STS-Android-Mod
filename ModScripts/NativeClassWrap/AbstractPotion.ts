@@ -2,12 +2,104 @@ import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { PatchHelper } from "../PatchHelper.js";
+import { PotionColor, PotionEffect, PotionRarity, PotionSize } from "../enums.js";
+import { NativePotions } from "../NativeFuncWrap/NativePotions.js";
+
+export interface NewPotionVFuncType {
+    getPrice?: (thisPtr: NativePointer) => number,
+    use: (thisPtr: NativePointer, targetCreature: NativePointer) => void,
+    canDiscard?: (thisPtr: NativePointer) => number,
+    initializeData: (thisPtr: NativePointer) => void,
+    canUse?: (thisPtr: NativePointer) => number,
+    getPotency: (thisPtr: NativePointer, ascensionLevel: number) => number,
+    onPlayerDeath?: (thisPtr: NativePointer) => number,
+}
 
 export class AbstractPotion extends NativeClassWrapper {
     //NativePointer AbstractPotion *
     constructor(CthisPtr: NativePointer) {
         super(CthisPtr);
     }
+
+    /**
+     * new potion id => (v func name => v func)
+     */
+    static #rewriteVFuncMap = new Map<string, NewPotionVFuncType>();
+
+    static readonly #NewRelicVFuncProxys: NewPotionVFuncType = {
+        getPrice: (thisPtr: NativePointer) => {
+            let wrapPotion = new AbstractPotion(thisPtr);
+            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(wrapPotion.potionId);
+            if (potionVFuncMap !== undefined) {
+                const Func = potionVFuncMap.getPrice;
+                if (Func !== undefined) {
+                    return Func(thisPtr);
+                }
+            }
+
+            //default logic
+            switch (wrapPotion.rarity) {
+                case PotionRarity.COMMON: {
+                    return 50;
+                }
+                case PotionRarity.UNCOMMON: {
+                    return 75;
+                }
+                case PotionRarity.RARE: {
+                    return 100;
+                }
+                default: {
+                    return 999;
+                }
+            }
+        },
+        use: (thisPtr: NativePointer, targetCreature: NativePointer) => {
+            let wrapPotion = new AbstractPotion(thisPtr);
+            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(wrapPotion.potionId);
+            if (potionVFuncMap !== undefined) {
+                const Func = potionVFuncMap.use;
+                if (Func !== undefined) {
+                    Func(thisPtr, targetCreature);
+                }
+            }
+        },
+        initializeData: (thisPtr: NativePointer) => {
+            let wrapPotion = new AbstractPotion(thisPtr);
+            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(wrapPotion.potionId);
+            if (potionVFuncMap !== undefined) {
+                const Func = potionVFuncMap.initializeData;
+                if (Func !== undefined) {
+                    Func(thisPtr);
+                }
+            }
+        },
+        getPotency: (thisPtr: NativePointer, ascensionLevel: number) => {
+            let wrapPotion = new AbstractPotion(thisPtr);
+            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(wrapPotion.potionId);
+            if (potionVFuncMap !== undefined) {
+                const Func = potionVFuncMap.getPotency;
+                if (Func !== undefined) {
+                    return Func(thisPtr, ascensionLevel);
+                }
+            }
+
+            PatchHelper.LogV(wrapPotion.potionId + " miss register Potion::getPotency vfunc???");
+            return 0;
+        },
+        onPlayerDeath: (thisPtr: NativePointer) => {
+            let wrapPotion = new AbstractPotion(thisPtr);
+            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(wrapPotion.potionId);
+            if (potionVFuncMap !== undefined) {
+                const Func = potionVFuncMap.onPlayerDeath;
+                if (Func !== undefined) {
+                    return Func(thisPtr);
+                }
+            }
+
+            //default logic
+            return Number(false);
+        },
+    };
 
     static readonly #vfunctionMap = {
         /**
@@ -24,7 +116,7 @@ export class AbstractPotion extends NativeClassWrapper {
         getPrice: new NativeFunctionInfo(0x38, 'int32', ['pointer']),
         /**
          * ```c
-         * void AbstractPotion::flash(STS::AbstractPotion* thisPtr, STS::AbstractCreature* creaturePtr)
+         * void AbstractPotion::use(STS::AbstractPotion* thisPtr, STS::AbstractCreature* creaturePtr)
          * ```
          */
         use: new NativeFunctionInfo(0x40, 'void', ['pointer', 'pointer']),
@@ -76,6 +168,34 @@ export class AbstractPotion extends NativeClassWrapper {
     };
 
     static #vFuncNamePrefix = "AbstractPotion_";
+
+    static NewPotionCtor(name: string, id: string, rarity: PotionRarity, size: PotionSize, color: PotionColor, vfuncs: NewPotionVFuncType): NativePointer {
+        let origPotionPtr = NativePotions.Abstract.Ctor(name, id, rarity, size, color);
+
+        vfuncs.initializeData(origPotionPtr);
+        if (!AbstractPotion.#rewriteVFuncMap.has(id)) {
+            AbstractPotion.#rewriteVFuncMap.set(id, vfuncs);
+        }
+
+        if (!AbstractPotion.#rewriteVFuncMap.has("AbstractPotionProxy")) {
+            const wrapPotion = new AbstractPotion(origPotionPtr);
+            const VFuncMap = AbstractPotion.#vfunctionMap;
+            const VFuncProxys = AbstractPotion.#NewRelicVFuncProxys;
+            let funcName = "AbstractPotion_BasicNewPotion_getPrice";
+            wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_P_Func(funcName), VFuncMap.getPrice, VFuncProxys.getPrice);
+            funcName = "AbstractPotion_BasicNewPotion_use";
+            wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.use, VFuncProxys.use);
+            funcName = "AbstractPotion_BasicNewPotion_initializeData";
+            wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.initializeData, VFuncProxys.initializeData);
+            funcName = "AbstractPotion_BasicNewPotion_getPotency";
+            wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PP_Func(funcName), VFuncMap.getPotency, VFuncProxys.getPotency);
+            funcName = "AbstractPotion_BasicNewPotion_onPlayerDeath";
+            wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_P_Func(funcName), VFuncMap.onPlayerDeath, VFuncProxys.onPlayerDeath);
+            AbstractPotion.#rewriteVFuncMap.set("AbstractPotionProxy", AbstractPotion.#NewRelicVFuncProxys);
+        }
+
+        return origPotionPtr;
+    }
 
     flash(): void {
         this.getVirtualFunction(AbstractPotion.#vfunctionMap.flash)(this.rawPtr);
@@ -143,5 +263,133 @@ export class AbstractPotion extends NativeClassWrapper {
     }
     set slot(value) {
         this.writeOffsetS32(0x14, value);
+    }
+
+    /** ArrayList\<PowerTip\> */
+    get tips() {
+        return this.readOffsetPointer(0x18);
+    }
+
+    /** GDX::Graphics::Texture* */
+    get containerImg() {
+        return this.readOffsetPointer(0x1C);
+    }
+
+    /** GDX::Graphics::Texture* */
+    get liquidImg() {
+        return this.readOffsetPointer(0x20);
+    }
+
+    /** GDX::Graphics::Texture* */
+    get hybridImg() {
+        return this.readOffsetPointer(0x24);
+    }
+
+    /** GDX::Graphics::Texture* */
+    get spotsImg() {
+        return this.readOffsetPointer(0x28);
+    }
+
+    /** GDX::Graphics::Texture* */
+    get outlineImg() {
+        return this.readOffsetPointer(0x2C);
+    }
+
+    get posX() {
+        return this.readOffsetS32(0x30);
+    }
+
+    /** ArrayList\<FlashPotionEffect\>* */
+    get effect() {
+        return this.readOffsetPointer(0x3C);
+    }
+
+    get scale() {
+        return this.readOffsetFloat(0x40);
+    }
+
+    get isObtained() {
+        return this.readOffsetBool(0x44);
+    }
+
+    get sparkleTimer() {
+        return this.readOffsetFloat(0x48);
+    }
+
+    get flashCount() {
+        return this.readOffsetS32(0x4C);
+    }
+    set flashCount(value) {
+        this.writeOffsetS32(0x4C, value);
+    }
+
+    get flashTimer() {
+        return this.readOffsetFloat(0x50);
+    }
+    set flashTimer(value) {
+        this.writeOffsetS32(0x50, value);
+    }
+
+    get potionEffect(): PotionEffect {
+        return this.readOffsetU32(0x54);
+    }
+    set potionEffect(value) {
+        this.writeOffsetU32(0x54, Number(value));
+    }
+
+    get color(): PotionColor {
+        return this.readOffsetU32(0x58);
+    }
+    set color(value) {
+        this.writeOffsetU32(0x58, Number(value));
+    }
+
+    get rarity(): PotionRarity {
+        return this.readOffsetU32(0x68);
+    }
+    set rarity(value) {
+        this.writeOffsetU32(0x68, Number(value));
+    }
+
+    get size(): PotionSize {
+        return this.readOffsetU32(0x6C);
+    }
+    set size(value) {
+        this.writeOffsetU32(0x6C, Number(value));
+    }
+
+    get potency() {
+        return this.readOffsetS32(0x6C);
+    }
+    set potency(value) {
+        this.writeOffsetS32(0x6C, value);
+    }
+
+    get canUseFlag() {
+        return this.readOffsetBool(0x7C)
+    }
+    set canUseFlag(value) {
+        this.writeOffsetBool(0x7C, value)
+    }
+
+    get discarded() {
+        return this.readOffsetBool(0x7D)
+    }
+    set discarded(value) {
+        this.writeOffsetBool(0x7D, value)
+    }
+
+    get isThrown() {
+        return this.readOffsetBool(0x7E)
+    }
+    set isThrown(value) {
+        this.writeOffsetBool(0x7E, value)
+    }
+
+    get targetRequired() {
+        return this.readOffsetBool(0x7F)
+    }
+    set targetRequired(value) {
+        this.writeOffsetBool(0x7F, value)
     }
 }
