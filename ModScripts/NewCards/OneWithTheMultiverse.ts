@@ -1,8 +1,8 @@
-import { AbstractCard, NewCardVFuncType } from "../NativeClassWrap/AbstractCard.js";
-import { CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
-import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
-import { AbstractDungeon } from "../NativeClassWrap/AbstractDungeon.js";
-import { OmniscientPotion } from "../NewPotions/OmniscientPotion.js";
+import { AbstractCard, NewCardVFuncType } from "../NativeClassWrap/AbstractCard";
+import { CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums";
+import { NativeActions } from "../NativeFuncWrap/NativeActions";
+import { AbstractDungeon } from "../NativeClassWrap/AbstractDungeon";
+import { OmniscientPotion } from "../NewPotions/OmniscientPotion";
 
 export const OneWithTheMultiverse = (thisPtr: NativePointer): NativePointer => {
     const vfuncs: NewCardVFuncType = {
