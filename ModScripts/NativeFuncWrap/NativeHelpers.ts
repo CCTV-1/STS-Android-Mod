@@ -1,6 +1,6 @@
-import { JString } from "../NativeClassWrap/JString.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
+import { NativeSTDLib } from "./NativeSTDLib.js";
 
 const CardLibrary = {
     /**
@@ -81,10 +81,10 @@ export const NativeHelpers = {
         }
     },
     PowerTip: {
-        Ctor(header: string, body: string) {
-            let nativeHeader = JString.CreateJString(header);
-            let nativeBody = JString.CreateJString(body);
-            PatchHelper.GetNativeFunction(PowerTip.Ctor)(PatchHelper.nullptr, nativeHeader, nativeBody);
-        }
+        Ctor(header: string, body: string): NativePointer {
+            let nativeHeader = NativeSTDLib.JString.Ctor(header);
+            let nativeBody = NativeSTDLib.JString.Ctor(body);
+            return PatchHelper.GetNativeFunction(PowerTip.Ctor)(PatchHelper.nullptr, nativeHeader, nativeBody);
+        },
     }
 }
