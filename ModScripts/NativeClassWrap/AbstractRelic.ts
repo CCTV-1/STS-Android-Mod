@@ -999,7 +999,7 @@ export class AbstractRelic extends NativeClassWrapper {
         wrapRelic.flavorText = flavorText;
 
         let wrapTips = new ArrayList(wrapRelic.tips);
-        let wrapTip = new PowerTip(NativeSTDLib.ArrayList.PowerTip.get(wrapTips, 0));
+        let wrapTip = new PowerTip(NativeSTDLib.ArrayList.PowerTip.get(wrapTips.rawPtr, 0));
         wrapTip.header = relicName;
         wrapTip.body = description;
 

@@ -51,6 +51,18 @@ const STDLib = {
         PowerTip: {
             /**
              * ```c
+             * void ArrayList<PowerTip>::add(STS::ArrayList<PowerTip>* PowerTip, PowerTip * powerTipPtr)
+             * ```
+             */
+            add: new NativeFunctionInfo(0x16CBC59, 'void', ['pointer', 'pointer']),
+            /**
+             * ```c
+             * void ArrayList<PowerTip>::clear(STS::ArrayList<PowerTip>* PowerTip)
+             * ```
+             */
+            clear: new NativeFunctionInfo(0x16CFB69, 'void', ['pointer']),
+            /**
+             * ```c
              * STS::PowerTip* ArrayList<PowerTip>::getItem(STS::ArrayList<PowerTip>* PowerTip, int index)
              * ```
              */
@@ -181,8 +193,14 @@ export const NativeSTDLib = {
             },
         },
         PowerTip: {
-            get(arrayListPtr: ArrayList, index: number): NativePointer {
-                return PatchHelper.GetNativeFunction(STDLib.ArrayList.PowerTip.get)(arrayListPtr.rawPtr, index);
+            add(arrayListPtr: NativePointer, powerTipPtr: NativePointer) {
+                PatchHelper.GetNativeFunction(STDLib.ArrayList.PowerTip.add)(arrayListPtr, powerTipPtr);
+            },
+            clear(arrayListPtr: NativePointer) {
+                PatchHelper.GetNativeFunction(STDLib.ArrayList.PowerTip.clear)(arrayListPtr);
+            },
+            get(arrayListPtr: NativePointer, index: number): NativePointer {
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.PowerTip.get)(arrayListPtr, index);
             }
         },
     },
