@@ -667,7 +667,7 @@ export class AbstractRelic extends NativeClassWrapper {
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.makeCopy;
                 if (Func !== undefined) {
-                    Func(thisPtr);
+                    return Func(thisPtr);
                 }
             }
 
