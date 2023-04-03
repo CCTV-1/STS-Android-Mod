@@ -52,13 +52,18 @@ export class AbstractCard extends NativeClassWrapper {
 
     /**
      * new card id => (v func name => v func)
+     * 
+     * NativePointer current don't exist toUInt64, Frida(Duktape) current don't support BigInt,
+     * so current proxy implement need all C pointer size equal sizeof(uint32_t).
+     * 
+     * use ptr.toString() or new Uint64(ptr.toString()) can support pointer size equal sizeof(uint64_t) architecture.
+     * but there is more performance overhead.
      */
-    static #rewriteVFuncMap = new Map<string, NewCardVFuncType>();
+    static #rewriteVFuncMap = new Map<number, NewCardVFuncType>();
 
     static readonly #NewCardVFuncProxys: NewCardVFuncType = {
         canUpgrade: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.canUpgrade;
                 if (Func !== undefined) {
@@ -66,6 +71,7 @@ export class AbstractCard extends NativeClassWrapper {
                 }
             }
 
+            const wrapCard = new AbstractCard(thisPtr);
             //default logic
             if ((wrapCard.type != CardType.CURSE) && (wrapCard.type != CardType.STATUS) && (!wrapCard.upgraded)) {
                 return Number(true);
@@ -74,8 +80,7 @@ export class AbstractCard extends NativeClassWrapper {
             return Number(false);
         },
         upgrade: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.upgrade;
                 if (Func !== undefined) {
@@ -84,8 +89,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         onRemoveFromMasterDeck: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onRemoveFromMasterDeck;
                 if (Func !== undefined) {
@@ -94,8 +98,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         tookDamage: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.tookDamage;
                 if (Func !== undefined) {
@@ -104,8 +107,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         didDiscard: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.didDiscard;
                 if (Func !== undefined) {
@@ -114,8 +116,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         switchedStance: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.switchedStance;
                 if (Func !== undefined) {
@@ -124,8 +125,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         canPlay: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.canPlay;
                 if (Func !== undefined) {
@@ -136,8 +136,7 @@ export class AbstractCard extends NativeClassWrapper {
             return Number(true);
         },
         canUse: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.canUse;
                 if (Func !== undefined) {
@@ -146,6 +145,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
 
             //default logic
+            const wrapCard = new AbstractCard(thisPtr);
             const currentPlayer = AbstractDungeon.getInstance().player;
             const check1: boolean = (wrapCard.type != CardType.STATUS || wrapCard.costForTurn >= -1 || currentPlayer.hasRelic("Medical Kit"))
             const check2: boolean = (wrapCard.type != CardType.CURSE || wrapCard.costForTurn >= -1 || currentPlayer.hasRelic("Blue Candle"))
@@ -153,8 +153,7 @@ export class AbstractCard extends NativeClassWrapper {
             return Number(check1 && check2 && check3);
         },
         use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const useFunc = cardVFuncMap.use;
                 if (useFunc !== undefined) {
@@ -163,8 +162,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         onMoveToDiscard: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onMoveToDiscard;
                 if (Func !== undefined) {
@@ -173,8 +171,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerWhenDrawn: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerWhenDrawn;
                 if (Func !== undefined) {
@@ -183,8 +180,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerWhenCopied: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerWhenCopied;
                 if (Func !== undefined) {
@@ -193,8 +189,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerOnEndOfPlayerTurn: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerOnEndOfPlayerTurn;
                 if (Func !== undefined) {
@@ -203,6 +198,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
 
             //default logic
+            const wrapCard = new AbstractCard(thisPtr);
             if (wrapCard.isEthereal) {
                 let currentPlayer = AbstractDungeon.getInstance().player;
                 let axhaustSpecificCardAction = NativeActions.common.ExhaustSpecificCard.Ctor(thisPtr, currentPlayer.hand.rawPtr, true);
@@ -210,8 +206,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerOnEndOfTurnForPlayingCard: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerOnEndOfTurnForPlayingCard;
                 if (Func !== undefined) {
@@ -220,8 +215,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerOnOtherCardPlayed: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerOnOtherCardPlayed;
                 if (Func !== undefined) {
@@ -230,8 +224,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerOnGainEnergy: (thisPtr: NativePointer, energyCount: number, dueToCard: boolean) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerOnGainEnergy;
                 if (Func !== undefined) {
@@ -240,8 +233,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerOnManualDiscard: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerOnManualDiscard;
                 if (Func !== undefined) {
@@ -250,8 +242,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerOnCardPlayed: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerOnCardPlayed;
                 if (Func !== undefined) {
@@ -260,8 +251,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerOnScry: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerOnScry;
                 if (Func !== undefined) {
@@ -270,8 +260,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerExhaustedCardsOnStanceChange: (thisPtr: NativePointer, newStance: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerExhaustedCardsOnStanceChange;
                 if (Func !== undefined) {
@@ -280,8 +269,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerAtStartOfTurn: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerAtStartOfTurn;
                 if (Func !== undefined) {
@@ -290,8 +278,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         onPlayCard: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onPlayCard;
                 if (Func !== undefined) {
@@ -300,8 +287,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         atTurnStart: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atTurnStart;
                 if (Func !== undefined) {
@@ -310,8 +296,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         atTurnStartPreDraw: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atTurnStartPreDraw;
                 if (Func !== undefined) {
@@ -320,8 +305,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         onChoseThisOption: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onChoseThisOption;
                 if (Func !== undefined) {
@@ -330,8 +314,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         onRetained: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onRetained;
                 if (Func !== undefined) {
@@ -340,8 +323,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerOnExhaust: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerOnExhaust;
                 if (Func !== undefined) {
@@ -350,8 +332,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         triggerOnGlowCheck: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerOnGlowCheck;
                 if (Func !== undefined) {
@@ -360,16 +341,17 @@ export class AbstractCard extends NativeClassWrapper {
             }
         },
         makeCopy: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(wrapCard.cardID);
+            let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const makeCopyFunc = cardVFuncMap.makeCopy;
                 if (makeCopyFunc !== undefined) {
                     let copyObj = makeCopyFunc(thisPtr);
+                    AbstractCard.#rewriteVFuncMap.set(copyObj.toUInt32(), cardVFuncMap);
                     return copyObj;
                 }
             }
 
+            const wrapCard = new AbstractCard(thisPtr);
             PatchHelper.LogV(wrapCard.cardID + " miss register Card::makeCopy vfunc???");
             return PatchHelper.nullptr;
         },
@@ -381,7 +363,7 @@ export class AbstractCard extends NativeClassWrapper {
          * bool AbstractCard::hasTag(STS::AbstractCard* this, CardTags tagToCheck)
          * ```
          */
-        hasTag:  new NativeFunctionInfo(0x48, 'bool', ['pointer', 'uint32']),
+        hasTag: new NativeFunctionInfo(0x48, 'bool', ['pointer', 'uint32']),
         /**
          * ```c
          *  bool AbstractCard::canUpgrade(STS::AbstractCard* this)
@@ -650,11 +632,11 @@ export class AbstractCard extends NativeClassWrapper {
         let origCardPtr = NativeCards.AbstractCard.Ctor(id, name, imgUrl, cost, rawDescription, type, color, rarity, target, dType);
 
         let wrapCard = new AbstractCard(origCardPtr);
-        if (!AbstractCard.#rewriteVFuncMap.has(id)) {
-            AbstractCard.#rewriteVFuncMap.set(id, newFuncs);
+        if (!AbstractCard.#rewriteVFuncMap.has(origCardPtr.toUInt32())) {
+            AbstractCard.#rewriteVFuncMap.set(origCardPtr.toUInt32(), newFuncs);
         }
 
-        if (!AbstractCard.#rewriteVFuncMap.has("AbstractCardProxy")) {
+        if (!AbstractCard.#rewriteVFuncMap.has(-1)) {
             const VFuncMap = AbstractCard.#vfunctionMap;
             const VFuncProxys = AbstractCard.#NewCardVFuncProxys;
             let funcName = "AbstractCard_BasicNewCard_canUpgrade";
@@ -713,14 +695,14 @@ export class AbstractCard extends NativeClassWrapper {
             wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.triggerOnGlowCheck, VFuncProxys.triggerOnGlowCheck);
             funcName = "AbstractCard_BasicNewCard_makeCopy";
             wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), VFuncMap.makeCopy, VFuncProxys.makeCopy);
-            AbstractCard.#rewriteVFuncMap.set("AbstractCardProxy", AbstractCard.#NewCardVFuncProxys);
+            AbstractCard.#rewriteVFuncMap.set(-1, AbstractCard.#NewCardVFuncProxys);
         }
 
         return wrapCard;
     };
 
     hasTag(tag: CardTags): boolean {
-        return this.getVirtualFunction(AbstractCard.#vfunctionMap.hasTag)(this.rawPtr, Number(tag)); 
+        return this.getVirtualFunction(AbstractCard.#vfunctionMap.hasTag)(this.rawPtr, Number(tag));
     }
 
     canUpgrade(): boolean {
@@ -778,17 +760,17 @@ export class AbstractCard extends NativeClassWrapper {
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, newVFunc);
     }
 
-    superFlash(colorPtr: NativePointer)  {
+    superFlash(colorPtr: NativePointer) {
         this.getVirtualFunction(AbstractCard.#vfunctionMap.superFlash)(this.rawPtr, colorPtr);
     }
-    superFlash2()  {
+    superFlash2() {
         this.getVirtualFunction(AbstractCard.#vfunctionMap.superFlash2)(this.rawPtr);
     }
 
-    flash()  {
+    flash() {
         this.getVirtualFunction(AbstractCard.#vfunctionMap.flash)(this.rawPtr);
     }
-    flash2(colorPtr: NativePointer)  {
+    flash2(colorPtr: NativePointer) {
         this.getVirtualFunction(AbstractCard.#vfunctionMap.flash2)(this.rawPtr, colorPtr);
     }
 
