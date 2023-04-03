@@ -1,11 +1,11 @@
+import { AbstractDungeon } from "../NativeClassWrap/AbstractDungeon.js";
 import { AbstractGameAction, NewGameActionVFuncType } from "../NativeClassWrap/AbstractGameAction.js"
-import { PatchHelper } from "../PatchHelper.js";
 
 export const DoubleGoldAction = () => {
     let vfuncs: NewGameActionVFuncType = {
         update: (thisPtr: NativePointer) => {
             let wrapAction = new AbstractGameAction(thisPtr);
-            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = AbstractDungeon.getInstance().player;
             currentPlayer.gainGold(currentPlayer.gold);
             wrapAction.isDone = true;
         }

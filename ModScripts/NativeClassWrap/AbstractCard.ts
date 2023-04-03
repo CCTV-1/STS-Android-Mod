@@ -5,6 +5,7 @@ import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
+import { AbstractDungeon } from "./AbstractDungeon.js";
 
 /**
  * thisPtr will is ```nullptr```.
@@ -145,7 +146,7 @@ export class AbstractCard extends NativeClassWrapper {
             }
 
             //default logic
-            const currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+            const currentPlayer = AbstractDungeon.getInstance().player;
             const check1: boolean = (wrapCard.type != CardType.STATUS || wrapCard.costForTurn >= -1 || currentPlayer.hasRelic("Medical Kit"))
             const check2: boolean = (wrapCard.type != CardType.CURSE || wrapCard.costForTurn >= -1 || currentPlayer.hasRelic("Blue Candle"))
             const check3: boolean = (wrapCard.cardPlayable(monsterPtr) && wrapCard.hasEnoughEnergy());
@@ -203,7 +204,7 @@ export class AbstractCard extends NativeClassWrapper {
 
             //default logic
             if (wrapCard.isEthereal) {
-                let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+                let currentPlayer = AbstractDungeon.getInstance().player;
                 let axhaustSpecificCardAction = NativeActions.common.ExhaustSpecificCard.Ctor(thisPtr, currentPlayer.hand.rawPtr, true);
                 wrapCard.addToBot(axhaustSpecificCardAction);
             }

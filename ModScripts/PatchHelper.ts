@@ -54,11 +54,8 @@ export class PatchHelper {
         get STSSetting_HEIGHT() {
             return PatchHelper.#GetOffsetPtr(0x34987C4).readS32();
         },
-        get AbstractDungeon_player() {
-            return new AbstractPlayer(PatchHelper.#GetOffsetPtr(0x3498EDC).readPointer());
-        },
-        get AbstractDungeon_topLevelEffects() {
-            return PatchHelper.#GetOffsetPtr(0x3498F84).readPointer();
+        get AbstractDungeonInstancePtr() {
+            return PatchHelper.STSModuleBaseAddress.add(0x3498EB0);
         },
     };
 
@@ -74,6 +71,7 @@ export class PatchHelper {
         V_PI32_Func(funcName: string) {
             return "void " + funcName + "(void * arg1, int arg2) { return ; }";
         },
+        /**if int != int32_t, this func not work. */
         V_PI32B_Func(funcName: string) {
             return "void " + funcName + "(void * arg1, int arg2, char arg3) { return ; }";
         },
@@ -94,6 +92,7 @@ export class PatchHelper {
         V_PPI32_Func(funcName: string) {
             return "void " + funcName + "(void * arg1, void * arg2, int arg3) { return ; }";
         },
+        /**if int != int32_t, this func not work. */
         V_PPI32P_Func(funcName: string) {
             return "void " + funcName + "(void * arg1, void * arg2, int arg3, void * arg4) { return ; }";
         },
@@ -106,6 +105,10 @@ export class PatchHelper {
         B_P_Func(funcName: string) {
             return "char " + funcName + "(void * arg1) { return 0; }";
         },
+        /**if int != int32_t, this func not work. */
+        I32_P_Func(funcName: string) {
+            return "int " + funcName + "(void * arg1) { return 0; }";
+        },
         /** CModule compile don't support stdc20,if want use bool need include header file. */
         B_PP_Func(funcName: string) {
             return "char " + funcName + "(void * arg1, void * arg2) { return 0; }";
@@ -114,16 +117,23 @@ export class PatchHelper {
         I32_PI32_Func(funcName: string) {
             return "int " + funcName + "(void * arg1, int arg2) { return 0; }";
         },
+        /**if int != int32_t, this func not work. */
         I32_PF_Func(funcName: string) {
             return "int " + funcName + "(void * arg1, float arg2) { return 0; }";
+        },
+        /**if int != int32_t, this func not work. */
+        I32_PP_Func(funcName: string) {
+            return "int " + funcName + "(void * arg1, void * arg2) { return 0; }";
         },
         /**if int != int32_t, this func not work. */
         F_PI32_Func(funcName: string) {
             return "float " + funcName + "(void * arg1, int arg2) { return 0; }";
         },
+        /**if int != int32_t, this func not work. */
         I32_PI32P_Func(funcName: string) {
             return "int " + funcName + "(void * arg1, int arg2, void * arg3) { return 0; }";
         },
+        /**if int != int32_t, this func not work. */
         I32_PPI32_Func(funcName: string) {
             return "int " + funcName + "(void * arg1, void * arg2, int arg3) { return 0; }";
         },

@@ -7,8 +7,9 @@ export class NativeClassWrapper {
 
     rawPtr: NativePointer;
     #vfuncMapPtr: NativePointer;
-    //NativePointer AbstractCreature *
-    constructor(CthisPtr: NativePointer) {
+    
+    /** if want wrap static class, shall pass hasVFuncMap = false,and get/setVirtualFunction unusable */
+    constructor(CthisPtr: NativePointer, hasVFuncMap: boolean = true) {
         if (!(CthisPtr instanceof NativePointer)) {
             throw new Error("need a NativePointer");
         }
@@ -16,7 +17,11 @@ export class NativeClassWrapper {
             throw new Error("need a non-nullptr");
         }
         this.rawPtr = CthisPtr;
-        this.#vfuncMapPtr = CthisPtr.readPointer().add(0x4).readPointer();
+        if (hasVFuncMap) {
+            this.#vfuncMapPtr = CthisPtr.readPointer().add(0x4).readPointer();
+        } else {
+            this.#vfuncMapPtr = PatchHelper.nullptr;
+        }
     }
 
     protected getVirtualFunction(funcInfo: NativeFunctionInfo) {

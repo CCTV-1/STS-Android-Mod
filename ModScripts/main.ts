@@ -18,6 +18,7 @@ import { NativePowers } from "./NativeFuncWrap/NativePowers.js";
 import { NativeGDXLib } from "./NativeFuncWrap/NativeGDXLib.js";
 import { JString } from "./NativeClassWrap/JString.js";
 import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
+import { AbstractDungeon } from "./NativeClassWrap/AbstractDungeon.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -38,7 +39,7 @@ function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
         let index = FakeRandom(0, canUpgradeCards.length - 1);
         let upgradeCard = canUpgradeCards[index];
         upgradeCard.upgrade();
-        let topLevelEffects = PatchHelper.STSGlobalVars.AbstractDungeon_topLevelEffects;
+        let topLevelEffects = AbstractDungeon.getInstance().topLevelEffects;
         let statCopyCard = upgradeCard.makeStatEquivalentCopy();
         let cardBrieflyEffectObj = NativeVFX.ShowCardBrieflyEffect.Ctor(statCopyCard);
         let upgradeShineEffectObj = NativeVFX.UpgradeShineEffect.Ctor(PatchHelper.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchHelper.STSGlobalVars.STSSetting_HEIGHT * 0.5);
@@ -328,7 +329,7 @@ function PatchPowers() {
 
 function PatchRelics() {
     let origBurningBloodOnVictory = NativeRelics.BurningBlood.OverrideonVictory((thisPtr: NativePointer) => {
-        let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+        let currentPlayer = AbstractDungeon.getInstance().player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.4) {
             UpgradeRandomCard(currentPlayer);
         }
@@ -336,7 +337,7 @@ function PatchRelics() {
     });
 
     let origBlackBloodBloodOnVictory = NativeRelics.BlackBlood.OverrideonVictory((thisPtr: NativePointer) => {
-        let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+        let currentPlayer = AbstractDungeon.getInstance().player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.6) {
             UpgradeRandomCard(currentPlayer);
         }
@@ -348,7 +349,7 @@ function PatchRelics() {
         let gingerObj = origGingeronCtor(thisPtr);
         let wrapGinger = new AbstractRelic(gingerObj);
         wrapGinger.OverrideatBattleStart((thisPtr: NativePointer) => {
-            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = AbstractDungeon.getInstance().player;
             if (currentPlayer.hasRelic("Turnip")) {
                 let wrapGinger = new AbstractRelic(gingerObj);
                 //Apotheosis
@@ -392,7 +393,7 @@ function PatchRelics() {
         let sacredBarkObj = origSacredBarkCtor(thisPtr);
         let wrapSacredBark = new AbstractRelic(sacredBarkObj);
         wrapSacredBark.OverrideonEquip((thisPtr: NativePointer) => {
-            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = AbstractDungeon.getInstance().player;
             currentPlayer.potionSlots += 2;
             let playerPotions = currentPlayer.potions;
             for (let index = 2; index > 0; index--) {
@@ -410,7 +411,7 @@ function PatchRelics() {
         let scryActionObj = origScryActionCtor(thisPtr, numCards);
         let wrapAction = new AbstractGameAction(scryActionObj);
         if (wrapAction.amount >= 5) {
-            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = AbstractDungeon.getInstance().player;
             if (currentPlayer.hasRelic("GoldenEye")) {
                 currentPlayer.gainEnergy(1);
             }
@@ -424,7 +425,7 @@ function PatchRelics() {
         wrapCoffeeDripper.OverrideonEnterRestRoom((thisPtr: NativePointer) => {
             let wrapCoffeeDripper = new AbstractRelic(thisPtr);
             wrapCoffeeDripper.counter++;
-            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = AbstractDungeon.getInstance().player;
             currentPlayer.heal(wrapCoffeeDripper.counter, true);
             wrapCoffeeDripper.flash();
         });
@@ -453,7 +454,7 @@ function PatchRelics() {
     NativeRelics.MarkofPain.OverrideatBattleStart((thisPtr: NativePointer) => {
         let wrapMarkofPain = new AbstractRelic(thisPtr);
         wrapMarkofPain.flash();
-        let relicAboveCreatureAction = NativeActions.common.RelicAboveCreature.Ctor(PatchHelper.STSGlobalVars.AbstractDungeon_player.rawPtr, thisPtr);
+        let relicAboveCreatureAction = NativeActions.common.RelicAboveCreature.Ctor(AbstractDungeon.getInstance().player.rawPtr, thisPtr);
         let targetCard = NativeCards.status.Burn.Ctor();
         let makeTempCardInHandAction = NativeActions.common.MakeTempCardInHand.Ctor(targetCard, 2, true);
         wrapMarkofPain.addToBot(relicAboveCreatureAction);
@@ -465,7 +466,7 @@ function PatchRelics() {
         let RunicPyramidObj = origRunicPyramidCtor(thisPtr);
         let wrapRunicPyramid = new AbstractRelic(RunicPyramidObj);
         wrapRunicPyramid.OverrideonPlayerEndTurn((thisPtr: NativePointer) => {
-            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = AbstractDungeon.getInstance().player;
             let handSize = currentPlayer.hand.group.size;
             if (handSize > 0) {
                 let wrapRunicPyramid = new AbstractRelic(RunicPyramidObj);

@@ -1,7 +1,7 @@
 import { AbstractRelic, NewRelicVFuncType } from "../NativeClassWrap/AbstractRelic.js";
 import { LandingSound, RelicTier } from "../enums.js";
 import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
-import { PatchHelper } from "../PatchHelper.js";
+import { AbstractDungeon } from "../NativeClassWrap/AbstractDungeon.js";
 
 export const TheOneRing = (thisPtr: NativePointer): NativePointer => {
     const vfuncs: NewRelicVFuncType = {
@@ -9,17 +9,17 @@ export const TheOneRing = (thisPtr: NativePointer): NativePointer => {
             return NativeSTDLib.JString.Ctor("在每场战斗开始时失去三分之一的生命，在每回合开始时获得 [E]  [E]  [E] 。");
         },
         onEquip: (thisPtr: NativePointer) => {
-            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = AbstractDungeon.getInstance().player;
             let energy = currentPlayer.energy;
             energy.energyMaster += 3;
         },
         onUnequip: (thisPtr: NativePointer) => {
-            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = AbstractDungeon.getInstance().player;
             let energy = currentPlayer.energy;
             energy.energyMaster -= 3;
         },
         atBattleStart: (thisPtr: NativePointer) => {
-            let currentPlayer = PatchHelper.STSGlobalVars.AbstractDungeon_player;
+            let currentPlayer = AbstractDungeon.getInstance().player;
             currentPlayer.heal(-currentPlayer.currentHealth / 3, true);
         },
         makeCopy: (thisPtr: NativePointer) => {
