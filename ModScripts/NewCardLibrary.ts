@@ -3,6 +3,7 @@ import { BasicAttackRed } from "./NewCards/BasicAttackRed.js";
 import { BasicDefendRed } from "./NewCards/BasicDefendRed.js";
 import { BigScore } from "./NewCards/BigScore.js";
 import { PlunderTalent } from "./NewCards/PlunderTalent.js";
+import { OneWithTheMultiverse } from "./NewCards/SeeTheWorld.js";
 
 /**
  * if you plan register a new card, add a function property to NewCardLibrary,the function code like follow:
@@ -45,4 +46,5 @@ export const newCardLibrary: STSCardCtor[] = [
     BasicDefendRed,
     BigScore,
     PlunderTalent,
+    OneWithTheMultiverse,
 ];
