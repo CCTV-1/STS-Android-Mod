@@ -28,7 +28,7 @@ export const OneWithTheMultiverse = (thisPtr: NativePointer): NativePointer => {
         },
     };
 
-    let wrapCard = AbstractCard.NewCardCtor("OneWithTheMultiverse", "意识飞升", "colorless/skill/OneWithTheMultiverse", 1, "消耗 !M! 金币，生成全知全能药水。 NL 消耗。", CardType.SKILL,
+    let wrapCard = AbstractCard.NewCardCtor("OneWithTheMultiverse", "多重宇宙加身", "colorless/skill/OneWithTheMultiverse", 1, "消耗 !M! 金币，生成全知全能药水。 NL 消耗。", CardType.SKILL,
         CardColor.COLORLESS, CardRarity.UNCOMMON, CardTarget.NONE, DamageType.NORMAL, vfuncs);
     wrapCard.baseMagicNumber = 100;
     wrapCard.magicNumber = 100;
