@@ -1,4 +1,5 @@
 import { PatchHelper } from "../PatchHelper.js";
+import { PlayerClass } from "../enums.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 import { NativeSTDLib } from "./NativeSTDLib.js";
 
@@ -49,7 +50,21 @@ const PowerTip = {
      * ```
      */
     Ctor3: new NativeFunctionInfo(0x18841C9, 'pointer', ['pointer', 'pointer', 'pointer', 'pointer']),
-}
+};
+const PotionHelper = {
+    /**
+     * ```c
+     * ArrayList<String>* PotionHelper::getPotions(PlayerClass class, bool getAll)
+     * ```
+     */
+    getPotions: new NativeFunctionInfo(0x1882D19, 'pointer', ['uint32', 'bool']),
+    /**
+     * ```c
+     * STS::AbstractPotion * PotionHelper::getPotion(JString* potionId)
+     * ```
+     */
+    getPotion: new NativeFunctionInfo(0x1883339, 'pointer', ['pointer']),
+};
 
 export const NativeHelpers = {
     CardLibrary: {
@@ -79,6 +94,22 @@ export const NativeHelpers = {
         OverrideAdd(newFunc: (relicPtr: NativePointer) => void): (relicPtr: NativePointer) => void {
             return PatchHelper.HookSTSFunction(RelicLibrary.Add, newFunc);
         }
+    },
+    PotionHelper: {
+        getPotions(playerClass: PlayerClass, getAll: boolean): NativePointer {
+            return PatchHelper.GetNativeFunction(PotionHelper.getPotions)(PatchHelper.nullptr, Number(playerClass), Number(getAll));
+        },
+        OverridegetPotions(newFunc: (playerClass: number, getAll: number) => NativePointer): (playerClass: number, getAll: number) => NativePointer {
+            return PatchHelper.HookSTSFunction(PotionHelper.getPotions, newFunc);
+        },
+        getPotion(potionId: string): NativePointer {
+            const nativePotionId = NativeSTDLib.JString.Ctor(potionId);
+            return PatchHelper.GetNativeFunction(PotionHelper.getPotion)(PatchHelper.nullptr, nativePotionId);
+        },
+        /** JString* potionId, return AbstractPotion* */
+        OverridegetPotion(newFunc: (potionId: NativePointer) => NativePointer): (potionId: NativePointer) => NativePointer {
+            return PatchHelper.HookSTSFunction(PotionHelper.getPotion, newFunc);
+        },
     },
     PowerTip: {
         Ctor(header: string, body: string): NativePointer {

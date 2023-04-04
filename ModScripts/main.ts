@@ -19,6 +19,7 @@ import { NativeGDXLib } from "./NativeFuncWrap/NativeGDXLib.js";
 import { JString } from "./NativeClassWrap/JString.js";
 import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
 import { AbstractDungeon } from "./NativeClassWrap/AbstractDungeon.js";
+import { NewPotionLibrary } from "./NewPotionLibrary.js";
 
 function FakeRandom(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -501,6 +502,31 @@ function RegisterNewRelic() {
     });
 }
 
+function RegisterNewPotions() {
+    let origPotionHelpergetPotions = NativeHelpers.PotionHelper.OverridegetPotions((playerClass: number, getAll: number) => {
+        let rawPotionList = origPotionHelpergetPotions(playerClass, getAll);
+        if (getAll) {
+            for (const k of NewPotionLibrary.PotionList.keys()) {
+                NativeSTDLib.ArrayList.JString.Add(rawPotionList, k);
+            }
+        } else {
+            for (const v of NewPotionLibrary.playerPotions(playerClass).values()) {
+                NativeSTDLib.ArrayList.JString.Add(rawPotionList, v);
+            }
+        }
+        return rawPotionList;
+    });
+
+    let origPotionHelpergetPotion = NativeHelpers.PotionHelper.OverridegetPotion((potionId: NativePointer): NativePointer => {
+        let wrapId = new JString(potionId);
+        const newPotionCtor = NewPotionLibrary.PotionList.get(wrapId.content);
+        if (newPotionCtor !== undefined) {
+            return newPotionCtor();
+        }
+        return origPotionHelpergetPotion(potionId);
+    });
+}
+
 function main() {
     //FixGDXFileHandlereadBytes();
 
@@ -514,6 +540,7 @@ function main() {
 
     RegisterNewCards();
     RegisterNewRelic();
+    RegisterNewPotions();
 }
 
 try {
