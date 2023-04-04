@@ -201,8 +201,8 @@ export class AbstractCard extends NativeClassWrapper {
             const wrapCard = new AbstractCard(thisPtr);
             if (wrapCard.isEthereal) {
                 let currentPlayer = AbstractDungeon.getInstance().player;
-                let axhaustSpecificCardAction = NativeActions.common.ExhaustSpecificCard.Ctor(thisPtr, currentPlayer.hand.rawPtr, true);
-                wrapCard.addToBot(axhaustSpecificCardAction);
+                let axhaustSpecificCardAction = NativeActions.common.ExhaustSpecificCard.Ctor(thisPtr, currentPlayer.hand.rawPtr, false);
+                wrapCard.addToTop(axhaustSpecificCardAction);
             }
         },
         triggerOnEndOfTurnForPlayingCard: (thisPtr: NativePointer) => {
