@@ -225,10 +225,12 @@ function Patchcharacters() {
 
         switch (FakeRandom(0, 1)) {
             case 0: {
-                NativeSTDLib.ArrayList.JString.Add(startDeck, "Distraction");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Prepared");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Prepared");
                 break;
             }
             default: {
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Poisoned Stab");
                 NativeSTDLib.ArrayList.JString.Add(startDeck, "Discovery");
                 break;
             }
@@ -256,11 +258,11 @@ function Patchcharacters() {
         switch (FakeRandom(0, 1)) {
             case 0: {
                 NativeSTDLib.ArrayList.JString.Add(startDeck, "Ball Lightning");
-                NativeSTDLib.ArrayList.JString.Add(startDeck, "Distraction");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "White Noise");
                 break;
             }
             default: {
-                NativeSTDLib.ArrayList.JString.Add(startDeck, "Dualcast");
+                NativeSTDLib.ArrayList.JString.Add(startDeck, "Chill");
                 NativeSTDLib.ArrayList.JString.Add(startDeck, "White Noise");
                 break;
             }
