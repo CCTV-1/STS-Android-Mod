@@ -23,12 +23,12 @@ const VFX = {
 export const NativeVFX = {
     ShowCardBrieflyEffect: {
         Ctor(cardPtr: NativePointer): NativePointer {
-            return PatchHelper.GetNativeFunction(VFX.ShowCardBrieflyEffect.Ctor)(PatchHelper.nullptr, cardPtr);
+            return PatchHelper.GetNativeFunction(VFX.ShowCardBrieflyEffect.Ctor)(NULL, cardPtr);
         }
     },
     UpgradeShineEffect: {
         Ctor(x: number, y: number): NativePointer {
-            return PatchHelper.GetNativeFunction(VFX.UpgradeShineEffect.Ctor)(PatchHelper.nullptr, x, y);
+            return PatchHelper.GetNativeFunction(VFX.UpgradeShineEffect.Ctor)(NULL, x, y);
         }
     }
 };

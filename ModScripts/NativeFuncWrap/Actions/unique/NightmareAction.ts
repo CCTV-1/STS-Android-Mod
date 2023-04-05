@@ -4,6 +4,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const NightmareAction = {
     Ctor(sourceCreature: NativePointer): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.Nightmare.Ctor)(PatchHelper.nullptr);
+        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.Nightmare.Ctor)(NULL);
     },
 };

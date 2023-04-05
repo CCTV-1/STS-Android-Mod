@@ -34,19 +34,19 @@ export const NativePotions = {
         Ctor(name: string, id: string, rarity: PotionRarity, size: PotionSize, color: PotionColor) {
             let nativeName = NativeSTDLib.JString.Ctor(name);
             let nativeId = NativeSTDLib.JString.Ctor(id);
-            return PatchHelper.GetNativeFunction(Potions.Abstract.Ctor)(PatchHelper.nullptr, nativeName, nativeId, Number(rarity), Number(size), Number(color));
+            return PatchHelper.GetNativeFunction(Potions.Abstract.Ctor)(NULL, nativeName, nativeId, Number(rarity), Number(size), Number(color));
         },
         Ctor2(name: string, id: string, rarity: PotionRarity, size: PotionSize, color: PotionColor, liquidColor: NativePointer,
             hybridColor: NativePointer, spotsColor: NativePointer) {
             let nativeName = NativeSTDLib.JString.Ctor(name);
             let nativeId = NativeSTDLib.JString.Ctor(id);
-            return PatchHelper.GetNativeFunction(Potions.Abstract.Ctor2)(PatchHelper.nullptr, nativeName, nativeId, Number(rarity), Number(size), Number(color),
+            return PatchHelper.GetNativeFunction(Potions.Abstract.Ctor2)(NULL, nativeName, nativeId, Number(rarity), Number(size), Number(color),
                 liquidColor, hybridColor, spotsColor);
         },
     },
     PotionSlot: {
         Ctor(index: number): NativePointer {
-            return PatchHelper.GetNativeFunction(Potions.PotionSlot.Ctor)(PatchHelper.nullptr, index);
+            return PatchHelper.GetNativeFunction(Potions.PotionSlot.Ctor)(NULL, index);
         }
     },
 };

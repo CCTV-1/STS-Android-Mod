@@ -7,6 +7,6 @@ export const DamageAllEnemiesAction = {
      * @amounts java type: int[],TS type: JObjectArray\<int32_t\>
      */
     Ctor(source: NativePointer, amounts: NativePointer, type: DamageType, effect: AttackEffect, isFast: boolean): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.common.DamageAllEnemies.Ctor)(PatchHelper.nullptr, source, amounts, Number(type), Number(effect), Number(isFast));
+        return PatchHelper.GetNativeFunction(NativeActionInfo.common.DamageAllEnemies.Ctor)(NULL, source, amounts, Number(type), Number(effect), Number(isFast));
     },
 };

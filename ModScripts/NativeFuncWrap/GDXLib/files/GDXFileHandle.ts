@@ -8,20 +8,20 @@ export const GDXFileHandle = {
      * don't use this, it doNothing.
      */
     Ctor(): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.files.FileHandle.Ctor)(PatchHelper.nullptr);
+        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.files.FileHandle.Ctor)(NULL);
     },
     /**
      * if pass to `GDX::Texture`/`GDX::Pixmap`/..., only work in internal file(for apk), game dev modified GDX::FileHandle::readBytes implement.
      */
     Ctor2(fileName: string, fileType: GDXFileType): NativePointer {
         let nativeFileName = NativeSTDLib.JString.Ctor(fileName);
-        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.files.FileHandle.Ctor2)(PatchHelper.nullptr, nativeFileName, Number(fileType));
+        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.files.FileHandle.Ctor2)(NULL, nativeFileName, Number(fileType));
     },
     /**
      * if pass to `GDX::Texture`/`GDX::Pixmap`/..., only work in internal file(for apk), game dev modified GDX::FileHandle::readBytes implement.
      */
     Ctor3(JavaFileHandle: NativePointer, fileType: GDXFileType): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.files.FileHandle.Ctor3)(PatchHelper.nullptr, JavaFileHandle, Number(fileType));
+        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.files.FileHandle.Ctor3)(NULL, JavaFileHandle, Number(fileType));
     },
     child(thisPtr: NativePointer, name: string): NativePointer {
         let NativeName = NativeSTDLib.JString.Ctor(name);

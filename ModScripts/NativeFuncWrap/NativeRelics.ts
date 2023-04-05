@@ -75,7 +75,7 @@ export const NativeRelics = {
         Ctor(relicId: string, imgName: string, tier: RelicTier, sfx: LandingSound): NativePointer {
             let nativeRelicId = NativeSTDLib.JString.Ctor(relicId);
             let nativeImgUrl = NativeSTDLib.JString.Ctor(imgName);
-            return PatchHelper.GetNativeFunction(Relics.AbstractRelic.Ctor)(PatchHelper.nullptr, nativeRelicId, nativeImgUrl, Number(tier), Number(sfx));
+            return PatchHelper.GetNativeFunction(Relics.AbstractRelic.Ctor)(NULL, nativeRelicId, nativeImgUrl, Number(tier), Number(sfx));
         },
         OverrideCtor(newCtor: (thisPtr: NativePointer, relicId: string, imgName: string, tier: RelicTier, sfx: LandingSound) => NativePointer):
             (relicId: string, imgName: string, tier: RelicTier, sfx: LandingSound) => NativePointer {
@@ -94,7 +94,7 @@ export const NativeRelics = {
     },
     Ginger: {
         Ctor(): NativePointer {
-            return PatchHelper.GetNativeFunction(Relics.Ginger.Ctor)(PatchHelper.nullptr);
+            return PatchHelper.GetNativeFunction(Relics.Ginger.Ctor)(NULL);
         },
         OverrideCtor(newCtor: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
             return PatchHelper.HookSTSFunction(Relics.Ginger.Ctor, newCtor);
@@ -102,7 +102,7 @@ export const NativeRelics = {
     },
     SacredBark: {
         Ctor(): NativePointer {
-            return PatchHelper.GetNativeFunction(Relics.SacredBark.Ctor)(PatchHelper.nullptr);
+            return PatchHelper.GetNativeFunction(Relics.SacredBark.Ctor)(NULL);
         },
         OverrideCtor(newCtor: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
             return PatchHelper.HookSTSFunction(Relics.SacredBark.Ctor, newCtor);
@@ -110,7 +110,7 @@ export const NativeRelics = {
     },
     CoffeeDripper: {
         Ctor(): NativePointer {
-            return PatchHelper.GetNativeFunction(Relics.CoffeeDripper.Ctor)(PatchHelper.nullptr);
+            return PatchHelper.GetNativeFunction(Relics.CoffeeDripper.Ctor)(NULL);
         },
         OverrideCtor(newCtor: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
             return PatchHelper.HookSTSFunction(Relics.CoffeeDripper.Ctor, newCtor);
@@ -123,7 +123,7 @@ export const NativeRelics = {
     },
     RunicPyramid: {
         Ctor(): NativePointer {
-            return PatchHelper.GetNativeFunction(Relics.RunicPyramid.Ctor)(PatchHelper.nullptr);
+            return PatchHelper.GetNativeFunction(Relics.RunicPyramid.Ctor)(NULL);
         },
         OverrideCtor(newCtor: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
             return PatchHelper.HookSTSFunction(Relics.RunicPyramid.Ctor, newCtor);

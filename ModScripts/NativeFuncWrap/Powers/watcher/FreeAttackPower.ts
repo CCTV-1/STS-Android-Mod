@@ -3,6 +3,6 @@ import { NativePowerInfo } from "../NativePowerInfo.js";
 
 export const FreeAttackPower = {
     Ctor(owner: NativePointer, strengthAmount: number): NativePointer {
-        return PatchHelper.GetNativeFunction(NativePowerInfo.watcher.FreeAttack.Ctor)(PatchHelper.nullptr, owner, strengthAmount);
+        return PatchHelper.GetNativeFunction(NativePowerInfo.watcher.FreeAttack.Ctor)(NULL, owner, strengthAmount);
     }
 };

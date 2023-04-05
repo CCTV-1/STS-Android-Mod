@@ -353,7 +353,7 @@ export class AbstractCard extends NativeClassWrapper {
 
             const wrapCard = new AbstractCard(thisPtr);
             PatchHelper.LogV(wrapCard.cardID + " miss register Card::makeCopy vfunc???");
-            return PatchHelper.nullptr;
+            return NULL;
         },
     }
 

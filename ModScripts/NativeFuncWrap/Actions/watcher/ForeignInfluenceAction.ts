@@ -3,6 +3,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const ForeignInfluenceAction = {
     Ctor(upgraded: boolean): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.watcher.ForeignInfluence.Ctor)(PatchHelper.nullptr, Number(upgraded));
+        return PatchHelper.GetNativeFunction(NativeActionInfo.watcher.ForeignInfluence.Ctor)(NULL, Number(upgraded));
     },
 };

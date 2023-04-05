@@ -5,6 +5,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 export const ChangeStanceAction = {
     Ctor(stanceId: string): NativePointer {
         let nativeStanceId = NativeSTDLib.JString.Ctor(stanceId);
-        return PatchHelper.GetNativeFunction(NativeActionInfo.watcher.ChangeStance.Ctor)(PatchHelper.nullptr, nativeStanceId);
+        return PatchHelper.GetNativeFunction(NativeActionInfo.watcher.ChangeStance.Ctor)(NULL, nativeStanceId);
     },
 };

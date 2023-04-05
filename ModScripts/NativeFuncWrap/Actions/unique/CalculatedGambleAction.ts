@@ -3,6 +3,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const CalculatedGambleAction = {
     Ctor(upgraded: boolean): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.CalculatedGamble.Ctor)(PatchHelper.nullptr, Number(upgraded));
+        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.CalculatedGamble.Ctor)(NULL, Number(upgraded));
     },
 };

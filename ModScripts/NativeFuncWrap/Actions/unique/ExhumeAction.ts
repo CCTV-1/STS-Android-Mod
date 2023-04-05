@@ -3,6 +3,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const ExhumeAction = {
     Ctor(upgrade: boolean): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.Exhume.Ctor)(PatchHelper.nullptr, Number(upgrade));
+        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.Exhume.Ctor)(NULL, Number(upgrade));
     },
 };

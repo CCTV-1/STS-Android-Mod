@@ -69,7 +69,7 @@ const PotionHelper = {
 export const NativeHelpers = {
     CardLibrary: {
         initialize() {
-            PatchHelper.GetNativeFunction(CardLibrary.initialize)(PatchHelper.nullptr);
+            PatchHelper.GetNativeFunction(CardLibrary.initialize)(NULL);
         },
         Overrideinitialize(newIniter: (thisPtr: NativePointer) => void): (thisPtr: NativePointer) => void {
             return PatchHelper.HookSTSFunction(CardLibrary.initialize, newIniter);
@@ -83,7 +83,7 @@ export const NativeHelpers = {
     },
     RelicLibrary: {
         initialize() {
-            PatchHelper.GetNativeFunction(RelicLibrary.initialize)(PatchHelper.nullptr);
+            PatchHelper.GetNativeFunction(RelicLibrary.initialize)(NULL);
         },
         Overrideinitialize(newIniter: (thisPtr: NativePointer) => void): (thisPtr: NativePointer) => void {
             return PatchHelper.HookSTSFunction(RelicLibrary.initialize, newIniter);
@@ -97,14 +97,14 @@ export const NativeHelpers = {
     },
     PotionHelper: {
         getPotions(playerClass: PlayerClass, getAll: boolean): NativePointer {
-            return PatchHelper.GetNativeFunction(PotionHelper.getPotions)(PatchHelper.nullptr, Number(playerClass), Number(getAll));
+            return PatchHelper.GetNativeFunction(PotionHelper.getPotions)(NULL, Number(playerClass), Number(getAll));
         },
         OverridegetPotions(newFunc: (playerClass: number, getAll: number) => NativePointer): (playerClass: number, getAll: number) => NativePointer {
             return PatchHelper.HookSTSFunction(PotionHelper.getPotions, newFunc);
         },
         getPotion(potionId: string): NativePointer {
             const nativePotionId = NativeSTDLib.JString.Ctor(potionId);
-            return PatchHelper.GetNativeFunction(PotionHelper.getPotion)(PatchHelper.nullptr, nativePotionId);
+            return PatchHelper.GetNativeFunction(PotionHelper.getPotion)(NULL, nativePotionId);
         },
         /** JString* potionId, return AbstractPotion* */
         OverridegetPotion(newFunc: (potionId: NativePointer) => NativePointer): (potionId: NativePointer) => NativePointer {
@@ -115,7 +115,7 @@ export const NativeHelpers = {
         Ctor(header: string, body: string): NativePointer {
             let nativeHeader = NativeSTDLib.JString.Ctor(header);
             let nativeBody = NativeSTDLib.JString.Ctor(body);
-            return PatchHelper.GetNativeFunction(PowerTip.Ctor)(PatchHelper.nullptr, nativeHeader, nativeBody);
+            return PatchHelper.GetNativeFunction(PowerTip.Ctor)(NULL, nativeHeader, nativeBody);
         },
     }
 }

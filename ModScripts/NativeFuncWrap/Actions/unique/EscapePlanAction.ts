@@ -3,6 +3,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const EscapePlanAction = {
     Ctor(blockGain: number): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.EscapePlan.Ctor)(PatchHelper.nullptr, blockGain);
+        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.EscapePlan.Ctor)(NULL, blockGain);
     },
 };

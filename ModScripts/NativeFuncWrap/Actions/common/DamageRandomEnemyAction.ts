@@ -4,6 +4,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const DamageRandomEnemyAction = {
     Ctor(info: NativePointer, effect: AttackEffect): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.common.DamageRandomEnemy.Ctor)(PatchHelper.nullptr, info, Number(effect));
+        return PatchHelper.GetNativeFunction(NativeActionInfo.common.DamageRandomEnemy.Ctor)(NULL, info, Number(effect));
     },
 };

@@ -3,6 +3,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const MillAction = {
     Ctor(target: NativePointer, source: NativePointer, amount: number): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.common.Mill.Ctor)(PatchHelper.nullptr, target, source, amount);
+        return PatchHelper.GetNativeFunction(NativeActionInfo.common.Mill.Ctor)(NULL, target, source, amount);
     }
 };

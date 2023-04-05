@@ -4,6 +4,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const PoisonLoseHpAction = {
     Ctor(sourceCreature: NativePointer): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.PoisonLoseHp.Ctor)(PatchHelper.nullptr);
+        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.PoisonLoseHp.Ctor)(NULL);
     },
 };

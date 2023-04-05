@@ -3,6 +3,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const MonsterStartTurnAction = {
     Ctor(): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.common.MonsterStartTurn.Ctor)(PatchHelper.nullptr);
+        return PatchHelper.GetNativeFunction(NativeActionInfo.common.MonsterStartTurn.Ctor)(NULL);
     }
 };

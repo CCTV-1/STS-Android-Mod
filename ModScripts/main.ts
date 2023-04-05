@@ -487,7 +487,7 @@ function PatchRelics() {
 function RegisterNewCards() {
     let origCardLibraryInitialize = NativeHelpers.CardLibrary.Overrideinitialize((thisPtr: NativePointer) => {
         for (const newCardCtor of newCardLibrary) {
-            NativeHelpers.CardLibrary.Add(newCardCtor(PatchHelper.nullptr));
+            NativeHelpers.CardLibrary.Add(newCardCtor(NULL));
         }
         origCardLibraryInitialize(thisPtr);
     });
@@ -496,7 +496,7 @@ function RegisterNewCards() {
 function RegisterNewRelic() {
     let origRelicLibraryInitialize = NativeHelpers.RelicLibrary.Overrideinitialize((thisPtr: NativePointer) => {
         for (const newRelicCtor of newRelicLibrary) {
-            let origRelicPtr = newRelicCtor(PatchHelper.nullptr);
+            let origRelicPtr = newRelicCtor(NULL);
             NativeHelpers.RelicLibrary.Add(origRelicPtr);
         }
 

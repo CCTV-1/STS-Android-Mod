@@ -164,7 +164,7 @@ export const NativeSTDLib = {
     ArrayList: {
         JString: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(STDLib.ArrayList.JString.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.JString.Ctor)(NULL);
             },
             AddNativeStr(thisPtr: NativePointer, JStringPtr: NativePointer): boolean {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.JString.Add)(thisPtr, JStringPtr);
@@ -186,7 +186,7 @@ export const NativeSTDLib = {
         },
         AbstractCard: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.Ctor)(NULL);
             },
             get(arrayListPtr: ArrayList, index: number): NativePointer {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.get)(arrayListPtr.rawPtr, index);
@@ -220,22 +220,22 @@ export const NativeSTDLib = {
         /** UTF-16 string ctor*/
         Ctor(str: string): NativePointer {
             let nativeMem = Memory.allocUtf16String(str);
-            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor)(PatchHelper.nullptr, nativeMem);
+            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor)(NULL, nativeMem);
         },
         /** UTF-16 string ctor*/
         Ctor2(str: string, start: number, len: number): NativePointer {
             let nativeMem = Memory.allocUtf16String(str);
-            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor2)(PatchHelper.nullptr, nativeMem, start, len);
+            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor2)(NULL, nativeMem, start, len);
         },
         /** C string ctor, don't use this*/
         Ctor3(str: string): NativePointer {
             let nativeMem = Memory.allocAnsiString(str);
-            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor3)(PatchHelper.nullptr, nativeMem);
+            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor3)(NULL, nativeMem);
         },
         /** C string ctor, don't use this*/
         Ctor4(str: string, start: number, len: number): NativePointer {
             let nativeMem = Memory.allocAnsiString(str);
-            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor4)(PatchHelper.nullptr, nativeMem, start, len);
+            return PatchHelper.GetNativeFunction(STDLib.JString.Ctor4)(NULL, nativeMem, start, len);
         },
     },
     Exception: {
@@ -245,7 +245,7 @@ export const NativeSTDLib = {
     },
     IOException: {
         Ctor(): NativePointer {
-            return PatchHelper.GetNativeFunction(STDLib.IOException.Ctor)(PatchHelper.nullptr);
+            return PatchHelper.GetNativeFunction(STDLib.IOException.Ctor)(NULL);
         },
         OverrideCtor(newCtor: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
             return PatchHelper.HookSTSFunction(STDLib.IOException.Ctor, newCtor);
@@ -253,14 +253,14 @@ export const NativeSTDLib = {
 
         Ctor3(message: string): NativePointer {
             let nativeMessage = NativeSTDLib.JString.Ctor(message);
-            return PatchHelper.GetNativeFunction(STDLib.IOException.Ctor3)(PatchHelper.nullptr, nativeMessage);
+            return PatchHelper.GetNativeFunction(STDLib.IOException.Ctor3)(NULL, nativeMessage);
         },
         OverrideCtor3(newCtor: (thisPtr: NativePointer, message: NativePointer) => NativePointer): (thisPtr: NativePointer, message: NativePointer) => NativePointer {
             return PatchHelper.HookSTSFunction(STDLib.IOException.Ctor3, newCtor);
         },
         Ctor4(message: string, arg2: number): NativePointer {
             let nativeMessage = NativeSTDLib.JString.Ctor(message);
-            return PatchHelper.GetNativeFunction(STDLib.IOException.Ctor4)(PatchHelper.nullptr, nativeMessage, arg2);
+            return PatchHelper.GetNativeFunction(STDLib.IOException.Ctor4)(NULL, nativeMessage, arg2);
         },
         OverrideCtor4(newCtor: (thisPtr: NativePointer, message: NativePointer, arg3: number) => NativePointer): (thisPtr: NativePointer, message: NativePointer, arg3: number) => NativePointer {
             return PatchHelper.HookSTSFunction(STDLib.IOException.Ctor4, newCtor);

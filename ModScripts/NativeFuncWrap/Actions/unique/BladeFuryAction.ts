@@ -3,6 +3,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const BladeFuryAction = {
     Ctor(upgraded: boolean): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.BladeFury.Ctor)(PatchHelper.nullptr, Number(upgraded));
+        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.BladeFury.Ctor)(NULL, Number(upgraded));
     },
 };

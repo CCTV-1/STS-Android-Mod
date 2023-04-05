@@ -3,6 +3,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const DoublePoisonAction = {
     Ctor(targetCreature: NativePointer, sourceCreature: NativePointer): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.DoublePoison.Ctor)(PatchHelper.nullptr, targetCreature, sourceCreature);
+        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.DoublePoison.Ctor)(NULL, targetCreature, sourceCreature);
     },
 };

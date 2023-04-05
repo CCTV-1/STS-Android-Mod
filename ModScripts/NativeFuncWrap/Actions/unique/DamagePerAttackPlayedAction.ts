@@ -4,6 +4,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const DamagePerAttackPlayedAction = {
     Ctor(targetCreature: NativePointer, dmgInfo: NativePointer, atkEffect: AttackEffect): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.DamagePerAttackPlayed.Ctor)(PatchHelper.nullptr, targetCreature, dmgInfo, atkEffect);
+        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.DamagePerAttackPlayed.Ctor)(NULL, targetCreature, dmgInfo, atkEffect);
     },
 };

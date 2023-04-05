@@ -6,6 +6,6 @@ export const ExhaustSpecificCardAction = {
      * group type is CardGroup
      */
     Ctor(targetCard: NativePointer, group: NativePointer, isFast: boolean): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.common.ExhaustSpecificCard.Ctor)(PatchHelper.nullptr, targetCard, group, Number(isFast));
+        return PatchHelper.GetNativeFunction(NativeActionInfo.common.ExhaustSpecificCard.Ctor)(NULL, targetCard, group, Number(isFast));
     },
 };

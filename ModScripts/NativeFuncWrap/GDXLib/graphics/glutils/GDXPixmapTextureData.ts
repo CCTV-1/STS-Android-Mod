@@ -4,7 +4,7 @@ import { NativeGDXLibInfo } from "../../NativeGDXLibInfo.js";
 export const GDXPixmapTextureData = {
     /** formatPtr see GDX::graphics::Pixmap::getFormatObjPtr */
     Ctor(pixmapPtr: NativePointer, formatPtr: NativePointer, useMipMaps: boolean, disposePixmap: boolean): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.graphics.Glutils.PixmapTextureData.Ctor)(PatchHelper.nullptr, pixmapPtr, formatPtr, Number(useMipMaps),
+        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.graphics.Glutils.PixmapTextureData.Ctor)(NULL, pixmapPtr, formatPtr, Number(useMipMaps),
             Number(disposePixmap));
     },
     /** formatPtr see GDX::graphics::Pixmap::getFormatObjPtr */

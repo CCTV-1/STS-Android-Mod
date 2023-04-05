@@ -4,6 +4,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const UnloadAction = {
     Ctor(sourceCreature: NativePointer): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.Unload.Ctor)(PatchHelper.nullptr);
+        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.Unload.Ctor)(NULL);
     },
 };

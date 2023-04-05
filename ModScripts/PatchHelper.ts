@@ -1,9 +1,7 @@
 import { NativeFunctionInfo } from "./NativeFuncWrap/NativeFunctionInfo.js"
-import { AbstractPlayer } from "./NativeClassWrap/AbstractPlayer.js";
 
 export class PatchHelper {
-    static readonly nullptr = new NativePointer(0);
-    static readonly STSModuleBaseAddress = Module.findBaseAddress("libSpire_ANDROID.so") || PatchHelper.nullptr;
+    static readonly STSModuleBaseAddress = Module.findBaseAddress("libSpire_ANDROID.so") || NULL;
     static readonly ScriptDir = "/sdcard/Android/data/com.humble.SlayTheSpire/files/ModScripts/";
     static readonly ResourceDir = "/sdcard/Android/data/com.humble.SlayTheSpire/files/ModResources/";
 
@@ -143,7 +141,7 @@ export class PatchHelper {
         if (!PatchHelper.#GlobalVarCache.has(offset)) {
             PatchHelper.#GlobalVarCache.set(offset, PatchHelper.STSModuleBaseAddress.add(offset));
         }
-        return PatchHelper.#GlobalVarCache.get(offset) || PatchHelper.nullptr;
+        return PatchHelper.#GlobalVarCache.get(offset) || NULL;
     }
 
     static GetNativeFunction(origFuncInfo: NativeFunctionInfo): NativeFunction<any, any> {

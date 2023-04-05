@@ -7,11 +7,11 @@ export const GDXPixmap = {
      * because GDX::Files::FileHandle::readBytes modified by game dev,this ctor olny work in internal file(for apk/obb)
      */
     Ctor(GDXFileHandle: NativePointer): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.graphics.PixMap.Ctor)(PatchHelper.nullptr, GDXFileHandle);
+        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.graphics.PixMap.Ctor)(NULL, GDXFileHandle);
     },
     /** see getFormatObjPtr function */
     Ctor2(width: number, height: number, formatObject: NativePointer): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.graphics.PixMap.Ctor2)(PatchHelper.nullptr, width, height, formatObject);
+        return PatchHelper.GetNativeFunction(NativeGDXLibInfo.graphics.PixMap.Ctor2)(NULL, width, height, formatObject);
     },
     getFormatObjPtr(format: GDXPixMapFormat): NativePointer {
         switch(format) {

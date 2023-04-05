@@ -672,7 +672,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
 
             PatchHelper.LogV(wrapRelic.relicId + " miss register Relic::makeCopy vfunc???");
-            return PatchHelper.nullptr;
+            return NULL;
         },
         canSpawn: (thisPtr: NativePointer) => {
             let wrapRelic = new AbstractRelic(thisPtr);

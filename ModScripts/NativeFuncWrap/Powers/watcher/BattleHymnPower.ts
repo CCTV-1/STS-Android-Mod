@@ -3,6 +3,6 @@ import { NativePowerInfo } from "../NativePowerInfo.js";
 
 export const BattleHymnPower = {
     Ctor(owner: NativePointer, strengthAmount: number): NativePointer {
-        return PatchHelper.GetNativeFunction(NativePowerInfo.watcher.BattleHymn.Ctor)(PatchHelper.nullptr, owner, strengthAmount);
+        return PatchHelper.GetNativeFunction(NativePowerInfo.watcher.BattleHymn.Ctor)(NULL, owner, strengthAmount);
     }
 };

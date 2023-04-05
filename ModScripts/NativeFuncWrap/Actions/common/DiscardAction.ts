@@ -6,6 +6,6 @@ export const DiscardAction = {
         return DiscardAction.Ctor2(target, source, amount, false, false);
     },
     Ctor2(target: NativePointer, source: NativePointer, amount: number, isRandom: boolean, endTurn: boolean): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.common.Discard.Ctor2)(PatchHelper.nullptr, target, source, amount, Number(isRandom), Number(endTurn));
+        return PatchHelper.GetNativeFunction(NativeActionInfo.common.Discard.Ctor2)(NULL, target, source, amount, Number(isRandom), Number(endTurn));
     },
 };

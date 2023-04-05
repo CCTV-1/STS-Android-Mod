@@ -3,6 +3,6 @@ import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const InstantKillAction = {
     Ctor(target: NativePointer): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.common.InstantKill.Ctor)(PatchHelper.nullptr, target);
+        return PatchHelper.GetNativeFunction(NativeActionInfo.common.InstantKill.Ctor)(NULL, target);
     },
 };

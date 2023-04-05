@@ -20,7 +20,7 @@ export class NativeClassWrapper {
         if (hasVFuncMap) {
             this.#vfuncMapPtr = CthisPtr.readPointer().add(0x4).readPointer();
         } else {
-            this.#vfuncMapPtr = PatchHelper.nullptr;
+            this.#vfuncMapPtr = NULL;
         }
     }
 

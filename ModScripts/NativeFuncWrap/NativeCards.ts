@@ -146,7 +146,7 @@ export const NativeCards = {
             let nativeName = NativeSTDLib.JString.Ctor(name);
             let nativeimgUrl = NativeSTDLib.JString.Ctor(imgUrl);
             let nativerawDescription = NativeSTDLib.JString.Ctor(rawDescription);
-            return PatchHelper.GetNativeFunction(Cards.AbstractCard.Ctor)(PatchHelper.nullptr, nativeId, nativeName,
+            return PatchHelper.GetNativeFunction(Cards.AbstractCard.Ctor)(NULL, nativeId, nativeName,
                 nativeimgUrl, cost, nativerawDescription, Number(type), Number(color), Number(rarity), Number(target), Number(dType));
         },
         OverrideCtor(newCtor: (thisPtr: NativePointer, id: NativePointer, name: NativePointer, imgUrl: NativePointer, cost: number, rawDescription: NativePointer,
@@ -158,13 +158,13 @@ export const NativeCards = {
     },
     DamageInfo: {
         Ctor(damageSource: NativePointer, dmgValue: number, dmgTYpe: DamageType): NativePointer {
-            return PatchHelper.GetNativeFunction(Cards.DamageInfo.Ctor)(PatchHelper.nullptr, damageSource, dmgValue, Number(dmgTYpe));
+            return PatchHelper.GetNativeFunction(Cards.DamageInfo.Ctor)(NULL, damageSource, dmgValue, Number(dmgTYpe));
         }
     },
     Red: {
         Bash: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(Cards.Red.Bash.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.Bash.Ctor)(NULL);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
@@ -173,7 +173,7 @@ export const NativeCards = {
         },
         Clothesline: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(Cards.Red.Clothesline.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.Clothesline.Ctor)(NULL);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
@@ -182,7 +182,7 @@ export const NativeCards = {
         },
         DefendRed: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(Cards.Red.DefendRed.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.DefendRed.Ctor)(NULL);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
@@ -191,7 +191,7 @@ export const NativeCards = {
         },
         Feed: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(Cards.Red.Feed.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.Feed.Ctor)(NULL);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
@@ -200,7 +200,7 @@ export const NativeCards = {
         },
         HeavyBlade: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(Cards.Red.HeavyBlade.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.HeavyBlade.Ctor)(NULL);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
@@ -209,7 +209,7 @@ export const NativeCards = {
         },
         PerfectedStrike: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(Cards.Red.PerfectedStrike.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.PerfectedStrike.Ctor)(NULL);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
@@ -227,7 +227,7 @@ export const NativeCards = {
         },
         StrikeRed: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(Cards.Red.StrikeRed.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Red.StrikeRed.Ctor)(NULL);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
@@ -256,7 +256,7 @@ export const NativeCards = {
     Purple: {
         Alpha: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(Cards.Purple.Alpha.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Purple.Alpha.Ctor)(NULL);
             },
             /** return origin Ctor */
             OverrideCtor(newCtor: STSCardCtor): STSCardCtor {
@@ -267,14 +267,14 @@ export const NativeCards = {
     Temp: {
         Omega: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(Cards.Temp.Omega.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.Temp.Omega.Ctor)(NULL);
             },
         }
     },
     status: {
         Burn: {
             Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(Cards.status.Burn.Ctor)(PatchHelper.nullptr);
+                return PatchHelper.GetNativeFunction(Cards.status.Burn.Ctor)(NULL);
             }
         },
     },
