@@ -6,6 +6,6 @@ export const ExhaustAction = {
         return PatchHelper.GetNativeFunction(NativeActionInfo.common.Exhaust.Ctor)(NULL, amount, Number(isRandom), Number(anyNumber), Number(canPickZero));
     },
     Ctor2(amount: number, isRandom: boolean, anyNumber: boolean, canPickZero: boolean, duration: number): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.common.Exhaust.Ctor)(NULL, amount, Number(isRandom), Number(anyNumber), Number(canPickZero), duration);
+        return PatchHelper.GetNativeFunction(NativeActionInfo.common.Exhaust.Ctor2)(NULL, amount, Number(isRandom), Number(anyNumber), Number(canPickZero), duration);
     },
 };
