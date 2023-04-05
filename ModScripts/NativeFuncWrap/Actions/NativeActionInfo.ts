@@ -1289,7 +1289,193 @@ export const NativeActionInfo = {
         },
     },
     watcher: {
+        ChangeStance: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ChangeStanceAction(STS::AbstractGameAction* thisPtr, JString* stanceId)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B323D, 'pointer', ['pointer', 'pointer']),
+        },
+        ChooseOne: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ChooseOneAction(STS::AbstractGameAction* thisPtr, ArrayList<AbstractCard>* choices)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B40A1, 'pointer', ['pointer', 'pointer']),
 
+        },
+        Collect: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::CollectAction(STS::AbstractGameAction* thisPtr, STS::AbstractPlayer* plyaerPtr, bool freeToPlayOnce,
+             *      int32_t energyOnUse, bool upgraded)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B4225, 'pointer', ['pointer', 'pointer', 'bool', 'int32', 'bool']),
+        },
+        ConjureBlade: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ConjureBladeAction(STS::AbstractGameAction* thisPtr, STS::AbstractPlayer* plyaerPtr, bool freeToPlayOnce,
+             *      int32_t energyOnUse)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B44B9, 'pointer', ['pointer', 'pointer', 'bool', 'int32']),
+        },
+        CrushJoints: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::CrushJoints(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* monsterPtr, int32_t vulnAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B4769, 'pointer', ['pointer', 'pointer', 'int32']),
+        },
+        ExpungeVFX: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ExpungeVFX(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* monsterPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B4945, 'pointer', ['pointer', 'pointer']),
+        },
+        FearNoEvil: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::FearNoEvil(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* monsterPtr, DamageInfo* dmgInfo)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B4B91, 'pointer', ['pointer', 'pointer', 'pointer']),
+        },
+        FollowUp: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::FollowUp(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B4E59, 'pointer', ['pointer']),
+        },
+        ForeignInfluence: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::ForeignInfluenceAction(STS::AbstractGameAction* thisPtr, bool upgraded)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B4ED9, 'pointer', ['pointer', 'bool']),
+        },
+        Halt: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::HaltAction(STS::AbstractGameAction* thisPtr, STS::AbstractCreature targetCreature, int32_t block, int32_t additional)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B5585, 'pointer', ['pointer', 'pointer', 'int32', 'int32']),
+        },
+        HeadStomp: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::HeadStomp(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* monsterPtr, int32_t vulnAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B5709, 'pointer', ['pointer', 'pointer', 'int32']),
+        },
+        Indignation: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::IndignationAction(STS::AbstractGameAction* thisPtr, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B58E1, 'pointer', ['pointer', 'int32']),
+        },
+        InnerPeace: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::InnerPeaceAction(STS::AbstractGameAction* thisPtr, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B5B69, 'pointer', ['pointer', 'int32']),
+        },
+        Judgement: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Judgement(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* targetCreature, int32_t cutoff)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B5CED, 'pointer', ['pointer', 'pointer', 'int32']),
+        },
+        LessonLearned: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::LessonLearned(STS::AbstractGameAction* thisPtr, STS::AbstractMonster* targetCreature, DamageInfo* dmgInfo)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B5ED1, 'pointer', ['pointer', 'pointer', 'pointer']),
+        },
+        Meditate: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Meditate(STS::AbstractGameAction* thisPtr, int32_t numberOfCards)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B66D9, 'pointer', ['pointer', 'int32']),
+        },
+        NotStanceCheck: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Meditate(STS::AbstractGameAction* thisPtr, JString* stanceToCheck, STS::AbstractGameAction* actionToCheck)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B747D, 'pointer', ['pointer', 'pointer', 'pointer']),
+        },
+        Omniscience: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Omniscience(STS::AbstractGameAction* thisPtr, int32_t numberOfCards)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B75C9, 'pointer', ['pointer', 'int32']),
+        },
+        PressEndTurnButton: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::PressEndTurnButton(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B7EE9, 'pointer', ['pointer']),
+        },
+        Sanctity: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Sanctity(STS::AbstractGameAction* thisPtr, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B7F69, 'pointer', ['pointer', 'int32']),
+        },
+        SkipEnemiesTurn: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::SkipEnemiesTurn(STS::AbstractGameAction* thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B8271, 'pointer', ['pointer']),
+        },
+        TriggerMarks: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::TriggerMarks(STS::AbstractGameAction* thisPtr, STS::AbstractCard* callingCard)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B82F1, 'pointer', ['pointer', 'pointer']),
+        },
+        Wallop: {
+            /**
+             * ```c
+             * AbstractGameAction* Actions::Wallop(STS::AbstractGameAction* thisPtr, STS::AbstractCard* targetCreature, DamageInfo* dmgInfo)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x16B8575, 'pointer', ['pointer', 'pointer', 'pointer']),
+        },
     },
     AbstractGame: {
         /**
