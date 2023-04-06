@@ -1,6 +1,7 @@
 import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
+import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
 
 export class AbstractCreature extends NativeClassWrapper {
     //NativePointer AbstractCreature *
@@ -97,6 +98,21 @@ export class AbstractCreature extends NativeClassWrapper {
     heal(amount: number, showEffect: boolean) {
         let healFunc = this.getVirtualFunction(AbstractCreature.#vfunctionMap.heal);
         healFunc(this.rawPtr, amount, Number(showEffect));
+    }
+
+    addPower(powerPtr: NativePointer) {
+        this.getVirtualFunction(AbstractCreature.#vfunctionMap.addPower)(this.rawPtr, powerPtr);
+    }
+
+    /** return AbstractPower* */
+    getPower(powerId: string): NativePointer {
+        let nativePowerId = NativeSTDLib.JString.Ctor(powerId);
+        return this.getVirtualFunction(AbstractCreature.#vfunctionMap.getPower)(this.rawPtr, nativePowerId);
+    }
+
+    hasPower(powerId: string): boolean {
+        let nativePowerId = NativeSTDLib.JString.Ctor(powerId);
+        return this.getVirtualFunction(AbstractCreature.#vfunctionMap.hasPower)(this.rawPtr, nativePowerId);
     }
 
     loseGold(goldAmount: number) {

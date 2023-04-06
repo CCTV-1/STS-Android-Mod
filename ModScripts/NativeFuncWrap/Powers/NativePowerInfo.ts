@@ -45,10 +45,18 @@ export const NativePowerInfo = {
         Echo: {
             /**
              * ```c
-             * STS::AbstractPower* Powers::EchoPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * STS::AbstractPower* Powers::EchoPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
              * ```
              */
             Ctor: new NativeFunctionInfo(0x1961C21, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        Focus: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::FocusPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x19669C5, 'pointer', ['pointer', 'pointer', 'int32'])
         },
     },
     ironclad: {

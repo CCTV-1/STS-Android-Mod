@@ -6,6 +6,8 @@ import { PlunderTalent } from "./NewCards/PlunderTalent.js";
 import { OneWithTheMultiverse } from "./NewCards/OneWithTheMultiverse.js";
 import { DemonicPurge } from "./NewCards/DemonicPurge.js";
 import { OuterGodization } from "./NewCards/OuterGodization.js";
+import { GaugeTheory } from "./NewCards/GaugeTheory.js";
+import { GammaRayBurst } from "./NewCards/GammaRayBurst.js";
 
 /**
  * if you plan register a new card, add a function property to NewCardLibrary,the function code like follow:
@@ -51,4 +53,6 @@ export const newCardLibrary: STSCardCtor[] = [
     OneWithTheMultiverse,
     DemonicPurge,
     OuterGodization,
+    GaugeTheory,
+    GammaRayBurst,
 ];
