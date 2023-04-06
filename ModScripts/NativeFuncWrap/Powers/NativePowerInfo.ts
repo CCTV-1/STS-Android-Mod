@@ -21,6 +21,12 @@ export const NativePowerInfo = {
         Confusion: {
             /**
              * ```c
+             * STS::AbstractPower* Powers::Confusion(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x195C3B5, 'pointer', ['pointer', 'pointer']),
+            /**
+             * ```c
              * void ConfusionPower::onCardDraw(STS::AbstractPower * thisPtr, STS::AbstractCard * card)
              * ```
              */
