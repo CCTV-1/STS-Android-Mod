@@ -6,6 +6,7 @@ import { CardType, CardColor, CardRarity, CardTarget, DamageType } from "../enum
 export const DemonicPurge: STSCardCtor = (thisPtr: NativePointer) => {
     const vfuncs: NewCardVFuncType = {
         use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
+            let wrapCard = new AbstractCard(thisPtr);
             let currentPlayer = AbstractDungeon.getInstance().player;
             const handList = currentPlayer.hand.group;
             const handSize = handList.size;
