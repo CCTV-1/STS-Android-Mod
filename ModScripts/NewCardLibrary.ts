@@ -8,6 +8,7 @@ import { DemonicPurge } from "./NewCards/DemonicPurge.js";
 import { OuterGodization } from "./NewCards/OuterGodization.js";
 import { GaugeTheory } from "./NewCards/GaugeTheory.js";
 import { GammaRayBurst } from "./NewCards/GammaRayBurst.js";
+import { AncestralRecall } from "./NewCards/AncestralRecall.js";
 
 /**
  * if you plan register a new card, add a function property to NewCardLibrary,the function code like follow:
@@ -55,4 +56,5 @@ export const newCardLibrary: STSCardCtor[] = [
     OuterGodization,
     GaugeTheory,
     GammaRayBurst,
+    AncestralRecall,
 ];
