@@ -1,11 +1,16 @@
 import { AbstractCard, NewCardVFuncType } from "../NativeClassWrap/AbstractCard.js";
+import { AbstractPlayer } from "../NativeClassWrap/AbstractPlayer.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
+import { PatchHelper } from "../PatchHelper.js";
 import { CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
 
 export const GaugeTheory = (thisPtr: NativePointer): NativePointer => {
     const vfuncs: NewCardVFuncType = {
         use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
+            let wrapPlayer = new AbstractPlayer(playerPtr);
+            const energyManager = wrapPlayer.energy;
+            energyManager.use(PatchHelper.STSGlobalVars.EnergyPaneltotalCount);
             let wrapCard = new AbstractCard(thisPtr);
             let fouceNumber = wrapCard.energyOnUse - wrapCard.magicNumber;
             if (fouceNumber <= 0) {
