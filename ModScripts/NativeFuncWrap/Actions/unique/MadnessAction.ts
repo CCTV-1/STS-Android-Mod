@@ -1,9 +1,8 @@
-
 import { PatchHelper } from "../../../PatchHelper.js";
 import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const MadnessAction = {
-    Ctor(sourceCreature: NativePointer): NativePointer {
+    Ctor(): NativePointer {
         return PatchHelper.GetNativeFunction(NativeActionInfo.unique.Madness.Ctor)(NULL);
     },
 };

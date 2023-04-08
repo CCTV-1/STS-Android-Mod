@@ -1,9 +1,8 @@
-
 import { PatchHelper } from "../../../PatchHelper.js";
 import { NativeActionInfo } from "../NativeActionInfo.js";
 
 export const MulticastAction = {
-    Ctor(sourceCreature: NativePointer): NativePointer {
-        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.Multicast.Ctor)(NULL);
+    Ctor(playerPtr: NativePointer, upgraded: boolean, freeToPlayOnce: boolean, energyOnUse: number): NativePointer {
+        return PatchHelper.GetNativeFunction(NativeActionInfo.unique.Multicast.Ctor)(NULL, playerPtr, energyOnUse, Number(upgraded), Number(freeToPlayOnce));
     },
 };

@@ -11,7 +11,7 @@ const vfuncs: NewCardVFuncType = {
         let confusionPower = NativePowers.Common.Confusion.Ctor(playerPtr);
         let applyPowerAction = NativeActions.common.ApplyPower.Ctor2(playerPtr, playerPtr, confusionPower, 1);
         wrapCard.addToBot(applyPowerAction);
-        let randomCostAction = NativeActions.unique.RandomizeHandCost.Ctor(playerPtr);
+        let randomCostAction = NativeActions.unique.RandomizeHandCost.Ctor();
         wrapCard.addToBot(randomCostAction);
     },
     upgrade: (thisPtr: NativePointer) => {
