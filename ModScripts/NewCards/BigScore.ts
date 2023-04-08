@@ -3,27 +3,27 @@ import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType }
 import { DoubleGoldAction } from "../NewActions/DoubleGoldAction.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 
-export const BigScore = (thisPtr: NativePointer): NativePointer => {
-    const vfuncs: NewCardVFuncType = {
-        use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let loseHPAction = NativeActions.common.LoseHP.Ctor(playerPtr, playerPtr, wrapCard.magicNumber, AttackEffect.NONE);
-            wrapCard.addToBot(loseHPAction);
-            wrapCard.addToBot(DoubleGoldAction());
-        },
-        upgrade: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            if (!wrapCard.upgraded) {
-                wrapCard.upgradeName();
-                wrapCard.upgradeMagicNumber(-5);
-            }
-        },
-        makeCopy: (thisPtr: NativePointer) => {
-            let copyObj = BigScore(thisPtr);
-            return copyObj;
-        },
-    };
+const vfuncs: NewCardVFuncType = {
+    use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
+        let wrapCard = new AbstractCard(thisPtr);
+        let loseHPAction = NativeActions.common.LoseHP.Ctor(playerPtr, playerPtr, wrapCard.magicNumber, AttackEffect.NONE);
+        wrapCard.addToBot(loseHPAction);
+        wrapCard.addToBot(DoubleGoldAction());
+    },
+    upgrade: (thisPtr: NativePointer) => {
+        let wrapCard = new AbstractCard(thisPtr);
+        if (!wrapCard.upgraded) {
+            wrapCard.upgradeName();
+            wrapCard.upgradeMagicNumber(-5);
+        }
+    },
+    makeCopy: (thisPtr: NativePointer) => {
+        let copyObj = BigScore(thisPtr);
+        return copyObj;
+    },
+};
 
+export const BigScore = (thisPtr: NativePointer): NativePointer => {
     let wrapCard = AbstractCard.NewCardCtor("BigScore", "大干一票", "colorless/skill/BigScore", 4, "失去 !M! 点生命，将你拥有的金币翻倍。", CardType.SKILL,
         CardColor.COLORLESS, CardRarity.RARE, CardTarget.NONE, DamageType.NORMAL, vfuncs);
     wrapCard.baseMagicNumber = 30;

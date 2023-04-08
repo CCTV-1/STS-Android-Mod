@@ -3,30 +3,30 @@ import { AttackEffect, CardColor, CardRarity, CardTarget, CardType, DamageType }
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
 
-export const BasicAttackRed = (thisPtr: NativePointer): NativePointer => {
-    const vfuncs: NewCardVFuncType = {
-        use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            let dmgInfoObj = NativeCards.DamageInfo.Ctor(playerPtr, wrapCard.damage, wrapCard.damageTypeForTurn);
-            let damageAction = NativeActions.common.Damage.Ctor(monsterPtr, dmgInfoObj, AttackEffect.SLASH_DIAGONAL);
-            let targetCard = NativeCards.status.Burn.Ctor();
-            let makeTempCardInHandAction = NativeActions.common.MakeTempCardInHand.Ctor(targetCard, 1, true);
-            wrapCard.addToBot(damageAction);
-            wrapCard.addToBot(makeTempCardInHandAction);
-        },
-        upgrade: (thisPtr: NativePointer) => {
-            let wrapCard = new AbstractCard(thisPtr);
-            if (!wrapCard.upgraded) {
-                wrapCard.upgradeName();
-                wrapCard.upgradeDamage(3);
-            }
-        },
-        makeCopy: (thisPtr: NativePointer) => {
-            let copyObj = BasicAttackRed(thisPtr);
-            return copyObj;
-        },
-    };
+const vfuncs: NewCardVFuncType = {
+    use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
+        let wrapCard = new AbstractCard(thisPtr);
+        let dmgInfoObj = NativeCards.DamageInfo.Ctor(playerPtr, wrapCard.damage, wrapCard.damageTypeForTurn);
+        let damageAction = NativeActions.common.Damage.Ctor(monsterPtr, dmgInfoObj, AttackEffect.SLASH_DIAGONAL);
+        let targetCard = NativeCards.status.Burn.Ctor();
+        let makeTempCardInHandAction = NativeActions.common.MakeTempCardInHand.Ctor(targetCard, 1, true);
+        wrapCard.addToBot(damageAction);
+        wrapCard.addToBot(makeTempCardInHandAction);
+    },
+    upgrade: (thisPtr: NativePointer) => {
+        let wrapCard = new AbstractCard(thisPtr);
+        if (!wrapCard.upgraded) {
+            wrapCard.upgradeName();
+            wrapCard.upgradeDamage(3);
+        }
+    },
+    makeCopy: (thisPtr: NativePointer) => {
+        let copyObj = BasicAttackRed(thisPtr);
+        return copyObj;
+    },
+};
 
+export const BasicAttackRed = (thisPtr: NativePointer): NativePointer => {
     let wrapCard = AbstractCard.NewCardCtor("BasicAttack_R", "熔岩击", "red/attack/strike", 1, "造成 !D! 点伤害，将一张灼伤放入你的手牌。", CardType.ATTACK,
         CardColor.RED, CardRarity.BASIC, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
     wrapCard.baseDamage = 9;
