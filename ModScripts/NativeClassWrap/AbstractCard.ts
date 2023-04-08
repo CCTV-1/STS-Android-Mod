@@ -346,7 +346,6 @@ export class AbstractCard extends NativeClassWrapper {
                 const makeCopyFunc = cardVFuncMap.makeCopy;
                 if (makeCopyFunc !== undefined) {
                     let copyObj = makeCopyFunc(thisPtr);
-                    AbstractCard.#rewriteVFuncMap.set(copyObj.toUInt32(), cardVFuncMap);
                     return copyObj;
                 }
             }
@@ -632,9 +631,8 @@ export class AbstractCard extends NativeClassWrapper {
         let origCardPtr = NativeCards.AbstractCard.Ctor(id, name, imgUrl, cost, rawDescription, type, color, rarity, target, dType);
 
         let wrapCard = new AbstractCard(origCardPtr);
-        if (!AbstractCard.#rewriteVFuncMap.has(origCardPtr.toUInt32())) {
-            AbstractCard.#rewriteVFuncMap.set(origCardPtr.toUInt32(), newFuncs);
-        }
+        //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
+        AbstractCard.#rewriteVFuncMap.set(origCardPtr.toUInt32(), newFuncs);
 
         if (!AbstractCard.#rewriteVFuncMap.has(-1)) {
             const VFuncMap = AbstractCard.#vfunctionMap;

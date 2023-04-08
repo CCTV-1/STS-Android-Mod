@@ -89,13 +89,18 @@ export class AbstractRelic extends NativeClassWrapper {
 
     /**
      * new Relic id => (v func name => v func)
+     * 
+     * NativePointer current don't exist toUInt64, Frida(Duktape) current don't support BigInt,
+     * so current proxy implement need all C pointer size equal sizeof(uint32_t).
+     * 
+     * use ptr.toString() or new Uint64(ptr.toString()) can support pointer size equal sizeof(uint64_t) architecture.
+     * but there is more performance overhead.
      */
-    static #rewriteVFuncMap = new Map<string, NewRelicVFuncType>();
+    static #rewriteVFuncMap = new Map<number, NewRelicVFuncType>();
 
     static readonly #NewRelicVFuncProxys: NewRelicVFuncType = {
         updateDescription: (thisPtr: NativePointer, playerClass: PlayerClass) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.updateDescription;
                 if (Func !== undefined) {
@@ -104,8 +109,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         getUpdatedDescription: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.getUpdatedDescription;
                 if (Func !== undefined) {
@@ -116,8 +120,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return NativeSTDLib.JString.Ctor("");
         },
         onPlayCard: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onPlayCard;
                 if (Func !== undefined) {
@@ -126,8 +129,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onPreviewObtainCard: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onPreviewObtainCard;
                 if (Func !== undefined) {
@@ -136,8 +138,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onObtainCard: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onObtainCard;
                 if (Func !== undefined) {
@@ -146,8 +147,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onGainGold: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onGainGold;
                 if (Func !== undefined) {
@@ -156,8 +156,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onLoseGold: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onLoseGold;
                 if (Func !== undefined) {
@@ -166,8 +165,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onSpendGold: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onSpendGold;
                 if (Func !== undefined) {
@@ -176,8 +174,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onEquip: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onEquip;
                 if (Func !== undefined) {
@@ -186,8 +183,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onUnequip: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onUnequip;
                 if (Func !== undefined) {
@@ -196,8 +192,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         atPreBattle: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atPreBattle;
                 if (Func !== undefined) {
@@ -206,8 +201,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         atBattleStart: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atBattleStart;
                 if (Func !== undefined) {
@@ -216,8 +210,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onSpawnMonster: (thisPtr: NativePointer, monsterPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onSpawnMonster;
                 if (Func !== undefined) {
@@ -226,8 +219,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         atBattleStartPreDraw: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atBattleStartPreDraw;
                 if (Func !== undefined) {
@@ -236,8 +228,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         atTurnStart: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atTurnStart;
                 if (Func !== undefined) {
@@ -246,8 +237,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         atTurnStartPostDraw: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atTurnStartPostDraw;
                 if (Func !== undefined) {
@@ -256,8 +246,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onPlayerEndTurn: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onPlayerEndTurn;
                 if (Func !== undefined) {
@@ -266,8 +255,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onBloodied: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onBloodied;
                 if (Func !== undefined) {
@@ -276,8 +264,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onNotBloodied: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onNotBloodied;
                 if (Func !== undefined) {
@@ -286,8 +273,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onManualDiscard: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onManualDiscard;
                 if (Func !== undefined) {
@@ -296,8 +282,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onUseCard: (thisPtr: NativePointer, cardPtr: NativePointer, useCardAction: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onUseCard;
                 if (Func !== undefined) {
@@ -306,8 +291,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onVictory: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onVictory;
                 if (Func !== undefined) {
@@ -316,8 +300,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onMonsterDeath: (thisPtr: NativePointer, monsterPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onMonsterDeath;
                 if (Func !== undefined) {
@@ -326,8 +309,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onBlockBroken: (thisPtr: NativePointer, creaturePtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onBlockBroken;
                 if (Func !== undefined) {
@@ -336,8 +318,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onPlayerGainedBlock: (thisPtr: NativePointer, blockAmount: number) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onPlayerGainedBlock;
                 if (Func !== undefined) {
@@ -348,8 +329,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return blockAmount;
         },
         onPlayerHeal: (thisPtr: NativePointer, healAmount: number) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onPlayerHeal;
                 if (Func !== undefined) {
@@ -360,8 +340,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return healAmount
         },
         onEnergyRecharge: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onEnergyRecharge;
                 if (Func !== undefined) {
@@ -371,8 +350,7 @@ export class AbstractRelic extends NativeClassWrapper {
         },
         /** ArrayList\<AbstractCampfireOption\>* options */
         addCampfireOption: (thisPtr: NativePointer, options: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.addCampfireOption;
                 if (Func !== undefined) {
@@ -382,8 +360,7 @@ export class AbstractRelic extends NativeClassWrapper {
         },
         /** AbstractCampfireOption* option */
         canUseCampfireOption: (thisPtr: NativePointer, option: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.canUseCampfireOption;
                 if (Func !== undefined) {
@@ -394,8 +371,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return Number(true);
         },
         onRest: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onRest;
                 if (Func !== undefined) {
@@ -404,8 +380,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onEnterRestRoom: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onEnterRestRoom;
                 if (Func !== undefined) {
@@ -414,8 +389,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onRefreshHand: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onRefreshHand;
                 if (Func !== undefined) {
@@ -424,8 +398,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onShuffle: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onShuffle;
                 if (Func !== undefined) {
@@ -434,8 +407,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onSmith: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onSmith;
                 if (Func !== undefined) {
@@ -444,8 +416,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onAttack: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number, targetCreature: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onAttack;
                 if (Func !== undefined) {
@@ -454,8 +425,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onAttacked: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onAttacked;
                 if (Func !== undefined) {
@@ -466,8 +436,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return damageAmount;
         },
         onAttackedToChangeDamage: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onAttackedToChangeDamage;
                 if (Func !== undefined) {
@@ -478,8 +447,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return damageAmount;
         },
         onAttackToChangeDamage: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onAttackToChangeDamage;
                 if (Func !== undefined) {
@@ -490,8 +458,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return damageAmount;
         },
         onExhaust: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onExhaust;
                 if (Func !== undefined) {
@@ -500,8 +467,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onTrigger: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onTrigger;
                 if (Func !== undefined) {
@@ -510,8 +476,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onTrigger2: (thisPtr: NativePointer, targetCreature: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onTrigger2;
                 if (Func !== undefined) {
@@ -520,8 +485,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         checkTrigger: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.checkTrigger;
                 if (Func !== undefined) {
@@ -532,8 +496,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return Number(false);
         },
         onEnterRoom: (thisPtr: NativePointer, roomPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onEnterRoom;
                 if (Func !== undefined) {
@@ -542,8 +505,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         justEnteredRoom: (thisPtr: NativePointer, roomPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.justEnteredRoom;
                 if (Func !== undefined) {
@@ -552,8 +514,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onCardDraw: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onCardDraw;
                 if (Func !== undefined) {
@@ -562,8 +523,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onChestOpen: (thisPtr: NativePointer, bossChest: boolean) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onChestOpen;
                 if (Func !== undefined) {
@@ -572,8 +532,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onChestOpenAfter: (thisPtr: NativePointer, bossChest: boolean) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onChestOpenAfter;
                 if (Func !== undefined) {
@@ -582,8 +541,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onDrawOrDiscard: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onDrawOrDiscard;
                 if (Func !== undefined) {
@@ -592,8 +550,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onMasterDeckChange: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onMasterDeckChange;
                 if (Func !== undefined) {
@@ -602,8 +559,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         atDamageModify: (thisPtr: NativePointer, damage: number, cardPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atDamageModify;
                 if (Func !== undefined) {
@@ -614,8 +570,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return damage;
         },
         changeNumberOfCardsInReward: (thisPtr: NativePointer, numberOfCards: number) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.changeNumberOfCardsInReward;
                 if (Func !== undefined) {
@@ -626,8 +581,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return numberOfCards;
         },
         changeRareCardRewardChance: (thisPtr: NativePointer, rareCardChance: number) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.changeRareCardRewardChance;
                 if (Func !== undefined) {
@@ -638,8 +592,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return rareCardChance;
         },
         changeUncommonCardRewardChance: (thisPtr: NativePointer, uncommonCardChance: number) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.changeUncommonCardRewardChance;
                 if (Func !== undefined) {
@@ -650,8 +603,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return uncommonCardChance;
         },
         canPlay: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.canPlay;
                 if (Func !== undefined) {
@@ -663,7 +615,7 @@ export class AbstractRelic extends NativeClassWrapper {
         },
         makeCopy: (thisPtr: NativePointer) => {
             let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.makeCopy;
                 if (Func !== undefined) {
@@ -675,8 +627,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return NULL;
         },
         canSpawn: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.canSpawn;
                 if (Func !== undefined) {
@@ -687,8 +638,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return Number(true);
         },
         onUsePotion: (thisPtr: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onUsePotion;
                 if (Func !== undefined) {
@@ -697,8 +647,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onChangeStance: (thisPtr: NativePointer, oldStance: NativePointer, newStance: NativePointer) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onChangeStance;
                 if (Func !== undefined) {
@@ -707,8 +656,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onLoseHp: (thisPtr: NativePointer, damageAmount: number) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onLoseHp;
                 if (Func !== undefined) {
@@ -717,8 +665,7 @@ export class AbstractRelic extends NativeClassWrapper {
             }
         },
         onLoseHpLast: (thisPtr: NativePointer, damageAmount: number) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onLoseHpLast;
                 if (Func !== undefined) {
@@ -729,8 +676,7 @@ export class AbstractRelic extends NativeClassWrapper {
             return damageAmount;
         },
         wasHPLost: (thisPtr: NativePointer, damageAmount: number) => {
-            let wrapRelic = new AbstractRelic(thisPtr);
-            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(wrapRelic.relicId);
+            let cardVFuncMap = AbstractRelic.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.wasHPLost;
                 if (Func !== undefined) {
@@ -989,9 +935,9 @@ export class AbstractRelic extends NativeClassWrapper {
         let origRelicPtr = NativeRelics.AbstractRelic.Ctor("Circlet", "Circlet.png", tier, sfx);
 
         let wrapRelic = new AbstractRelic(origRelicPtr);
-        if (!AbstractRelic.#rewriteVFuncMap.has(relicId)) {
-            AbstractRelic.#rewriteVFuncMap.set(relicId, newVFuncs);
-        }
+        //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
+        AbstractRelic.#rewriteVFuncMap.set(origRelicPtr.toUInt32(), newVFuncs);
+
 
         wrapRelic.relicId = relicId;
         wrapRelic.name = relicName;
@@ -1019,7 +965,7 @@ export class AbstractRelic extends NativeClassWrapper {
             wrapRelic.img = newRelicImg;
         }
 
-        if (!AbstractRelic.#rewriteVFuncMap.has("AbstractRelicProxy")) {
+        if (!AbstractRelic.#rewriteVFuncMap.has(-1)) {
             const VFuncMap = AbstractRelic.#vfunctionMap;
             const VFuncProxys = AbstractRelic.#NewRelicVFuncProxys;
             let funcName = "AbstractRelic_BasicNewRelic_updateDescription";
@@ -1145,7 +1091,7 @@ export class AbstractRelic extends NativeClassWrapper {
             funcName = "AbstractRelic_BasicNewRelic_wasHPLost";
             wrapRelic.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PI32_Func(funcName), VFuncMap.wasHPLost, VFuncProxys.wasHPLost);
 
-            AbstractRelic.#rewriteVFuncMap.set("AbstractRelicProxy", AbstractRelic.#NewRelicVFuncProxys);
+            AbstractRelic.#rewriteVFuncMap.set(-1, AbstractRelic.#NewRelicVFuncProxys);
         }
 
         return origRelicPtr;

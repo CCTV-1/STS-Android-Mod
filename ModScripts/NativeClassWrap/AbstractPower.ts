@@ -68,12 +68,17 @@ export class AbstractPower extends NativeClassWrapper {
 
     /**
      * new Power id => (v func name => v func)
+     * 
+     * NativePointer current don't exist toUInt64, Frida(Duktape) current don't support BigInt,
+     * so current proxy implement need all C pointer size equal sizeof(uint32_t).
+     * 
+     * use ptr.toString() or new Uint64(ptr.toString()) can support pointer size equal sizeof(uint64_t) architecture.
+     * but there is more performance overhead.
      */
-    static #rewriteVFuncMap = new Map<string, NewPowerVFuncType>();
+    static #rewriteVFuncMap = new Map<number, NewPowerVFuncType>();
     static readonly #NewRelicVFuncProxys: NewPowerVFuncType = {
         updateParticles: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.updateParticles;
                 if (Func !== undefined) {
@@ -82,8 +87,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         updateDescription: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.updateDescription;
                 if (Func !== undefined) {
@@ -92,8 +96,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         atStartOfTurn: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atStartOfTurn;
                 if (Func !== undefined) {
@@ -102,8 +105,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         duringTurn: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.duringTurn;
                 if (Func !== undefined) {
@@ -112,8 +114,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         atStartOfTurnPostDraw: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atStartOfTurnPostDraw;
                 if (Func !== undefined) {
@@ -122,8 +123,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         atEndOfTurn: (thisPtr: NativePointer, isPlayer: boolean) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atEndOfTurn;
                 if (Func !== undefined) {
@@ -132,8 +132,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         atEndOfTurnPreEndTurnCards: (thisPtr: NativePointer, isPlayer: boolean) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atEndOfTurnPreEndTurnCards;
                 if (Func !== undefined) {
@@ -142,8 +141,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         atEndOfRound: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atStartOfTurnPostDraw;
                 if (Func !== undefined) {
@@ -152,8 +150,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onScry: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onScry;
                 if (Func !== undefined) {
@@ -162,8 +159,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onDamageAllEnemies: (thisPtr: NativePointer, damageArray: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onDamageAllEnemies;
                 if (Func !== undefined) {
@@ -172,8 +168,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onHeal: (thisPtr: NativePointer, healAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onHeal;
                 if (Func !== undefined) {
@@ -183,8 +178,7 @@ export class AbstractPower extends NativeClassWrapper {
             return healAmount;
         },
         onAttacked: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onAttacked;
                 if (Func !== undefined) {
@@ -194,8 +188,7 @@ export class AbstractPower extends NativeClassWrapper {
             return damageAmount;
         },
         onAttack: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number, targetCreature: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onAttack;
                 if (Func !== undefined) {
@@ -204,8 +197,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onAttackedToChangeDamage: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onAttackedToChangeDamage;
                 if (Func !== undefined) {
@@ -215,8 +207,7 @@ export class AbstractPower extends NativeClassWrapper {
             return damageAmount;
         },
         onAttackToChangeDamage: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onAttackToChangeDamage;
                 if (Func !== undefined) {
@@ -226,8 +217,7 @@ export class AbstractPower extends NativeClassWrapper {
             return damageAmount;
         },
         onInflictDamage: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number, targetCreature: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onInflictDamage;
                 if (Func !== undefined) {
@@ -236,8 +226,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onEvokeOrb: (thisPtr: NativePointer, orbPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onEvokeOrb;
                 if (Func !== undefined) {
@@ -246,8 +235,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onCardDraw: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onCardDraw;
                 if (Func !== undefined) {
@@ -256,8 +244,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onPlayCard: (thisPtr: NativePointer, cardPtr: NativePointer, monsterPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onPlayCard;
                 if (Func !== undefined) {
@@ -266,8 +253,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onUseCard: (thisPtr: NativePointer, cardPtr: NativePointer, useCardActionPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onUseCard;
                 if (Func !== undefined) {
@@ -276,8 +262,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onAfterUseCard: (thisPtr: NativePointer, cardPtr: NativePointer, useCardActionPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onAfterUseCard;
                 if (Func !== undefined) {
@@ -286,8 +271,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         wasHPLost: (thisPtr: NativePointer, dmgInfo: NativePointer, damageAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.wasHPLost;
                 if (Func !== undefined) {
@@ -296,8 +280,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onSpecificTrigger: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onSpecificTrigger;
                 if (Func !== undefined) {
@@ -306,8 +289,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         triggerMarks: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.triggerMarks;
                 if (Func !== undefined) {
@@ -316,8 +298,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onDeath: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onDeath;
                 if (Func !== undefined) {
@@ -326,8 +307,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onChannel: (thisPtr: NativePointer, orbPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onChannel;
                 if (Func !== undefined) {
@@ -336,8 +316,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         atEnergyGain: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.atEnergyGain;
                 if (Func !== undefined) {
@@ -346,8 +325,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onExhaust: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onExhaust;
                 if (Func !== undefined) {
@@ -356,8 +334,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onChangeStance: (thisPtr: NativePointer, oldStance: NativePointer, newStance: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onChangeStance;
                 if (Func !== undefined) {
@@ -366,8 +343,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         modifyBlock: (thisPtr: NativePointer, blockAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.modifyBlock;
                 if (Func !== undefined) {
@@ -377,8 +353,7 @@ export class AbstractPower extends NativeClassWrapper {
             return blockAmount;
         },
         modifyBlock2: (thisPtr: NativePointer, blockAmount: number, cardPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.modifyBlock2;
                 if (Func !== undefined) {
@@ -388,8 +363,7 @@ export class AbstractPower extends NativeClassWrapper {
             return blockAmount;
         },
         modifyBlockLast: (thisPtr: NativePointer, blockAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.modifyBlockLast;
                 if (Func !== undefined) {
@@ -399,8 +373,7 @@ export class AbstractPower extends NativeClassWrapper {
             return blockAmount;
         },
         onGainedBlock: (thisPtr: NativePointer, blockAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onGainedBlock;
                 if (Func !== undefined) {
@@ -409,8 +382,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onPlayerGainedBlock: (thisPtr: NativePointer, blockAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onPlayerGainedBlock;
                 if (Func !== undefined) {
@@ -420,8 +392,7 @@ export class AbstractPower extends NativeClassWrapper {
             return blockAmount;
         },
         onPlayerGainedBlock2: (thisPtr: NativePointer, blockAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onPlayerGainedBlock2;
                 if (Func !== undefined) {
@@ -431,8 +402,7 @@ export class AbstractPower extends NativeClassWrapper {
             return blockAmount;
         },
         onGainCharge: (thisPtr: NativePointer, chargeAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onGainCharge;
                 if (Func !== undefined) {
@@ -441,8 +411,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onRemove: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onRemove;
                 if (Func !== undefined) {
@@ -451,8 +420,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onEnergyRecharge: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onEnergyRecharge;
                 if (Func !== undefined) {
@@ -461,8 +429,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onDrawOrDiscard: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onDrawOrDiscard;
                 if (Func !== undefined) {
@@ -471,8 +438,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onAfterCardPlayed: (thisPtr: NativePointer, cardPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onAfterCardPlayed;
                 if (Func !== undefined) {
@@ -481,8 +447,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onInitialApplication: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onInitialApplication;
                 if (Func !== undefined) {
@@ -491,8 +456,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onApplyPower: (thisPtr: NativePointer, powerPtr: NativePointer, targetCreature: NativePointer, sourceCreature: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onApplyPower;
                 if (Func !== undefined) {
@@ -501,8 +465,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         onLoseHp: (thisPtr: NativePointer, damageAmount: number) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onPlayerGainedBlock2;
                 if (Func !== undefined) {
@@ -512,8 +475,7 @@ export class AbstractPower extends NativeClassWrapper {
             return damageAmount;
         },
         onVictory: (thisPtr: NativePointer) => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.onVictory;
                 if (Func !== undefined) {
@@ -522,8 +484,7 @@ export class AbstractPower extends NativeClassWrapper {
             }
         },
         canPlayCard: (thisPtr: NativePointer, cardPtr: NativePointer): number => {
-            let wrapPower = new AbstractPower(thisPtr);
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(wrapPower.ID);
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.canPlayCard;
                 if (Func !== undefined) {
@@ -916,9 +877,8 @@ export class AbstractPower extends NativeClassWrapper {
         let origPowerPtr = NativePowers.Abstract.Ctor();
 
         let wrapPower = new AbstractPower(origPowerPtr);
-        if (!AbstractPower.#rewriteVFuncMap.has(powerId)) {
-            AbstractPower.#rewriteVFuncMap.set(powerId, newVFuncs);
-        }
+        //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
+        AbstractPower.#rewriteVFuncMap.set(origPowerPtr.toUInt32(), newVFuncs);
 
         wrapPower.ID = powerId;
         wrapPower.name = powerName;
@@ -927,7 +887,7 @@ export class AbstractPower extends NativeClassWrapper {
         wrapPower.amount = amount;
         wrapPower.loadRegion("afterImage");
 
-        if (!AbstractPower.#rewriteVFuncMap.has("AbstractPowerProxy")) {
+        if (!AbstractPower.#rewriteVFuncMap.has(-1)) {
             const VFuncMap = AbstractPower.#vfunctionMap;
             const VFuncProxys = AbstractPower.#NewRelicVFuncProxys;
             let funcName = "AbstractPower_BasicNewPower_updateDescription";
@@ -1020,7 +980,7 @@ export class AbstractPower extends NativeClassWrapper {
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.onVictory, VFuncProxys.onVictory);
             funcName = "AbstractPower_BasicNewPower_canPlayCard";
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_PP_Func(funcName), VFuncMap.canPlayCard, VFuncProxys.canPlayCard);
-            AbstractPower.#rewriteVFuncMap.set("AbstractPowerProxy", AbstractPower.#NewRelicVFuncProxys);
+            AbstractPower.#rewriteVFuncMap.set(-1, AbstractPower.#NewRelicVFuncProxys);
         }
 
         return origPowerPtr;

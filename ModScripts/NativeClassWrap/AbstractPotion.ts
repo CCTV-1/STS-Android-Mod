@@ -23,13 +23,19 @@ export class AbstractPotion extends NativeClassWrapper {
 
     /**
      * new potion id => (v func name => v func)
+     * 
+     * NativePointer current don't exist toUInt64, Frida(Duktape) current don't support BigInt,
+     * so current proxy implement need all C pointer size equal sizeof(uint32_t).
+     * 
+     * use ptr.toString() or new Uint64(ptr.toString()) can support pointer size equal sizeof(uint64_t) architecture.
+     * but there is more performance overhead.
      */
-    static #rewriteVFuncMap = new Map<string, NewPotionVFuncType>();
+    static #rewriteVFuncMap = new Map<number, NewPotionVFuncType>();
 
     static readonly #NewRelicVFuncProxys: NewPotionVFuncType = {
         getPrice: (thisPtr: NativePointer) => {
             let wrapPotion = new AbstractPotion(thisPtr);
-            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(wrapPotion.potionId);
+            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (potionVFuncMap !== undefined) {
                 const Func = potionVFuncMap.getPrice;
                 if (Func !== undefined) {
@@ -54,8 +60,7 @@ export class AbstractPotion extends NativeClassWrapper {
             }
         },
         use: (thisPtr: NativePointer, targetCreature: NativePointer) => {
-            let wrapPotion = new AbstractPotion(thisPtr);
-            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(wrapPotion.potionId);
+            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (potionVFuncMap !== undefined) {
                 const Func = potionVFuncMap.use;
                 if (Func !== undefined) {
@@ -64,8 +69,7 @@ export class AbstractPotion extends NativeClassWrapper {
             }
         },
         initializeData: (thisPtr: NativePointer) => {
-            let wrapPotion = new AbstractPotion(thisPtr);
-            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(wrapPotion.potionId);
+            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (potionVFuncMap !== undefined) {
                 const Func = potionVFuncMap.initializeData;
                 if (Func !== undefined) {
@@ -75,7 +79,7 @@ export class AbstractPotion extends NativeClassWrapper {
         },
         getPotency: (thisPtr: NativePointer, ascensionLevel: number) => {
             let wrapPotion = new AbstractPotion(thisPtr);
-            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(wrapPotion.potionId);
+            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (potionVFuncMap !== undefined) {
                 const Func = potionVFuncMap.getPotency;
                 if (Func !== undefined) {
@@ -87,8 +91,7 @@ export class AbstractPotion extends NativeClassWrapper {
             return 0;
         },
         onPlayerDeath: (thisPtr: NativePointer) => {
-            let wrapPotion = new AbstractPotion(thisPtr);
-            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(wrapPotion.potionId);
+            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (potionVFuncMap !== undefined) {
                 const Func = potionVFuncMap.onPlayerDeath;
                 if (Func !== undefined) {
@@ -173,11 +176,10 @@ export class AbstractPotion extends NativeClassWrapper {
         let origPotionPtr = NativePotions.Abstract.Ctor(name, id, rarity, size, color);
 
         vfuncs.initializeData(origPotionPtr);
-        if (!AbstractPotion.#rewriteVFuncMap.has(id)) {
-            AbstractPotion.#rewriteVFuncMap.set(id, vfuncs);
-        }
+        //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
+        AbstractPotion.#rewriteVFuncMap.set(origPotionPtr.toUInt32(), vfuncs);
 
-        if (!AbstractPotion.#rewriteVFuncMap.has("AbstractPotionProxy")) {
+        if (!AbstractPotion.#rewriteVFuncMap.has(-1)) {
             const wrapPotion = new AbstractPotion(origPotionPtr);
             const VFuncMap = AbstractPotion.#vfunctionMap;
             const VFuncProxys = AbstractPotion.#NewRelicVFuncProxys;
@@ -191,7 +193,7 @@ export class AbstractPotion extends NativeClassWrapper {
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PP_Func(funcName), VFuncMap.getPotency, VFuncProxys.getPotency);
             funcName = "AbstractPotion_BasicNewPotion_onPlayerDeath";
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_P_Func(funcName), VFuncMap.onPlayerDeath, VFuncProxys.onPlayerDeath);
-            AbstractPotion.#rewriteVFuncMap.set("AbstractPotionProxy", AbstractPotion.#NewRelicVFuncProxys);
+            AbstractPotion.#rewriteVFuncMap.set(-1, AbstractPotion.#NewRelicVFuncProxys);
         }
 
         return origPotionPtr;
