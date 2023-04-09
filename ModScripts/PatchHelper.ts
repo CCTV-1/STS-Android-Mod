@@ -114,6 +114,10 @@ export class PatchHelper {
         B_PP_Func(funcName: string) {
             return "char " + funcName + "(void * arg1, void * arg2) { return 0; }";
         },
+        /** CModule compile don't support stdc20,if want use bool need include header file. */
+        B_PPP_Func(funcName: string) {
+            return "char " + funcName + "(void * arg1, void * arg2, void * arg3) { return 0; }";
+        },
         /**if int != int32_t, this func not work. */
         I32_PI32_Func(funcName: string) {
             return "int " + funcName + "(void * arg1, int arg2) { return 0; }";
