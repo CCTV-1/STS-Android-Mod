@@ -30,6 +30,7 @@ export class AbstractRoom extends NativeClassWrapper {
         return this.readOffsetPointer(0x20);
     }
 
+    /** MonsterGroup* */
     get monsters() {
         return this.readOffsetPointer(0x24);
     }
