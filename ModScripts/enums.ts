@@ -197,6 +197,12 @@ export enum MonsterIntent {
     UNKNOWN
 };
 
+export enum EnemyType {
+    NORMAL = 0x0, 
+    ELITE, 
+    BOSS,
+};
+
 export enum PowerType {
     BUFF = 0x0,
     DEBUFF

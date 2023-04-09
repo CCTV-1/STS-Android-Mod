@@ -356,6 +356,13 @@ namespace STS
         UNKNOWN
     };
 
+    enum class EnemyType:uint32_t
+    {
+        NORMAL = 0x0, 
+        ELITE, 
+        BOSS
+    };
+
     enum class PowerType:uint32_t
     {
         BUFF = 0x0,
@@ -565,7 +572,10 @@ namespace STS
     {
         void *basePtr;
         void *vfuncMap;
-        uint8_t gap08[32];
+        uint8_t gap08[24];
+        dummyFunc_t damage;
+        bool Initdamage;
+        uint8_t gap25[3];
         dummyFunc_t decrementBlock;
         bool byte2C;
         uint8_t gap2D[3];
@@ -709,7 +719,10 @@ namespace STS
         uint8_t gap1A5[3];
         dummyFunc_t dword1A8;
         bool byte1AC;
-        uint8_t unk[8];
+        uint8_t gap1AD[3];
+        dummyFunc_t render;
+        bool Initrender;
+        uint8_t pad1B5[3];
     } __attribute__((aligned(4)));
 
 
@@ -903,12 +916,177 @@ namespace STS
 
     struct AbstractMonsterVFuncMap : public AbstractCreatureVMap
     {
-
+        dummyFunc_t refreshIntentHbLocation;
+        bool Init0;
+        uint8_t pad5[3];
+        dummyFunc_t update;
+        bool Init8;
+        uint8_t padd[3];
+        dummyFunc_t unhover;
+        bool Init10;
+        uint8_t pad15[3];
+        dummyFunc_t gap18;
+        bool Init18;
+        uint8_t pad1d[3];
+        dummyFunc_t flashIntent;
+        bool Init20;
+        uint8_t pad25[3];
+        dummyFunc_t createIntent;
+        bool Init28;
+        uint8_t pad2d[3];
+        dummyFunc_t setMove;
+        bool Init30;
+        uint8_t pad35[3];
+        dummyFunc_t setMove2;
+        bool Init38;
+        uint8_t pad3d[3];
+        dummyFunc_t setMove3;
+        bool Init40;
+        uint8_t pad45[3];
+        dummyFunc_t setMove4;
+        bool Init48;
+        uint8_t pad4d[3];
+        dummyFunc_t setMove5;
+        bool Init50;
+        uint8_t pad55[3];
+        dummyFunc_t setMove6;
+        bool Init58;
+        uint8_t pad5d[3];
+        dummyFunc_t rollMove;
+        bool Init60;
+        uint8_t pad65[3];
+        dummyFunc_t lastMove;
+        bool Init68;
+        uint8_t pad6d[3];
+        dummyFunc_t lastMoveBefore;
+        bool Init70;
+        uint8_t pad75[3];
+        dummyFunc_t lastTwoMoves;
+        bool Init78;
+        uint8_t pad7d[3];
+        dummyFunc_t gap80;
+        bool Init80;
+        uint8_t pad85[3];
+        dummyFunc_t getAttackIntent;
+        bool Init88;
+        uint8_t pad8d[3];
+        dummyFunc_t init;
+        bool Init90;
+        uint8_t pad95[3];
+        dummyFunc_t gap98;
+        bool Init98;
+        uint8_t pad9d[3];
+        dummyFunc_t setHp;
+        bool Inita0;
+        uint8_t pada5[3];
+        dummyFunc_t setHP2;
+        bool Inita8;
+        uint8_t padad[3];
+        dummyFunc_t updateHitbox;
+        bool Initb0;
+        uint8_t padb5[3];
+        dummyFunc_t gapb8;
+        bool Initb8;
+        uint8_t padbd[3];
+        dummyFunc_t dispose;
+        bool Initc0;
+        uint8_t padc5[3];
+        dummyFunc_t gapc8;
+        bool Initc8;
+        uint8_t padcd[3];
+        dummyFunc_t deathReact;
+        bool Initd0;
+        uint8_t padd5[3];
+        dummyFunc_t escape;
+        bool Initd8;
+        uint8_t paddd[3];
+        dummyFunc_t die;
+        bool Inite0;
+        uint8_t pade5[3];
+        dummyFunc_t die2;
+        bool Inite8;
+        uint8_t paded[3];
+        dummyFunc_t usePreBattleAction;
+        bool Initf0;
+        uint8_t padf5[3];
+        dummyFunc_t useUniversalPreBattleAction;
+        bool Initf8;
+        uint8_t padfd[3];
+        dummyFunc_t applyPowers;
+        bool Init100;
+        uint8_t pad105[3];
+        dummyFunc_t removeSurroundedPower;
+        bool Init108;
+        uint8_t pad10d[3];
+        dummyFunc_t changeState;
+        bool Init110;
+        uint8_t pad115[3];
+        dummyFunc_t addToBot;
+        bool Init118;
+        uint8_t pad11d[3];
+        dummyFunc_t addToTop;
+        bool Init120;
+        uint8_t pad125[3];
+        dummyFunc_t onBossVictoryLogic;
+        bool Init128;
+        uint8_t pad12d[3];
+        dummyFunc_t onFinalBossVictoryLogic;
+        bool Init130;
+        uint8_t pad135[3];
+        dummyFunc_t gap138;
+        bool Init138;
+        uint8_t pad13d[3];
+        dummyFunc_t IntentBaseDmg;
+        bool Init140;
+        uint8_t pad145[3];
+        dummyFunc_t gap148;
+        bool Init148;
+        uint8_t pad14d[3];
     } __attribute__((aligned(4)));
 
     struct AbstractMonster : public AbstractCreature
     {
-
+        float deathTimer;
+        GDX::Graphics::Color *nameColor;
+        GDX::Graphics::Color *nameBgColor;
+        GDX::Graphics::Texture *img;
+        bool tintFadeOutCalled;
+        uint8_t pad11[3];
+        void *moveSet;
+        bool escaped;
+        bool escapeNext;
+        uint8_t pad1A[2];
+        PowerTip *intentTip;
+        EnemyType type;
+        float hoverTimer;
+        bool cannotEscape;
+        uint8_t pad2A[3];
+        ArrayList<DamageInfo> *damage;
+        void *move;
+        float intentParticleTimer;
+        float intentAngle;
+        ArrayList<uint8_t> *moveHistory;
+        //AbstractGameEffect
+        ArrayList<void*> *intentVfx;
+        bool nextMove;
+        uint8_t pad45[3];
+        void *bobEffect;
+        void *intentHb;
+        void *intent;
+        void *tipIntent;
+        float intentAlpha;
+        float intentAlphaTarget;
+        float intentOffsetX;
+        GDX::Graphics::Texture *intentImg;
+        GDX::Graphics::Texture *intentBg;
+        int32_t intentDmg;
+        int32_t intentBaseDmg;
+        int32_t intentMultiAmt;
+        bool isMultiDmg;
+        uint8_t pad7A[3];
+        GDX::Graphics::Color *intentColor;
+        JString *moveName;
+        void *disposables;
     } __attribute__((aligned(4)));
     
     struct AbstractGameActionVFuncMap
