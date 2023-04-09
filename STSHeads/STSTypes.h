@@ -431,6 +431,88 @@ namespace STS
         ArrayList<AbstractCard *> * inHand;
     } __attribute__((aligned(4)));
 
+    struct MonsterGroupVFuncMap
+    {
+        void *basePtr;
+        void *vfuncMap;
+        uint8_t unk[24];
+        dummyFunc_t addMonster;
+        bool byte24;
+        uint8_t gap25[19];
+        dummyFunc_t showIntent;
+        bool byte3C;
+        uint8_t gap3D[3];
+        dummyFunc_t init;
+        bool byte44;
+        uint8_t gap45[3];
+        dummyFunc_t add;
+        bool byte4C;
+        uint8_t gap4D[3];
+        dummyFunc_t usePreBattleAction;
+        bool byte54;
+        uint8_t gap55[3];
+        dummyFunc_t areMonstersDead;
+        bool byte5C;
+        uint8_t gap5D[3];
+        dummyFunc_t areMonstersBasicallyDead;
+        bool byte64;
+        uint8_t gap65[3];
+        dummyFunc_t applyPreTurnLogic;
+        bool byte6C;
+        uint8_t gap6D[3];
+        dummyFunc_t getMonster;
+        bool byte74;
+        uint8_t gap75[3];
+        dummyFunc_t queueMonsters;
+        bool byte7C;
+        uint8_t gap7D[3];
+        dummyFunc_t haveMonstersEscaped;
+        bool byte84;
+        uint8_t gap85[19];
+        dummyFunc_t getRandomMonster;
+        bool byte9C;
+        uint8_t gap9D[11];
+        dummyFunc_t getRandomMonster2;
+        bool byteAC;
+        uint8_t gapAD[3];
+        dummyFunc_t getRandomMonster3;
+        bool byteB4;
+        uint8_t gapB5[3];
+        dummyFunc_t update;
+        bool byteBC;
+        uint8_t gapBD[3];
+        dummyFunc_t updateAnimations;
+        bool byteC4;
+        uint8_t gapC5[3];
+        dummyFunc_t shouldFlipVfx;
+        bool byteCC;
+        uint8_t gapCD[3];
+        dummyFunc_t escape;
+        bool byteD4;
+        uint8_t gapD5[3];
+        dummyFunc_t unhover;
+        bool byteDC;
+        uint8_t gapDD[3];
+        dummyFunc_t render;
+        bool byteE4;
+        uint8_t gapE5[3];
+        dummyFunc_t applyEndOfTurnPowers;
+        bool byteEC;
+        uint8_t gapED[3];
+        dummyFunc_t renderReticle;
+        uint8_t byteF4;
+        uint8_t gapF5[3];
+    };
+    
+
+    struct MonsterGroup
+    {
+        void *basePtr;
+        void *vfuncMap;
+        ArrayList<AbstractMonster>* monsters;
+        AbstractMonster* hoveredMonster;
+    } __attribute__((aligned(4)));
+
     struct EnergyManager
     {
         void *basePtr;
@@ -819,6 +901,16 @@ namespace STS
     } __attribute__((aligned(4)));
     
 
+    struct AbstractMonsterVFuncMap : public AbstractCreatureVMap
+    {
+
+    } __attribute__((aligned(4)));
+
+    struct AbstractMonster : public AbstractCreature
+    {
+
+    } __attribute__((aligned(4)));
+    
     struct AbstractGameActionVFuncMap
     {
         void *baseClassPtr;
