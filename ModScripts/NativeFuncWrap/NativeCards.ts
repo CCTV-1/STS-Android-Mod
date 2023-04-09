@@ -8,6 +8,12 @@ const Cards = {
     AbstractCard: {
         /**
          * ```c
+         * STS::AbstractCard * Cards::AbstractCard::canUse(STS::AbstractCard * this, STS::AbstractPlayer* playerPtr, STS::AbstractMonster* monsterPtr)
+         * ```
+         */
+        canUse: new NativeFunctionInfo(0x16DB091, 'bool', ['pointer', 'pointer', 'pointer']),
+        /**
+         * ```c
          * STS::AbstractCard * Cards::AbstractCard::Ctor(STS::AbstractCard * this, STS::JString* id, STS::JString* name, STS::JString* imgUrl, 
          * int32_t cost, STS::JString* rawDescription, STS::CardType type, STS::CardColor color, STS::CardRarity rarity, STS::CardTarget target, STS::DamageType dType)
          * ```
@@ -140,6 +146,10 @@ const Cards = {
 
 export const NativeCards = {
     AbstractCard: {
+        canUse: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer): boolean => {
+            return PatchHelper.GetNativeFunction(Cards.AbstractCard.canUse)(thisPtr, playerPtr, monsterPtr);
+        },
+
         Ctor(id: string, name: string, imgUrl: string, cost: number, rawDescription: string,
             type: CardType, color: CardColor, rarity: CardRarity, target: CardTarget, dType: DamageType): NativePointer {
             let nativeId = NativeSTDLib.JString.Ctor(id);

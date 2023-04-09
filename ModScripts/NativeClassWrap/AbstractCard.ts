@@ -145,12 +145,8 @@ export class AbstractCard extends NativeClassWrapper {
             }
 
             //default logic
-            const wrapCard = new AbstractCard(thisPtr);
-            const currentPlayer = AbstractDungeon.getInstance().player;
-            const check1: boolean = (wrapCard.type != CardType.STATUS || wrapCard.costForTurn >= -1 || currentPlayer.hasRelic("Medical Kit"))
-            const check2: boolean = (wrapCard.type != CardType.CURSE || wrapCard.costForTurn >= -1 || currentPlayer.hasRelic("Blue Candle"))
-            const check3: boolean = (wrapCard.cardPlayable(monsterPtr) && wrapCard.hasEnoughEnergy());
-            return Number(check1 && check2 && check3);
+            let origRet = NativeCards.AbstractCard.canUse(thisPtr, playerPtr, monsterPtr);
+            return Number(origRet);
         },
         use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
             let cardVFuncMap = AbstractCard.#rewriteVFuncMap.get(thisPtr.toUInt32());
@@ -651,6 +647,8 @@ export class AbstractCard extends NativeClassWrapper {
             wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.switchedStance, VFuncProxys.switchedStance);
             funcName = "AbstractCard_BasicNewCard_canPlay";
             wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_PP_Func(funcName), VFuncMap.canPlay, VFuncProxys.canPlay);
+            funcName = "AbstractCard_BasicNewCard_canUse";
+            wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_PPP_Func(funcName), VFuncMap.canUse, VFuncProxys.canUse);
             funcName = "AbstractCard_BasicNewCard_use";
             wrapCard.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), VFuncMap.use, VFuncProxys.use);
             funcName = "AbstractCard_BasicNewCard_onMoveToDiscard";
