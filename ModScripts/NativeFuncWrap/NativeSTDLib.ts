@@ -40,6 +40,15 @@ const STDLib = {
              */
             get: new NativeFunctionInfo(0x205A631, 'pointer', ['pointer', 'uint32']),
         },
+        AbstractMonster: {
+            /**
+             * ```c
+             * STS::AbstractMonster* STS::ArrayList<AbstractMonster>::getItem(STS::ArrayList<AbstractMonster>* thisPtr, int index)
+             * ```
+             */
+            get: new NativeFunctionInfo(0x2096269, 'pointer', ['pointer', 'uint32']),
+            
+        },
         AbstractPotion: {
             /**
              * ```c
@@ -140,12 +149,36 @@ const STDLib = {
         Ctor3: new NativeFunctionInfo(0x13FBFA1, 'pointer', ['pointer', 'pointer']),
         /**
          * ```c
-         * IOException* IOException::Ctor(IOException* thisPtr, JString* message, int32_t arg3)
+         * IOException* IOException::Ctor(IOException* thisPtr, JString* message, int32_t fd)
          * ```
          */
         Ctor4: new NativeFunctionInfo(0x13FC0B5, 'pointer', ['pointer', 'pointer', 'int32']),
     },
     Exception: {
+        /**
+         * ```c
+         * Exception* STD::Exception::Ctor(Exception* thisPtr)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x13E490D, 'pointer', ['pointer']),
+        /**
+         * ```c
+         * Exception* STD::Exception::Ctor(Exception* thisPtr, SerializationInfo *, StreamingContext ctx)
+         * ```
+         */
+        Ctor2: new NativeFunctionInfo(0x13E4A21, 'pointer', ['pointer', 'pointer', 'pointer']),
+        /**
+         * ```c
+         * Exception* STD::Exception::Ctor(Exception* thisPtr, JString* message)
+         * ```
+         */
+        Ctor3: new NativeFunctionInfo(0x13E4995, 'pointer', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * Exception* STD::Exception::Ctor(Exception* thisPtr, JString* message, Exception* exceptPtr)
+         * ```
+         */
+        Ctor4: new NativeFunctionInfo(0x13E4DE1, 'pointer', ['pointer', 'pointer', 'pointer']),
         /**
          * ```c
          * JString* STD::Exception::getMessage(STD::Exception * thisPtr)
@@ -190,6 +223,11 @@ export const NativeSTDLib = {
             },
             get(arrayListPtr: ArrayList, index: number): NativePointer {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.get)(arrayListPtr.rawPtr, index);
+            },
+        },
+        AbstractMonster: {
+            get(arrayListPtr: ArrayList, index: number): NativePointer {
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractMonster.get)(arrayListPtr.rawPtr, index);
             },
         },
         PowerTip: {
@@ -239,6 +277,29 @@ export const NativeSTDLib = {
         },
     },
     Exception: {
+        Ctor(): NativePointer {
+            return PatchHelper.GetNativeFunction(STDLib.Exception.Ctor)(NULL);
+        },
+        OverrideCtor(newCtor: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
+            return PatchHelper.HookSTSFunction(STDLib.Exception.Ctor, newCtor);
+        },
+
+        Ctor3(message: string): NativePointer {
+            let nativeMessage = NativeSTDLib.JString.Ctor(message);
+            return PatchHelper.GetNativeFunction(STDLib.Exception.Ctor3)(NULL, nativeMessage);
+        },
+        OverrideCtor3(newCtor: (thisPtr: NativePointer, message: NativePointer) => NativePointer): (thisPtr: NativePointer, message: NativePointer) => NativePointer {
+            return PatchHelper.HookSTSFunction(STDLib.Exception.Ctor3, newCtor);
+        },
+
+        Ctor4(message: string, exceptPtr: NativePointer): NativePointer {
+            let nativeMessage = NativeSTDLib.JString.Ctor(message);
+            return PatchHelper.GetNativeFunction(STDLib.Exception.Ctor4)(NULL, nativeMessage, exceptPtr);
+        },
+        OverrideCtor4(newCtor: (thisPtr: NativePointer, message: NativePointer, exceptPtr: NativePointer) => NativePointer): (thisPtr: NativePointer, message: NativePointer, exceptPtr: NativePointer) => NativePointer {
+            return PatchHelper.HookSTSFunction(STDLib.Exception.Ctor4, newCtor);
+        },
+
         getMessage(thisPtr: NativePointer): NativePointer {
             return PatchHelper.GetNativeFunction(STDLib.Exception.getMessage)(thisPtr); 
         },
@@ -258,11 +319,11 @@ export const NativeSTDLib = {
         OverrideCtor3(newCtor: (thisPtr: NativePointer, message: NativePointer) => NativePointer): (thisPtr: NativePointer, message: NativePointer) => NativePointer {
             return PatchHelper.HookSTSFunction(STDLib.IOException.Ctor3, newCtor);
         },
-        Ctor4(message: string, arg2: number): NativePointer {
+        Ctor4(message: string, fd: number): NativePointer {
             let nativeMessage = NativeSTDLib.JString.Ctor(message);
-            return PatchHelper.GetNativeFunction(STDLib.IOException.Ctor4)(NULL, nativeMessage, arg2);
+            return PatchHelper.GetNativeFunction(STDLib.IOException.Ctor4)(NULL, nativeMessage, fd);
         },
-        OverrideCtor4(newCtor: (thisPtr: NativePointer, message: NativePointer, arg3: number) => NativePointer): (thisPtr: NativePointer, message: NativePointer, arg3: number) => NativePointer {
+        OverrideCtor4(newCtor: (thisPtr: NativePointer, message: NativePointer, fd: number) => NativePointer): (thisPtr: NativePointer, message: NativePointer, fd: number) => NativePointer {
             return PatchHelper.HookSTSFunction(STDLib.IOException.Ctor4, newCtor);
         },
     },
