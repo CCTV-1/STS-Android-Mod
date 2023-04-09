@@ -40,6 +40,14 @@ export const NativePowerInfo = {
              */
             Ctor: new NativeFunctionInfo(0x19693B9, 'pointer', ['pointer', 'pointer', 'int32'])
         },
+        Slow: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::SlowPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1975995, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
     },
     defect: {
         Echo: {
