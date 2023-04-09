@@ -1,6 +1,5 @@
 import { PatchHelper } from "./PatchHelper.js";
 import { AbstractCard } from "./NativeClassWrap/AbstractCard.js";
-import { AbstractPlayer } from "./NativeClassWrap/AbstractPlayer.js";
 import { AbstractRelic } from "./NativeClassWrap/AbstractRelic.js";
 import { PlayerClass } from "./enums.js";
 import { AbstractGameAction } from "./NativeClassWrap/AbstractGameAction.js";
@@ -13,41 +12,13 @@ import { NativeHelpers } from "./NativeFuncWrap/NativeHelpers.js";
 import { NativeCharacters } from "./NativeFuncWrap/NativeCharacters.js";
 import { NativeRelics } from "./NativeFuncWrap/NativeRelics.js";
 import { NativePotions } from "./NativeFuncWrap/NativePotions.js";
-import { NativeVFX } from "./NativeFuncWrap/NativeVFX.js";
 import { NativePowers } from "./NativeFuncWrap/NativePowers.js";
 import { NativeGDXLib } from "./NativeFuncWrap/NativeGDXLib.js";
 import { JString } from "./NativeClassWrap/JString.js";
 import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
 import { AbstractDungeon } from "./NativeClassWrap/AbstractDungeon.js";
 import { NewPotionLibrary } from "./NewPotionLibrary.js";
-
-function FakeRandom(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function UpgradeRandomCard(currentPlayer: AbstractPlayer) {
-    let masterDeckGroup = currentPlayer.masterDeck.group;
-    let deckSize = masterDeckGroup.size;
-    let canUpgradeCards = new Array<AbstractCard>();
-    for (let i = 0; i < deckSize - 1; i++) {
-        let randCard = NativeSTDLib.ArrayList.AbstractCard.get(masterDeckGroup, i);
-        let wrapCard = new AbstractCard(randCard);
-        if (wrapCard.canUpgrade()) {
-            canUpgradeCards.push(wrapCard);
-        }
-    }
-    if (canUpgradeCards.length > 0) {
-        let index = FakeRandom(0, canUpgradeCards.length - 1);
-        let upgradeCard = canUpgradeCards[index];
-        upgradeCard.upgrade();
-        let topLevelEffects = AbstractDungeon.getInstance().topLevelEffects;
-        let statCopyCard = upgradeCard.makeStatEquivalentCopy();
-        let cardBrieflyEffectObj = NativeVFX.ShowCardBrieflyEffect.Ctor(statCopyCard);
-        let upgradeShineEffectObj = NativeVFX.UpgradeShineEffect.Ctor(PatchHelper.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchHelper.STSGlobalVars.STSSetting_HEIGHT * 0.5);
-        NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
-        NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
-    }
-}
+import { ModUtility } from "./ModUtility.js";
 
 function FixGDXFileHandlereadBytes() {
     let origOpenAssetFile = NativeSTSLib.OverrideopenAssestFile((thisPtr: NativePointer) => {
@@ -189,7 +160,7 @@ function Patchcharacters() {
         addNativeStr(startDeck, baseDefend);
         addNativeStr(startDeck, baseDefend);
 
-        switch (FakeRandom(0, 1)) {
+        switch (ModUtility.FakeRandom(0, 1)) {
             case 0: {
                 NativeSTDLib.ArrayList.JString.Add(startDeck, "BasicAttack_R");
                 NativeSTDLib.ArrayList.JString.Add(startDeck, "BasicDefend_R");
@@ -223,7 +194,7 @@ function Patchcharacters() {
         addNativeStr(startDeck, baseDefend);
         addNativeStr(startDeck, baseDefend);
 
-        switch (FakeRandom(0, 1)) {
+        switch (ModUtility.FakeRandom(0, 1)) {
             case 0: {
                 NativeSTDLib.ArrayList.JString.Add(startDeck, "Prepared");
                 NativeSTDLib.ArrayList.JString.Add(startDeck, "Prepared");
@@ -255,7 +226,7 @@ function Patchcharacters() {
         addNativeStr(startDeck, baseDefend);
         addNativeStr(startDeck, baseDefend);
 
-        switch (FakeRandom(0, 1)) {
+        switch (ModUtility.FakeRandom(0, 1)) {
             case 0: {
                 NativeSTDLib.ArrayList.JString.Add(startDeck, "Ball Lightning");
                 NativeSTDLib.ArrayList.JString.Add(startDeck, "White Noise");
@@ -287,7 +258,7 @@ function Patchcharacters() {
         addNativeStr(startDeck, baseDefend);
         addNativeStr(startDeck, baseDefend);
 
-        switch (FakeRandom(0, 1)) {
+        switch (ModUtility.FakeRandom(0, 1)) {
             case 0: {
                 NativeSTDLib.ArrayList.JString.Add(startDeck, "ForeignInfluence");
                 NativeSTDLib.ArrayList.JString.Add(startDeck, "Discovery");
@@ -319,7 +290,7 @@ function PatchPowers() {
         //    origOnCardDrawFunc(thisPtr, cardPtr)
         let baseCard = new AbstractCard(cardPtr);
         if (baseCard.cost >= 0) {
-            let newCost = FakeRandom(0, Math.min(3, baseCard.cost + 1));
+            let newCost = ModUtility.FakeRandom(0, Math.min(3, baseCard.cost + 1));
             if (baseCard.cost != newCost) {
                 baseCard.cost = newCost;
                 baseCard.costForTurn = baseCard.cost;
@@ -334,7 +305,7 @@ function PatchRelics() {
     let origBurningBloodOnVictory = NativeRelics.BurningBlood.OverrideonVictory((thisPtr: NativePointer) => {
         let currentPlayer = AbstractDungeon.getInstance().player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.4) {
-            UpgradeRandomCard(currentPlayer);
+            ModUtility.UpgradeRandomCard(currentPlayer);
         }
         origBurningBloodOnVictory(thisPtr);
     });
@@ -342,7 +313,7 @@ function PatchRelics() {
     let origBlackBloodBloodOnVictory = NativeRelics.BlackBlood.OverrideonVictory((thisPtr: NativePointer) => {
         let currentPlayer = AbstractDungeon.getInstance().player;
         if (currentPlayer.currentHealth < currentPlayer.maxHealth * 0.6) {
-            UpgradeRandomCard(currentPlayer);
+            ModUtility.UpgradeRandomCard(currentPlayer);
         }
         origBlackBloodBloodOnVictory(thisPtr);
     });

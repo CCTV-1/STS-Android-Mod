@@ -1,14 +1,10 @@
+import { ModUtility } from "../ModUtility.js";
 import { AbstractCard, NewCardVFuncType, STSCardCtor } from "../NativeClassWrap/AbstractCard.js";
-import { AbstractDungeon } from "../NativeClassWrap/AbstractDungeon.js";
 import { AbstractMonster } from "../NativeClassWrap/AbstractMonster.js";
 import { AbstractPlayer } from "../NativeClassWrap/AbstractPlayer.js";
-import { AbstractRoom } from "../NativeClassWrap/AbstractRoom.js";
-import { MapRoomNode } from "../NativeClassWrap/MapRoomNode.js";
-import { MonsterGroup } from "../NativeClassWrap/MonsterGroup.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
 import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
-import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
 import { CardType, CardColor, CardRarity, CardTarget, DamageType } from "../enums.js";
 
 const vfuncs: NewCardVFuncType = {
@@ -24,21 +20,15 @@ const vfuncs: NewCardVFuncType = {
         return Number(wrapPlayer.hand.group.size >= wrapCard.magicNumber);
     },
     use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
-        const abstractDungeon = AbstractDungeon.getInstance();
-        const currentMapNode = new MapRoomNode(abstractDungeon.currMapNode);
-        const currentRoom = new AbstractRoom(currentMapNode.room);
-        const RoomMonsters = new MonsterGroup(currentRoom.monsters).monsters;
-        const monsterNumber = RoomMonsters.size;
         const wrapCard = new AbstractCard(thisPtr);
-        for (let index = 0; index < monsterNumber; index++) {
-            let monsterPtr = NativeSTDLib.ArrayList.AbstractMonster.get(RoomMonsters, index);
+        ModUtility.foreachCurrentRoomMonster((monsterPtr: NativePointer) => {
             let wrapMonster = new AbstractMonster(monsterPtr);
             if (!wrapMonster.isDying && !wrapMonster.isDead) {
                 const slowPower = NativePowers.Common.Slow.Ctor(monsterPtr, 1);
                 const applyPowerAction = NativeActions.common.ApplyPower.Ctor2(monsterPtr, playerPtr, slowPower, 1);
                 wrapCard.addToBot(applyPowerAction);
             }
-        }
+        });
     },
     upgrade: (thisPtr: NativePointer) => {
         let wrapCard = new AbstractCard(thisPtr);
