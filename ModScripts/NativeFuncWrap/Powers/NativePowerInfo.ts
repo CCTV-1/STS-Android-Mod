@@ -30,12 +30,20 @@ export const NativePowerInfo = {
              * void ConfusionPower::onCardDraw(STS::AbstractPower * thisPtr, STS::AbstractCard * card)
              * ```
              */
-            onCardDraw: new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer'])
+            onCardDraw: new NativeFunctionInfo(0x195C54D, 'void', ['pointer', 'pointer']),
+        },
+        Dexterity: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::DexterityPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x195EFB5, 'pointer', ['pointer', 'pointer', 'int32']),
         },
         IntangiblePlayer: {
             /**
              * ```c
-             * STS::AbstractPower* Powers::IntangiblePlayerPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * STS::AbstractPower* Powers::IntangiblePlayerPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
              * ```
              */
             Ctor: new NativeFunctionInfo(0x19693B9, 'pointer', ['pointer', 'pointer', 'int32'])
@@ -43,10 +51,18 @@ export const NativePowerInfo = {
         Slow: {
             /**
              * ```c
-             * STS::AbstractPower* Powers::SlowPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * STS::AbstractPower* Powers::SlowPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
              * ```
              */
             Ctor: new NativeFunctionInfo(0x1975995, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        Strength: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::StrengthPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1977711, 'pointer', ['pointer', 'pointer', 'int32'])
         },
     },
     defect: {
@@ -71,7 +87,7 @@ export const NativePowerInfo = {
         DemonForm: {
             /**
              * ```c
-             * STS::AbstractPower* Powers::DemonFormPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * STS::AbstractPower* Powers::DemonFormPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
              * ```
              */
             Ctor: new NativeFunctionInfo(0x195EBB1, 'pointer', ['pointer', 'pointer', 'int32'])
@@ -81,7 +97,7 @@ export const NativePowerInfo = {
         BattleHymn: {
             /**
              * ```c
-             * STS::AbstractPower* Powers::BattleHymnPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * STS::AbstractPower* Powers::BattleHymnPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
              * ```
              */
             Ctor: new NativeFunctionInfo(0x197C2BD, 'pointer', ['pointer', 'pointer', 'int32'])
@@ -89,7 +105,7 @@ export const NativePowerInfo = {
         BlockReturn: {
             /**
              * ```c
-             * STS::AbstractPower* Powers::BlockReturnPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * STS::AbstractPower* Powers::BlockReturnPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
              * ```
              */
             Ctor: new NativeFunctionInfo(0x197C749, 'pointer', ['pointer', 'pointer', 'int32'])
@@ -97,7 +113,7 @@ export const NativePowerInfo = {
         Deva: {
             /**
              * ```c
-             * STS::AbstractPower* Powers::DevaPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * STS::AbstractPower* Powers::DevaPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
              * ```
              */
             Ctor: new NativeFunctionInfo(0x197CC09, 'pointer', ['pointer', 'pointer', 'int32'])
@@ -105,7 +121,7 @@ export const NativePowerInfo = {
         Devotion: {
             /**
              * ```c
-             * STS::AbstractPower* Powers::DevotionPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * STS::AbstractPower* Powers::DevotionPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
              * ```
              */
             Ctor: new NativeFunctionInfo(0x197D42D, 'pointer', ['pointer', 'pointer', 'int32'])
@@ -121,7 +137,7 @@ export const NativePowerInfo = {
         EnergyDown: {
             /**
              * ```c
-             * STS::AbstractPower* Powers::EnergyDownPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount, bool isFasting)
+             * STS::AbstractPower* Powers::EnergyDownPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount, bool isFasting)
              * ```
              */
             Ctor: new NativeFunctionInfo(0x197DC79, 'pointer', ['pointer', 'pointer', 'int32', 'bool'])
@@ -129,7 +145,7 @@ export const NativePowerInfo = {
         Establishment: {
             /**
              * ```c
-             * STS::AbstractPower* Powers::EstablishmentPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t strengthAmount)
+             * STS::AbstractPower* Powers::EstablishmentPower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
              * ```
              */
             Ctor: new NativeFunctionInfo(0x197E14D, 'pointer', ['pointer', 'pointer', 'int32'])
