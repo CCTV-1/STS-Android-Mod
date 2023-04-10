@@ -10,6 +10,7 @@ import { GaugeTheory } from "./NewCards/GaugeTheory.js";
 import { GammaRayBurst } from "./NewCards/GammaRayBurst.js";
 import { AncestralRecall } from "./NewCards/AncestralRecall.js";
 import { Ephemerate } from "./NewCards/Ephemerate.js";
+import { ForceOfWill } from "./NewCards/ForceOfWill.js";
 
 /**
  * if you plan register a new card, add a function property to NewCardLibrary,the function code like follow:
@@ -59,4 +60,5 @@ export const newCardLibrary: STSCardCtor[] = [
     GammaRayBurst,
     AncestralRecall,
     Ephemerate,
+    ForceOfWill,
 ];
