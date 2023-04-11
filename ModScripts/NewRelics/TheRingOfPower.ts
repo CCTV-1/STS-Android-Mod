@@ -10,10 +10,10 @@ export const TheRingOfPower = (thisPtr: NativePointer): NativePointer => {
             const currentPlayer = AbstractDungeon.getInstance().player.rawPtr;
             const wrapRelic = new AbstractRelic(thisPtr);
             const strengthPower = NativePowers.Common.Strength.Ctor(currentPlayer, 4);
-            let applyPowerAction = NativeActions.common.ApplyPower.Ctor2(currentPlayer, currentPlayer, strengthPower, 1);
+            let applyPowerAction = NativeActions.common.ApplyPower.Ctor2(currentPlayer, currentPlayer, strengthPower, 4);
             wrapRelic.addToBot(applyPowerAction);
             const dexterityPower = NativePowers.Common.Dexterity.Ctor(currentPlayer, -2);
-            applyPowerAction = NativeActions.common.ApplyPower.Ctor2(currentPlayer, currentPlayer, dexterityPower, -1);
+            applyPowerAction = NativeActions.common.ApplyPower.Ctor2(currentPlayer, currentPlayer, dexterityPower, -2);
             wrapRelic.addToBot(applyPowerAction);
             wrapRelic.flash();
         },
