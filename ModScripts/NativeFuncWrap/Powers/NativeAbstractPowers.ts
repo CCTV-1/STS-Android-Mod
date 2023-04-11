@@ -1,7 +1,7 @@
 import { PatchHelper } from "../../PatchHelper.js";
 import { NativePowerInfo } from "./NativePowerInfo.js";
 
-export const NativeAbstractPower = {
+export const NativeAbstractPowers = {
     Ctor(): NativePointer {
         return PatchHelper.GetNativeFunction(NativePowerInfo.Abstract.Ctor)(NULL);
     },

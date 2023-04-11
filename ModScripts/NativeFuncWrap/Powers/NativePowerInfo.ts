@@ -93,6 +93,16 @@ export const NativePowerInfo = {
             Ctor: new NativeFunctionInfo(0x195EBB1, 'pointer', ['pointer', 'pointer', 'int32'])
         },
     },
+    monster: {
+        Reactive: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::ReactivePower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1972061, 'pointer', ['pointer', 'pointer']),
+        }
+    },
     watcher: {
         BattleHymn: {
             /**
