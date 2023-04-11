@@ -42,7 +42,6 @@ export interface NewPowerVFuncType {
     onChangeStance?: (thisPtr: NativePointer, oldStance: NativePointer, newStance: NativePointer) => void,
     modifyBlock?: (thisPtr: NativePointer, blockAmount: number) => number,
     modifyBlock2?: (thisPtr: NativePointer, blockAmount: number, cardPtr: NativePointer) => number,
-    modifyBlockLast?: (thisPtr: NativePointer, blockAmount: number) => number,
     onGainedBlock?: (thisPtr: NativePointer, blockAmount: number) => void,
     /**`int (*func)(float)`*/
     onPlayerGainedBlock?: (thisPtr: NativePointer, blockAmount: number) => number,
@@ -143,7 +142,7 @@ export class AbstractPower extends NativeClassWrapper {
         atEndOfRound: (thisPtr: NativePointer) => {
             let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
-                const Func = cardVFuncMap.atStartOfTurnPostDraw;
+                const Func = cardVFuncMap.atEndOfRound;
                 if (Func !== undefined) {
                     Func(thisPtr);
                 }
@@ -362,16 +361,6 @@ export class AbstractPower extends NativeClassWrapper {
             }
             return blockAmount;
         },
-        modifyBlockLast: (thisPtr: NativePointer, blockAmount: number) => {
-            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
-            if (cardVFuncMap !== undefined) {
-                const Func = cardVFuncMap.modifyBlockLast;
-                if (Func !== undefined) {
-                    return Func(thisPtr, blockAmount);
-                }
-            }
-            return blockAmount;
-        },
         onGainedBlock: (thisPtr: NativePointer, blockAmount: number) => {
             let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
@@ -467,7 +456,7 @@ export class AbstractPower extends NativeClassWrapper {
         onLoseHp: (thisPtr: NativePointer, damageAmount: number) => {
             let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
-                const Func = cardVFuncMap.onPlayerGainedBlock2;
+                const Func = cardVFuncMap.onLoseHp;
                 if (Func !== undefined) {
                     return Func(thisPtr, damageAmount);
                 }
@@ -775,28 +764,22 @@ export class AbstractPower extends NativeClassWrapper {
         modifyBlock2: new NativeFunctionInfo(0x1A0, 'float', ['pointer', 'float', 'pointer']),
         /**
          * ```c
-         * void AbstractPower::modifyBlockLast(STS::AbstractPower* thisPtr, float blockAmount)
-         * ```
-         */
-        modifyBlockLast: new NativeFunctionInfo(0x1A8, 'void', ['pointer', 'float']),
-        /**
-         * ```c
          * void AbstractPower::onGainedBlock(STS::AbstractPower* thisPtr, float blockAmount)
          * ```
          */
-        onGainedBlock: new NativeFunctionInfo(0x1B0, 'void', ['pointer', 'float']),
+        onGainedBlock: new NativeFunctionInfo(0x1A8, 'void', ['pointer', 'float']),
         /**
          * ```c
          * int32_t AbstractPower::onPlayerGainedBlock(STS::AbstractPower* thisPtr, float blockAmount)
          * ```
          */
-        onPlayerGainedBlock: new NativeFunctionInfo(0x1B8, 'int32', ['pointer', 'float']),
+        onPlayerGainedBlock: new NativeFunctionInfo(0x1B0, 'int32', ['pointer', 'float']),
         /**
          * ```c
          * int32_t AbstractPower::onPlayerGainedBlock(STS::AbstractPower* thisPtr, int32_t blockAmount)
          * ```
          */
-        onPlayerGainedBlock2: new NativeFunctionInfo(0x1C0, 'int32', ['pointer', 'int32']),
+        onPlayerGainedBlock2: new NativeFunctionInfo(0x1B8, 'int32', ['pointer', 'int32']),
         /**
          * ```c
          * void AbstractPower::onGainCharge(STS::AbstractPower* thisPtr, int32_t blockAmount)
@@ -808,7 +791,7 @@ export class AbstractPower extends NativeClassWrapper {
          * void AbstractPower::onRemove(STS::AbstractPower* thisPtr)
          * ```
          */
-        onRemove: new NativeFunctionInfo(0x1D0, 'void', ['pointer']),
+        onRemove: new NativeFunctionInfo(0x1C8, 'void', ['pointer']),
         /**
          * ```c
          * void AbstractPower::onEnergyRecharge(STS::AbstractPower* thisPtr)
@@ -911,7 +894,7 @@ export class AbstractPower extends NativeClassWrapper {
             funcName = "AbstractPower_BasicNewPower_onDamageAllEnemies";
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.onDamageAllEnemies, VFuncProxys.onDamageAllEnemies);
             funcName = "AbstractPower_BasicNewPower_onHeal";
-            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PI32_Func(funcName), VFuncMap.onHeal, VFuncProxys.onHeal);
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.onHeal, VFuncProxys.onHeal);
             funcName = "AbstractPower_BasicNewPower_onAttacked";
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PPI32_Func(funcName), VFuncMap.onAttacked, VFuncProxys.onAttacked);
             funcName = "AbstractPower_BasicNewPower_onAttack";
@@ -952,14 +935,12 @@ export class AbstractPower extends NativeClassWrapper {
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.modifyBlock, VFuncProxys.modifyBlock);
             funcName = "AbstractPower_BasicNewPower_modifyBlock2";
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32P_Func(funcName), VFuncMap.modifyBlock2, VFuncProxys.modifyBlock2);
-            funcName = "AbstractPower_BasicNewPower_modifyBlockLast";
-            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.modifyBlockLast, VFuncProxys.modifyBlockLast);
             funcName = "AbstractPower_BasicNewPower_onGainedBlock";
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PF_Func(funcName), VFuncMap.onGainedBlock, VFuncProxys.onGainedBlock);
             funcName = "AbstractPower_BasicNewPower_onPlayerGainedBlock";
-            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.onPlayerGainedBlock, VFuncProxys.onPlayerGainedBlock);
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PF_Func(funcName), VFuncMap.onPlayerGainedBlock, VFuncProxys.onPlayerGainedBlock);
             funcName = "AbstractPower_BasicNewPower_onPlayerGainedBlock2";
-            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.F_PI32_Func(funcName), VFuncMap.onPlayerGainedBlock2, VFuncProxys.onPlayerGainedBlock2);
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.onPlayerGainedBlock2, VFuncProxys.onPlayerGainedBlock2);
             funcName = "AbstractPower_BasicNewPower_onGainCharge";
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PI32_Func(funcName), VFuncMap.onGainCharge, VFuncProxys.onGainCharge);
             funcName = "AbstractPower_BasicNewPower_onRemove";
