@@ -1,3 +1,5 @@
+import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
+import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
 import { EnemyType } from "../enums.js";
 import { AbstractCreature } from "./AbstractCreature.js";
 
@@ -13,8 +15,98 @@ export class AbstractMonster extends AbstractCreature {
     }
 
     static readonly #vfunctionMap = {
-
+        /**
+         * ```c
+         * void AbstractMonster::flashIntent(AbstractMonster* thisPtr)
+         * ```
+         */
+        flashIntent: new NativeFunctionInfo(0x1D8, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractMonster::createIntent(AbstractMonster* thisPtr)
+         * ```
+         */
+        createIntent: new NativeFunctionInfo(0x1E0, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractMonster::rollMove(AbstractMonster* thisPtr)
+         * ```
+         */
+        rollMove: new NativeFunctionInfo(0x218, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractMonster::init(AbstractMonster* thisPtr)
+         * ```
+         */
+        init: new NativeFunctionInfo(0x248, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractMonster::escape(AbstractMonster* thisPtr)
+         * ```
+         */
+        escape: new NativeFunctionInfo(0x290, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractMonster::die(AbstractMonster* thisPtr, bool triggerRelics)
+         * ```
+         */
+        die: new NativeFunctionInfo(0x2A0, 'void', ['pointer', 'bool']),
+        /**
+         * ```c
+         * void AbstractMonster::changeState(AbstractMonster* thisPtr, JString* stateName)
+         * ```
+         */
+        changeState: new NativeFunctionInfo(0x2C8, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  void AbstractMonster::addToTop(STS::AbstractCard* this, STS::AbstractGameAction* actionPtr)
+         * ```
+         */
+        addToBot: new NativeFunctionInfo(0x2D0, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  void AbstractMonster::addToTop(STS::AbstractCard* this, STS::AbstractGameAction* actionPtr)
+         * ```
+         */
+        addToTop: new NativeFunctionInfo(0x2D8, 'void', ['pointer', 'pointer']),
     };
+
+    flashIntent() {
+        this.getVirtualFunction(AbstractMonster.#vfunctionMap.flashIntent)(this.rawPtr);
+    }
+
+    createIntent() {
+        this.getVirtualFunction(AbstractMonster.#vfunctionMap.createIntent)(this.rawPtr);
+    }
+
+    rollMove() {
+        this.getVirtualFunction(AbstractMonster.#vfunctionMap.rollMove)(this.rawPtr);
+    }
+
+    init() {
+        this.getVirtualFunction(AbstractMonster.#vfunctionMap.init)(this.rawPtr);
+    }
+
+    escape() {
+        this.getVirtualFunction(AbstractMonster.#vfunctionMap.escape)(this.rawPtr);
+    }
+
+    die(triggerRelics: boolean) {
+        this.getVirtualFunction(AbstractMonster.#vfunctionMap.die)(this.rawPtr, Number(triggerRelics));
+    }
+
+    changeState(stateName: string) {
+        const nativeStateName = NativeSTDLib.JString.Ctor(stateName);
+        this.getVirtualFunction(AbstractMonster.#vfunctionMap.changeState)(this.rawPtr, nativeStateName);
+    }
+
+    addToBot(actionPtr: NativePointer): void {
+        this.getVirtualFunction(AbstractMonster.#vfunctionMap.addToBot)(this.rawPtr, actionPtr);
+    }
+
+    addToTop(actionPtr: NativePointer): void {
+        this.getVirtualFunction(AbstractMonster.#vfunctionMap.addToTop)(this.rawPtr, actionPtr);
+    }
 
     get deathTimer() {
         return this.readOffsetFloat(0x104);
