@@ -4,7 +4,7 @@ import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
 import { LandingSound, RelicTier } from "../enums.js";
 
-export const TheRingOfPower = (thisPtr: NativePointer): NativePointer => {
+export const TheStrengthRing = (thisPtr: NativePointer): NativePointer => {
     const vfuncs: NewRelicVFuncType = {
         atTurnStart: (thisPtr: NativePointer) => {
             const currentPlayer = AbstractDungeon.getInstance().player.rawPtr;
@@ -18,12 +18,12 @@ export const TheRingOfPower = (thisPtr: NativePointer): NativePointer => {
             wrapRelic.flash();
         },
         makeCopy: (thisPtr: NativePointer) => {
-            let copyObj = TheRingOfPower(thisPtr);
+            let copyObj = TheStrengthRing(thisPtr);
             return copyObj;
         },
     };
 
-    let relicObj = AbstractRelic.NewRelicCtor("TheRingOfPower", "力量魔戒", "在每回合开始时获得4点力量并失去2点敏捷。", "手握日月摘星辰，世间无我这般人。", "TheRingOfPower.png", RelicTier.BOSS, LandingSound.HEAVY, vfuncs);
+    let relicObj = AbstractRelic.NewRelicCtor("TheStrengthRing", "力量魔戒", "在每回合开始时获得4点力量并失去2点敏捷。", "手握日月摘星辰，世间无我这般人。", "TheStrengthRing.png", RelicTier.BOSS, LandingSound.HEAVY, vfuncs);
 
     return relicObj;
 };
