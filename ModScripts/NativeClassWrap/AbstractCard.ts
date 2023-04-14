@@ -60,6 +60,7 @@ export class AbstractCard extends NativeClassWrapper {
      * but there is more performance overhead.
      */
     static #rewriteVFuncMap = new Map<number, NewCardVFuncType>();
+    static #tempObjPtrArr = new Array<number>();
 
     static readonly #NewCardVFuncProxys: NewCardVFuncType = {
         canUpgrade: (thisPtr: NativePointer) => {
@@ -341,7 +342,8 @@ export class AbstractCard extends NativeClassWrapper {
             if (cardVFuncMap !== undefined) {
                 const makeCopyFunc = cardVFuncMap.makeCopy;
                 if (makeCopyFunc !== undefined) {
-                    let copyObj = makeCopyFunc(thisPtr);
+                    const copyObj = makeCopyFunc(thisPtr);
+                    AbstractCard.#tempObjPtrArr.push(copyObj.toUInt32());
                     return copyObj;
                 }
             }
@@ -696,6 +698,15 @@ export class AbstractCard extends NativeClassWrapper {
 
         return wrapCard;
     };
+
+    static OnGameSaveLoad() {
+        while (AbstractCard.#tempObjPtrArr.length) {
+            let tempPtr = AbstractCard.#tempObjPtrArr.pop();
+            if (tempPtr !== undefined) {
+                AbstractCard.#rewriteVFuncMap.delete(tempPtr);
+            }
+        }
+    }
 
     hasTag(tag: CardTags): boolean {
         return this.getVirtualFunction(AbstractCard.#vfunctionMap.hasTag)(this.rawPtr, Number(tag));

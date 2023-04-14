@@ -500,6 +500,14 @@ function RegisterNewPotions() {
     });
 }
 
+function ListenGameSaveLoadEvent() {
+    let origLoadPlayerSaveFunc = NativeSTSLib.OverrideloadPlayerSave((gameInstance, playerPtr) => {
+        AbstractCard.OnGameSaveLoad();
+        AbstractRelic.OnGameSaveLoad();
+        origLoadPlayerSaveFunc(gameInstance, playerPtr);
+    });
+};
+
 function main() {
     //FixGDXFileHandlereadBytes();
 
@@ -514,6 +522,8 @@ function main() {
     RegisterNewCards();
     RegisterNewRelic();
     RegisterNewPotions();
+
+    ListenGameSaveLoadEvent();
 }
 
 try {

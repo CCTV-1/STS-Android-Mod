@@ -8,6 +8,12 @@ const NativeSTSLibInfo = {
      * ```
      */
     openAssestFile: new NativeFunctionInfo(0x1375C69, 'pointer', ['pointer']),
+    /**
+     * ```c
+     * void loadPlayerSave(STS::GameInstance* instancePtr, STS::AbstractPlayer* playerPtr)
+     * ```
+     */
+    loadPlayerSave: new NativeFunctionInfo(0x178AE7D, 'void', ['pointer', 'pointer']),
 };
 
 export const NativeSTSLib = {
@@ -24,5 +30,12 @@ export const NativeSTSLib = {
     },
     OverrideopenAssestFile(newImplement: (filePath: NativePointer) => NativePointer): (filePath: NativePointer) => NativePointer {
         return PatchHelper.HookSTSFunction(NativeSTSLibInfo.openAssestFile, newImplement);
+    },
+
+    loadPlayerSave(playerPtr: NativePointer) {
+        return PatchHelper.GetNativeFunction(NativeSTSLibInfo.loadPlayerSave)(NULL, playerPtr);
+    },
+    OverrideloadPlayerSave(newImplement: (gameInstance: NativePointer, playerPtr: NativePointer) => void):(gameInstance: NativePointer, playerPtr: NativePointer) => void  {
+        return PatchHelper.HookSTSFunction(NativeSTSLibInfo.loadPlayerSave, newImplement);
     }
 };

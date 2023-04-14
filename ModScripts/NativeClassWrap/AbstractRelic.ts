@@ -97,6 +97,7 @@ export class AbstractRelic extends NativeClassWrapper {
      * but there is more performance overhead.
      */
     static #rewriteVFuncMap = new Map<number, NewRelicVFuncType>();
+    static #tempObjPtrArr = new Array<number>();
 
     static readonly #NewRelicVFuncProxys: NewRelicVFuncType = {
         updateDescription: (thisPtr: NativePointer, playerClass: PlayerClass) => {
@@ -619,7 +620,9 @@ export class AbstractRelic extends NativeClassWrapper {
             if (cardVFuncMap !== undefined) {
                 const Func = cardVFuncMap.makeCopy;
                 if (Func !== undefined) {
-                    return Func(thisPtr);
+                    const copyObj = Func(thisPtr);
+                    AbstractRelic.#tempObjPtrArr.push(copyObj.toUInt32());
+                    return copyObj
                 }
             }
 
@@ -1095,6 +1098,15 @@ export class AbstractRelic extends NativeClassWrapper {
         }
 
         return origRelicPtr;
+    }
+
+    static OnGameSaveLoad() {
+        while (AbstractRelic.#tempObjPtrArr.length) {
+            let tempPtr = AbstractRelic.#tempObjPtrArr.pop();
+            if (tempPtr !== undefined) {
+                AbstractRelic.#rewriteVFuncMap.delete(tempPtr);
+            }
+        }
     }
 
     getUpdatedDescription(): JString {
