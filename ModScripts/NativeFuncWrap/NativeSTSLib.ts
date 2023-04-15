@@ -14,6 +14,14 @@ const NativeSTSLibInfo = {
      * ```
      */
     loadPlayerSave: new NativeFunctionInfo(0x178AE7D, 'void', ['pointer', 'pointer']),
+    Random: {
+        /**
+         * ```c
+         * Random* STS::Random::Ctor(Random* thisPtr)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x1983719, 'pointer', ['pointer']),
+    },
 };
 
 export const NativeSTSLib = {
@@ -37,5 +45,11 @@ export const NativeSTSLib = {
     },
     OverrideloadPlayerSave(newImplement: (gameInstance: NativePointer, playerPtr: NativePointer) => void):(gameInstance: NativePointer, playerPtr: NativePointer) => void  {
         return PatchHelper.HookSTSFunction(NativeSTSLibInfo.loadPlayerSave, newImplement);
+    },
+
+    Random: {
+        Ctor(): NativePointer {
+            return PatchHelper.GetNativeFunction(NativeSTSLibInfo.Random.Ctor)(NULL);
+        }
     }
 };
