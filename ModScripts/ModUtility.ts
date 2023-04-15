@@ -16,6 +16,9 @@ export class ModUtility {
     static FakeRandom(min: number, max: number): number {
         if (ModUtility.RNGRef === undefined) {
             const eventRng = AbstractDungeon.getInstance().eventRng;
+            if (eventRng.isNull()) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
             ModUtility.RNGRef = new Random(eventRng);
         }
         return ModUtility.RNGRef.randomI32_2(min, max);
