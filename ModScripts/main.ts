@@ -19,6 +19,7 @@ import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
 import { AbstractDungeon } from "./NativeClassWrap/AbstractDungeon.js";
 import { NewPotionLibrary } from "./NewPotionLibrary.js";
 import { ModUtility } from "./ModUtility.js";
+import { Random } from "./NativeClassWrap/Random.js";
 
 function FixGDXFileHandlereadBytes() {
     let origOpenAssetFile = NativeSTSLib.OverrideopenAssestFile((thisPtr: NativePointer) => {
@@ -290,7 +291,8 @@ function PatchPowers() {
         //    origOnCardDrawFunc(thisPtr, cardPtr)
         let baseCard = new AbstractCard(cardPtr);
         if (baseCard.cost >= 0) {
-            let newCost = ModUtility.FakeRandom(0, Math.min(3, baseCard.cost + 1));
+            const eventRng = new Random(AbstractDungeon.getInstance().eventRng);
+            let newCost = eventRng.randomI32_2(0, Math.min(3, baseCard.cost + 1));
             if (baseCard.cost != newCost) {
                 baseCard.cost = newCost;
                 baseCard.costForTurn = baseCard.cost;

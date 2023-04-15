@@ -1,7 +1,7 @@
-import { ModUtility } from "../ModUtility.js";
 import { AbstractCard } from "../NativeClassWrap/AbstractCard.js";
 import { AbstractDungeon } from "../NativeClassWrap/AbstractDungeon.js";
 import { AbstractGameAction, NewGameActionVFuncType } from "../NativeClassWrap/AbstractGameAction.js"
+import { Random } from "../NativeClassWrap/Random.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 
 const vfuncs: NewGameActionVFuncType = {
@@ -15,17 +15,18 @@ const vfuncs: NewGameActionVFuncType = {
         }
         const randCard = playerHand.getRandomCard2(true);
         const wrapCard = new AbstractCard(randCard);
+        const eventRng = new Random(AbstractDungeon.getInstance().eventRng);
         if (wrapCard.canUpgrade()) {
             wrapCard.upgrade();
-            wrapCard.upgradeBaseCost(ModUtility.FakeRandom(0, 3));
-            wrapCard.upgradeDamage(ModUtility.FakeRandom(-wrapCard.baseDamage, wrapCard.baseDamage * 4));
-            wrapCard.upgradeBlock(ModUtility.FakeRandom(-wrapCard.baseBlock, wrapCard.baseBlock * 4));
-            wrapCard.upgradeMagicNumber(ModUtility.FakeRandom(-wrapCard.baseMagicNumber, wrapCard.baseMagicNumber * 4));
+            wrapCard.upgradeBaseCost(eventRng.randomI32_2(0, 3));
+            wrapCard.upgradeDamage(eventRng.randomI32_2(-wrapCard.baseDamage, wrapCard.baseDamage * 4));
+            wrapCard.upgradeBlock(eventRng.randomI32_2(-wrapCard.baseBlock, wrapCard.baseBlock * 4));
+            wrapCard.upgradeMagicNumber(eventRng.randomI32_2(-wrapCard.baseMagicNumber, wrapCard.baseMagicNumber * 4));
             wrapCard.flash();
         } else {
-            const DrawCount = ModUtility.FakeRandom(0,3);
+            const DrawCount = eventRng.randomI32_2(0,3);
             const drawAction = NativeActions.common.DrawCard.Ctor(currentPlayer.rawPtr, DrawCount, false);
-            const randDiscardAction = NativeActions.common.Discard.Ctor(currentPlayer.rawPtr, currentPlayer.rawPtr, ModUtility.FakeRandom(0, 2*DrawCount));
+            const randDiscardAction = NativeActions.common.Discard.Ctor(currentPlayer.rawPtr, currentPlayer.rawPtr, eventRng.randomI32_2(0, 2*DrawCount));
             wrapAction.addToBot(drawAction);
             wrapAction.addToBot(randDiscardAction);
         }

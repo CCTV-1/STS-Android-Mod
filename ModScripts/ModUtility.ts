@@ -4,6 +4,7 @@ import { AbstractPlayer } from "./NativeClassWrap/AbstractPlayer.js";
 import { AbstractRoom } from "./NativeClassWrap/AbstractRoom.js";
 import { MapRoomNode } from "./NativeClassWrap/MapRoomNode.js";
 import { MonsterGroup } from "./NativeClassWrap/MonsterGroup.js";
+import { Random } from "./NativeClassWrap/Random.js";
 import { NativeSTDLib } from "./NativeFuncWrap/NativeSTDLib.js";
 import { NativeVFX } from "./NativeFuncWrap/NativeVFX.js";
 import { PatchHelper } from "./PatchHelper.js";
@@ -25,7 +26,8 @@ export class ModUtility {
             }
         }
         if (canUpgradeCards.length > 0) {
-            let index = ModUtility.FakeRandom(0, canUpgradeCards.length - 1);
+            const eventRng = new Random(AbstractDungeon.getInstance().eventRng);
+            let index = eventRng.randomI32_2(0, canUpgradeCards.length - 1);
             let upgradeCard = canUpgradeCards[index];
             upgradeCard.upgrade();
             let topLevelEffects = AbstractDungeon.getInstance().topLevelEffects;
