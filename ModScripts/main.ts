@@ -63,6 +63,16 @@ function PatchNativeExceptions() {
     });
 }
 
+function PatchAbstractCardFunctions() {
+    let origMakeStatEquivalentCopy = NativeCards.AbstractCard.OverridemakeStatEquivalentCopy((thisPtr: NativePointer) => {
+        let origCopy = origMakeStatEquivalentCopy(thisPtr);
+        let wrapCopyCard = new AbstractCard(origCopy);
+        let wrapOriCard = new AbstractCard(thisPtr);
+        wrapCopyCard.exhaust = wrapOriCard.exhaust;
+        return origCopy;
+    })
+}
+
 function PatchRedCards() {
     let origStrikeRedCtorFunc = NativeCards.Red.StrikeRed.OverrideCtor((thisPtr: NativePointer) => {
         let ret = origStrikeRedCtorFunc(thisPtr);
@@ -514,6 +524,7 @@ function main() {
     //FixGDXFileHandlereadBytes();
 
     PatchNativeExceptions();
+    PatchAbstractCardFunctions();
 
     PatchRedCards();
     PatchPurpleCards();

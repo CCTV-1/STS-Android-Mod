@@ -19,6 +19,12 @@ const Cards = {
          * ```
          */
         Ctor: new NativeFunctionInfo(0x16D4FB5, 'pointer', ['pointer', 'pointer', 'pointer', 'pointer', 'int32', 'pointer', 'uint32', 'uint32', 'uint32', 'uint32', 'uint32']),
+        /**
+         * ```c
+         * STS::AbstractCard * Cards::AbstractCard::makeStatEquivalentCopy(STS::AbstractCard * this)
+         * ```
+         */
+        makeStatEquivalentCopy: new NativeFunctionInfo(0x16DA80D, 'pointer', ['pointer']),
     },
     DamageInfo: {
         /**
@@ -164,6 +170,13 @@ export const NativeCards = {
             (thisPtr: NativePointer, id: NativePointer, name: NativePointer, imgUrl: NativePointer, cost: number, rawDescription: NativePointer,
                 type: Number, color: Number, rarity: Number, target: Number, dType: Number) => NativePointer {
             return PatchHelper.HookSTSFunction(Cards.AbstractCard.Ctor, newCtor);
+        },
+
+        makeStatEquivalentCopy(thisPtr: NativePointer) {
+            return PatchHelper.GetNativeFunction(Cards.AbstractCard.makeStatEquivalentCopy)(thisPtr);
+        },
+        OverridemakeStatEquivalentCopy(newImplement: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
+            return PatchHelper.HookSTSFunction(Cards.AbstractCard.makeStatEquivalentCopy, newImplement);
         },
     },
     DamageInfo: {
