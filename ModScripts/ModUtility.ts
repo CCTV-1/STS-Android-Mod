@@ -4,13 +4,21 @@ import { AbstractPlayer } from "./NativeClassWrap/AbstractPlayer.js";
 import { AbstractRoom } from "./NativeClassWrap/AbstractRoom.js";
 import { MapRoomNode } from "./NativeClassWrap/MapRoomNode.js";
 import { MonsterGroup } from "./NativeClassWrap/MonsterGroup.js";
+import { Random } from "./NativeClassWrap/Random.js";
 import { NativeSTDLib } from "./NativeFuncWrap/NativeSTDLib.js";
 import { NativeVFX } from "./NativeFuncWrap/NativeVFX.js";
 import { PatchHelper } from "./PatchHelper.js";
 
+
 export class ModUtility {
-    static FakeRandom(min: number, max: number) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+    static RNGRef: Random | undefined = undefined
+    
+    static FakeRandom(min: number, max: number): number {
+        if (ModUtility.RNGRef === undefined) {
+            const eventRng = AbstractDungeon.getInstance().eventRng;
+            ModUtility.RNGRef = new Random(eventRng);
+        }
+        return ModUtility.RNGRef.randomI32_2(min, max);
     }
 
     static UpgradeRandomCard(currentPlayer: AbstractPlayer) {
