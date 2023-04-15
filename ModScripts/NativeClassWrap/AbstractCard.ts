@@ -789,6 +789,9 @@ export class AbstractCard extends NativeClassWrapper {
         this.getVirtualFunction(AbstractCard.#vfunctionMap.addToTop)(this.rawPtr, actionPtr);
     }
 
+    makeCopy(): NativePointer {
+        return this.getVirtualFunction(AbstractCard.#vfunctionMap.makeCopy)(this.rawPtr);
+    }
     OverridemakeCopy(newVFunc: (thisPtr: NativePointer) => NativePointer) {
         let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_makeCopy").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.P_P_Func(funcName), AbstractCard.#vfunctionMap.makeCopy, newVFunc);
