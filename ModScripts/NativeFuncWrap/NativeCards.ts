@@ -1,4 +1,4 @@
-import { CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
+import { CardColor, CardGroupType, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
 import { STSCardCtor } from "../NativeClassWrap/AbstractCard.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
@@ -25,6 +25,54 @@ const Cards = {
          * ```
          */
         makeStatEquivalentCopy: new NativeFunctionInfo(0x16DA80D, 'pointer', ['pointer']),
+    },
+    CardGroup: {
+        /**
+         * ```c
+         * CardGroup* CardGroup::Ctor(CardGroup* thisPtr, CardGroupType type)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x16F8B45, 'pointer', ['pointer', 'uint32']),
+        /**
+         * ```c
+         * CardGroup* CardGroup::Ctor(CardGroup* thisPtr, CardGroup* sourceGroupPtr, CardGroupType type)
+         * ```
+         */
+        Ctor2: new NativeFunctionInfo(0x16F8D85, 'pointer', ['pointer', 'pointer', 'uint32']),
+    },
+    CardQueueItem: {
+        /**
+         * ```c
+         * CardQueueItem* CardQueueItem::Ctor(CardQueueItem* thisPtr)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x170E879, 'pointer', ['pointer']),
+        /**
+         * ```c
+         * CardQueueItem* CardQueueItem::Ctor(CardQueueItem* thisPtr, STS::AbstractCard* cardPtr, bool isEndTurnAutoPlay)
+         * ```
+         */
+        Ctor2: new NativeFunctionInfo(0x170E8FD, 'pointer', ['pointer', 'pointer', 'bool']),
+        /**
+         * ```c
+         * CardQueueItem* CardQueueItem::Ctor(CardQueueItem* thisPtr, STS::AbstractCard* cardPtr, STS::AbstractMonster* monsterPtr)
+         * ```
+         */
+        Ctor3: new NativeFunctionInfo(0x170E985, 'pointer', ['pointer', 'pointer', 'pointer']),
+        /**
+         * ```c
+         * CardQueueItem* CardQueueItem::Ctor(CardQueueItem* thisPtr, STS::AbstractCard* cardPtr, STS::AbstractMonster* monsterPtr, 
+         *      int32_t setEnergyOnUse, bool ignoreEnergyTotal, bool autoplayCard)
+         * ```
+         */
+        Ctor4: new NativeFunctionInfo(0x170EB41, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'bool', 'bool']),
+        /**
+         * ```c
+         * CardQueueItem* CardQueueItem::Ctor(CardQueueItem* thisPtr, STS::AbstractCard* cardPtr, bool randomTarget, 
+         *      int32_t setEnergyOnUse, bool ignoreEnergyTotal, bool autoplayCard)
+         * ```
+         */
+        Ctor5: new NativeFunctionInfo(0x170EBF1, 'pointer', ['pointer', 'pointer', 'bool', 'int32', 'bool', 'bool']),
     },
     DamageInfo: {
         /**
@@ -177,6 +225,31 @@ export const NativeCards = {
         },
         OverridemakeStatEquivalentCopy(newImplement: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
             return PatchHelper.HookSTSFunction(Cards.AbstractCard.makeStatEquivalentCopy, newImplement);
+        },
+    },
+    CardGroup: {
+        Ctor(type: CardGroupType): NativePointer {
+            return PatchHelper.GetNativeFunction(Cards.CardGroup.Ctor)(NULL, Number(type));
+        },
+        Ctor2(groupPtr: NativePointer, type: CardGroupType): NativePointer {
+            return PatchHelper.GetNativeFunction(Cards.CardGroup.Ctor2)(NULL, groupPtr, Number(type));
+        },
+    },
+    CardQueueItem: {
+        Ctor(): NativePointer {
+            return PatchHelper.GetNativeFunction(Cards.CardQueueItem.Ctor)(NULL);
+        },
+        Ctor2(cardPtr: NativePointer, isEndTurnAutoPlay: boolean): NativePointer {
+            return PatchHelper.GetNativeFunction(Cards.CardQueueItem.Ctor2)(NULL, cardPtr, Number(isEndTurnAutoPlay));
+        },
+        Ctor3(cardPtr: NativePointer, monsterPtr: NativePointer): NativePointer {
+            return PatchHelper.GetNativeFunction(Cards.CardQueueItem.Ctor3)(NULL, cardPtr, monsterPtr);
+        },
+        Ctor4(cardPtr: NativePointer, monsterPtr: NativePointer, setEnergyOnUse: number, ignoreEnergyTotal: boolean, autoplayCard: boolean): NativePointer {
+            return PatchHelper.GetNativeFunction(Cards.CardQueueItem.Ctor4)(NULL, cardPtr, monsterPtr, setEnergyOnUse, Number(ignoreEnergyTotal), Number(autoplayCard));
+        },
+        Ctor5(cardPtr: NativePointer, randomTarget: boolean, setEnergyOnUse: number, ignoreEnergyTotal: boolean, autoplayCard: boolean): NativePointer {
+            return PatchHelper.GetNativeFunction(Cards.CardQueueItem.Ctor5)(NULL, cardPtr, Number(randomTarget), setEnergyOnUse, Number(ignoreEnergyTotal), Number(autoplayCard));
         },
     },
     DamageInfo: {
