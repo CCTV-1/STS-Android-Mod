@@ -20,6 +20,8 @@ import { AbstractDungeon } from "./NativeClassWrap/AbstractDungeon.js";
 import { NewPotionLibrary } from "./NewPotionLibrary.js";
 import { ModUtility } from "./ModUtility.js";
 import { Random } from "./NativeClassWrap/Random.js";
+import { AbstractPower } from "./NativeClassWrap/AbstractPower.js";
+import { AbstractPotion } from "./NativeClassWrap/AbstractPotion.js";
 
 function FixGDXFileHandlereadBytes() {
     let origOpenAssetFile = NativeSTSLib.OverrideopenAssestFile((thisPtr: NativePointer) => {
@@ -512,11 +514,43 @@ function RegisterNewPotions() {
     });
 }
 
-function ListenGameSaveLoadEvent() {
-    let origLoadPlayerSaveFunc = NativeSTSLib.OverrideloadPlayerSave((gameInstance, playerPtr) => {
-        AbstractCard.OnGameSaveLoad();
-        AbstractRelic.OnGameSaveLoad();
-        origLoadPlayerSaveFunc(gameInstance, playerPtr);
+function ListenNativeObjectAlloc() {
+    //let origLoadPlayerSaveFunc = NativeSTSLib.OverrideloadPlayerSave((gameInstance, playerPtr) => {
+    //    AbstractCard.OnGameSaveLoad();
+    //    AbstractRelic.OnGameSaveLoad();
+    //    origLoadPlayerSaveFunc(gameInstance, playerPtr);
+    //});
+
+    //these ctor pass RuntimeType_t argument to call GC_malloc,so these maybe use different memory pool to alloc memory.
+    //so maybe don't need send all wrapped class::ctor return value to each wrapClass::OnNativeObjectAlloc?
+    let origAbstractCardCtor = NativeCards.AbstractCard.OverrideCtor((thisPtr: NativePointer, id: NativePointer, name: NativePointer, imgUrl: NativePointer, cost: number, rawDescription: NativePointer, type: Number, color: Number, rarity: Number, target: Number, dType: Number) => {
+        const rawPtr = origAbstractCardCtor(thisPtr, id, name, imgUrl, cost, rawDescription, type, color, rarity, target, dType);
+        AbstractCard.OnNativeObjectAlloc(rawPtr.toUInt32());
+        return rawPtr;
+    });
+
+    let origAbstractRelicCtor = NativeRelics.AbstractRelic.OverrideCtor((thisPtr: NativePointer, relicId: NativePointer, imgName: NativePointer, tier: Number, sfx: Number) => {
+        const rawPtr = origAbstractRelicCtor(thisPtr, relicId, imgName, tier, sfx);
+        AbstractRelic.OnNativeObjectAlloc(rawPtr.toUInt32());
+        return rawPtr;
+    });
+
+    let origAbstractPowerCtor = NativePowers.Abstract.OverrideCtor((thisPtr: NativePointer) => {
+        const rawPtr = origAbstractPowerCtor(thisPtr);
+        AbstractPower.OnNativeObjectAlloc(rawPtr.toUInt32());
+        return rawPtr;
+    });
+
+    let origAbstractActionCtor = NativeActions.Abstract.OverrideCtor((thisPtr: NativePointer) => {
+        const rawPtr = origAbstractActionCtor(thisPtr);
+        AbstractGameAction.OnNativeObjectAlloc(rawPtr.toUInt32());
+        return rawPtr;
+    });
+
+    let origAbstractPotionCtor = NativePotions.Abstract.OverrideCtor2((thisPtr: NativePointer, name: NativePointer, id: NativePointer, rarity: number, size: number, color: number, liquidColor: NativePointer, hybridColor: NativePointer, spotsColor: NativePointer) => {
+        const rawPtr = origAbstractPotionCtor(thisPtr, name, id, rarity, size, color, liquidColor, hybridColor, spotsColor);
+        AbstractPotion.OnNativeObjectAlloc(rawPtr.toUInt32());
+        return rawPtr;
     });
 };
 
@@ -536,7 +570,7 @@ function main() {
     RegisterNewRelic();
     RegisterNewPotions();
 
-    ListenGameSaveLoadEvent();
+    ListenNativeObjectAlloc();
 }
 
 try {

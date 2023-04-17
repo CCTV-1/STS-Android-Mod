@@ -77,8 +77,8 @@ export const NativeRelics = {
             let nativeImgUrl = NativeSTDLib.JString.Ctor(imgName);
             return PatchHelper.GetNativeFunction(Relics.AbstractRelic.Ctor)(NULL, nativeRelicId, nativeImgUrl, Number(tier), Number(sfx));
         },
-        OverrideCtor(newCtor: (thisPtr: NativePointer, relicId: string, imgName: string, tier: RelicTier, sfx: LandingSound) => NativePointer):
-            (relicId: string, imgName: string, tier: RelicTier, sfx: LandingSound) => NativePointer {
+        OverrideCtor(newCtor: (thisPtr: NativePointer, relicId: NativePointer, imgName: NativePointer, tier: Number, sfx: Number) => NativePointer):
+            (thisPtr: NativePointer, relicId: NativePointer, imgName: NativePointer, tier: Number, sfx: Number) => NativePointer {
             return PatchHelper.HookSTSFunction(Relics.AbstractRelic.Ctor, newCtor);
         },
     },

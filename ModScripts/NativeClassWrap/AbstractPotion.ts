@@ -199,6 +199,13 @@ export class AbstractPotion extends NativeClassWrapper {
         return origPotionPtr;
     }
 
+    static OnNativeObjectAlloc(ptrValue: number) {
+        const vfuncs = AbstractPotion.#rewriteVFuncMap.get(ptrValue);
+        if (vfuncs !== undefined) {
+            AbstractPotion.#rewriteVFuncMap.delete(ptrValue);
+        }
+    }
+
     flash(): void {
         this.getVirtualFunction(AbstractPotion.#vfunctionMap.flash)(this.rawPtr);
     }

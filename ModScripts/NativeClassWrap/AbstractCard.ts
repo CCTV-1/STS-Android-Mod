@@ -42,7 +42,7 @@ export interface NewCardVFuncType {
     triggerOnExhaust?: (thisPtr: NativePointer) => void,
     triggerOnGlowCheck?: (thisPtr: NativePointer) => void,
     makeCopy: (thisPtr: NativePointer) => NativePointer,
-    onGameSaveLoad?: (thisPtrValue: number) => void,
+    onObjectDector?: (thisPtrValue: number) => void,
 };
 
 export class AbstractCard extends NativeClassWrapper {
@@ -706,13 +706,24 @@ export class AbstractCard extends NativeClassWrapper {
             if (tempPtr !== undefined) {
                 const vfuncs = AbstractCard.#rewriteVFuncMap.get(tempPtr);
                 if (vfuncs !== undefined) {
-                    const deCtor = vfuncs.onGameSaveLoad;
+                    const deCtor = vfuncs.onObjectDector;
                     if (deCtor !== undefined) {
                         deCtor(tempPtr);
                     }
                     AbstractCard.#rewriteVFuncMap.delete(tempPtr);
                 }
             }
+        }
+    }
+
+    static OnNativeObjectAlloc(ptrValue: number) {
+        const vfuncs = AbstractCard.#rewriteVFuncMap.get(ptrValue);
+        if (vfuncs !== undefined) {
+            const deCtor = vfuncs.onObjectDector;
+            if (deCtor !== undefined) {
+                deCtor(ptrValue);
+            }
+            AbstractCard.#rewriteVFuncMap.delete(ptrValue);
         }
     }
 

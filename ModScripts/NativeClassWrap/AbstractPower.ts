@@ -967,6 +967,13 @@ export class AbstractPower extends NativeClassWrapper {
         return origPowerPtr;
     }
 
+    static OnNativeObjectAlloc(ptrValue: number) {
+        const vfuncs = AbstractPower.#rewriteVFuncMap.get(ptrValue);
+        if (vfuncs !== undefined) {
+            AbstractPower.#rewriteVFuncMap.delete(ptrValue);
+        }
+    }
+
     OverrideonCardDraw(newVFunc: (thisPtr: NativePointer, cardPtr: NativePointer) => void) {
         let funcName = (AbstractPower.#vFuncNamePrefix + this.ID + "_onCardDraw").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractPower.#vfunctionMap.onCardDraw, newVFunc);

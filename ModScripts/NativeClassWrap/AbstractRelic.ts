@@ -1109,6 +1109,13 @@ export class AbstractRelic extends NativeClassWrapper {
         }
     }
 
+    static OnNativeObjectAlloc(ptrValue: number) {
+        const vfuncs = AbstractRelic.#rewriteVFuncMap.get(ptrValue);
+        if (vfuncs !== undefined) {
+            AbstractRelic.#rewriteVFuncMap.delete(ptrValue);
+        }
+    }
+
     getUpdatedDescription(): JString {
         return new JString(this.getVirtualFunction(AbstractRelic.#vfunctionMap.getUpdatedDescription)(this.rawPtr));
     }

@@ -43,6 +43,10 @@ export const NativePotions = {
             return PatchHelper.GetNativeFunction(Potions.Abstract.Ctor2)(NULL, nativeName, nativeId, Number(rarity), Number(size), Number(color),
                 liquidColor, hybridColor, spotsColor);
         },
+        OverrideCtor2(newCtor: (thisPtr: NativePointer, name: NativePointer, id: NativePointer, rarity: number, size: number, color: number, liquidColor: NativePointer,
+            hybridColor: NativePointer, spotsColor: NativePointer) => NativePointer): (thisPtr: NativePointer, name: NativePointer, id: NativePointer, rarity: number, size: number, color: number, liquidColor: NativePointer, hybridColor: NativePointer, spotsColor: NativePointer) => NativePointer {
+            return PatchHelper.HookSTSFunction(Potions.Abstract.Ctor2, newCtor);
+        },
     },
     PotionSlot: {
         Ctor(index: number): NativePointer {

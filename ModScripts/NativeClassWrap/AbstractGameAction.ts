@@ -16,11 +16,11 @@ export class AbstractGameAction extends NativeClassWrapper {
     /**
      * new card id => (v func name => v func)
      */
-    static #rewriteVFuncMap = new Map<string, NewGameActionVFuncType>();
+    static #rewriteVFuncMap = new Map<number, NewGameActionVFuncType>();
 
     static readonly #NewGameActionVFuncProxys: NewGameActionVFuncType = {
         update: (thisPtr: NativePointer) => {
-            let cardVFuncMap = AbstractGameAction.#rewriteVFuncMap.get(thisPtr.toString());
+            let cardVFuncMap = AbstractGameAction.#rewriteVFuncMap.get(thisPtr.toUInt32());
             if (cardVFuncMap !== undefined) {
                 const updateFunc = cardVFuncMap.update;
                 if (updateFunc !== undefined) {
@@ -88,18 +88,25 @@ export class AbstractGameAction extends NativeClassWrapper {
         let origActionPtr = NativeActions.Abstract.Ctor();
 
         let wrapAction = new AbstractGameAction(origActionPtr);
-        let actionId = origActionPtr.toString();
+        let actionId = origActionPtr.toUInt32();
         //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
         AbstractGameAction.#rewriteVFuncMap.set(actionId, newFuncs);
 
-        if (!AbstractGameAction.#rewriteVFuncMap.has("AbstractGameActionProxy")) {
+        if (!AbstractGameAction.#rewriteVFuncMap.has(-1)) {
             let funcName = "AbstractGameAction_BasicNewAction_update";
             wrapAction.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractGameAction.#vfunctionMap.update, AbstractGameAction.#NewGameActionVFuncProxys.update);
-            AbstractGameAction.#rewriteVFuncMap.set("AbstractGameActionProxy", AbstractGameAction.#NewGameActionVFuncProxys);
+            AbstractGameAction.#rewriteVFuncMap.set(-1, AbstractGameAction.#NewGameActionVFuncProxys);
         }
 
         return origActionPtr;
     };
+
+    static OnNativeObjectAlloc(ptrValue: number) {
+        const vfuncs = AbstractGameAction.#rewriteVFuncMap.get(ptrValue);
+        if (vfuncs !== undefined) {
+            AbstractGameAction.#rewriteVFuncMap.delete(ptrValue);
+        }
+    }
 
     setValues(targetCreature: NativePointer, dmgInfo: NativePointer): void {
         this.getVirtualFunction(AbstractGameAction.#vfunctionMap.setValues)(this.rawPtr, targetCreature, dmgInfo);
