@@ -32,12 +32,9 @@ const vfuncs: NewGameActionVFuncType = {
             const selectCard3 = NativeSTDLib.ArrayList.AbstractCard.get(selectCards.group, 2);
             selectCards.clear();
             selectScreen.wereCardsRetrieved = true;
-            let exhaustAction = NativeActions.common.ExhaustSpecificCard.Ctor(selectCard1, currentPlayer.hand.rawPtr, true);
-            wrapAction.addToBot(exhaustAction);
-            exhaustAction = NativeActions.common.ExhaustSpecificCard.Ctor(selectCard2, currentPlayer.hand.rawPtr, true);
-            wrapAction.addToBot(exhaustAction);
-            exhaustAction = NativeActions.common.ExhaustSpecificCard.Ctor(selectCard3, currentPlayer.hand.rawPtr, true);
-            wrapAction.addToBot(exhaustAction);
+            currentPlayer.hand.moveToExhaustPile(selectCard1);
+            currentPlayer.hand.moveToExhaustPile(selectCard2);
+            currentPlayer.hand.moveToExhaustPile(selectCard3);
 
             const MimicCard = Mimic(NULL, selectCard1, selectCard2, selectCard3);
             const addCardtoHand = NativeActions.common.MakeTempCardInHand.Ctor(MimicCard, 1, false);
