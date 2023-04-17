@@ -1,4 +1,5 @@
 import { OmniscientPotion } from "./NewPotions/OmniscientPotion.js";
+import { SuperPolymerizationPotion } from "./NewPotions/SuperPolymerizationActionPotion.js";
 import { PlayerClass } from "./enums.js";
 
 /**
@@ -15,6 +16,7 @@ import { PlayerClass } from "./enums.js";
 export class NewPotionLibrary {
     static PotionList = new Map<string, Function>([
         ["OmniscientPotion", OmniscientPotion],
+        ["SuperPolymerizationPotion", SuperPolymerizationPotion],
     ]);
 
     static playerPotions(playerClass: PlayerClass): Array<string> {

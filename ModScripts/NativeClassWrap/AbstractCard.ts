@@ -781,6 +781,9 @@ export class AbstractCard extends NativeClassWrapper {
         return this.getVirtualFunction(AbstractCard.#vfunctionMap.hasEnoughEnergy)(this.rawPtr);
     }
 
+    use(playerPtr: NativePointer, monsterPtr: NativePointer) {
+        return this.getVirtualFunction(AbstractCard.#vfunctionMap.use)(this.rawPtr, playerPtr, monsterPtr);
+    }
     Overrideuse(newVFunc: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => void) {
         let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_use").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, newVFunc);
