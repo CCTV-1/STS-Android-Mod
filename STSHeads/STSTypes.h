@@ -2010,7 +2010,7 @@ namespace STS
         bool targetRequired;
     } __attribute__((aligned(4)));
 
-    struct __attribute__((aligned(4))) AbstractPowerVFuncMap
+    struct AbstractPowerVFuncMap
     {
         void *baseClassPtr;
         void *vFuncMap;
@@ -2201,8 +2201,7 @@ namespace STS
         dummyFunc_t dword228;
         bool byte22C;
         uint8_t  gap22D[3];
-    };
-
+    } __attribute__((aligned(4)));
 
     struct AbstractPower
     {
@@ -2228,6 +2227,68 @@ namespace STS
         bool canGoNegative;
         uint8_t gap47;
     } __attribute__((aligned(4)));
+
+    struct HandCardSelectScreenVFuncMap
+    {
+        void *baseClassPtr;
+        void *vFuncMap;
+        uint8_t unk[24];
+        dummyFunc_t dword20;
+        bool byte24;
+        uint8_t gap25[3];
+        dummyFunc_t dword28;
+        bool byte2C;
+        uint8_t gap2D[3];
+        dummyFunc_t open;
+        bool byte34;
+        uint8_t gap35[3];
+        dummyFunc_t open1;
+        bool byte3C;
+        uint8_t gap3D[3];
+        dummyFunc_t open2;
+        bool Initopen2;
+        uint8_t gap45[3];
+        dummyFunc_t open3;
+        bool byte4C;
+        uint8_t gap4D[3];
+        dummyFunc_t open4;
+        bool byte54;
+        uint8_t gap55[3];
+        dummyFunc_t dword58;
+        bool byte5C;
+    };
+
+    struct HandCardSelectScreen
+    {
+        void *baseclassPtr;
+        void *vfuncMap;
+        int32_t numCardsToSelect;
+        CardGroup *selectedCards;
+        AbstractCard *hoveredCard;
+        AbstractCard *upgradePreviewCard;
+        JString *selectionReason;
+        bool wereCardsRetrieved;
+        bool canPickZero;
+        bool upTo;
+        uint8_t pad1F[1];
+        JString *message;
+        void *confirmButton;
+        void *peekButton;
+        bool anyNumber;
+        bool forTransform;
+        bool forUpgrade;
+        uint8_t pad2F[1];
+        int32_t numSelected;
+        bool waitThenClose;
+        uint8_t pad35[3];
+        float waitToCloseTimer;
+        CardGroup *hand;
+        float arrowScale1;
+        float arrowScale2;
+        float arrowScale3;
+        float arrowTimer;
+    } __attribute__((aligned(4)));
+
 
 }
 
