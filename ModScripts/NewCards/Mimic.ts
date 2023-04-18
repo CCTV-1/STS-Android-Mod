@@ -32,7 +32,7 @@ const vfuncs: NewCardVFuncType = {
         const wrapCard = new AbstractCard(thisPtr);
         if (!wrapCard.upgraded) {
             wrapCard.upgradeName();
-            wrapCard.upgradeMagicNumber(3);
+            wrapCard.upgradeMagicNumber(2);
         }
     },
     makeCopy: (thisPtr: NativePointer) => {
@@ -51,7 +51,9 @@ const vfuncs: NewCardVFuncType = {
 };
 
 export const Mimic = (thisPtr: NativePointer, cardPtr1: NativePointer, cardPtr2: NativePointer, cardPtr3: NativePointer): NativePointer => {
-    let wrapCard = AbstractCard.NewCardCtor("Mimic", "拟态", "colorless/skill/Mimic", 1, "消耗 !M! 。", CardType.SKILL,
+    const mimicAbilityTexts = "消耗 !M! 。 NL " + new AbstractCard(cardPtr1).name + " NL " + new AbstractCard(cardPtr2).name + " NL " + new AbstractCard(cardPtr3).name + " NL ";
+
+    let wrapCard = AbstractCard.NewCardCtor("Mimic", "拟态", "colorless/skill/Mimic", 1, mimicAbilityTexts, CardType.SKILL,
         CardColor.COLORLESS, CardRarity.RARE, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
 
     extraVarMap.set(wrapCard.rawPtr.toUInt32(), { cardPtr1, cardPtr2, cardPtr3 });
