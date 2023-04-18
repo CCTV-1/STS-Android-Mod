@@ -23,7 +23,7 @@ const vfuncs: NewCardVFuncType = {
             callCardUse(extraVars.cardPtr2, playerPtr, monsterPtr);
             callCardUse(extraVars.cardPtr3, playerPtr, monsterPtr);
             wrapCard.upgradeMagicNumber(-1);
-            if (wrapCard.baseMagicNumber <= 1) {
+            if (wrapCard.baseMagicNumber <= 0) {
                 wrapCard.exhaust = true;
             }
         }
