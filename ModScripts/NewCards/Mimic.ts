@@ -11,7 +11,8 @@ const extraVarMap = new Map<number, MimicExtraMember>();
 
 function callCardUse(cardPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) {
     const wrapCard = new AbstractCard(cardPtr);
-    wrapCard.use(playerPtr, monsterPtr)
+    wrapCard.applyPowers();
+    wrapCard.use(playerPtr, monsterPtr);
 };
 
 const vfuncs: NewCardVFuncType = {

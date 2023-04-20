@@ -574,6 +574,18 @@ export class AbstractCard extends NativeClassWrapper {
         triggerOnExhaust: new NativeFunctionInfo(0x260, 'void', ['pointer']),
         /**
          * ```c
+         *  void AbstractCard::applyPowers(STS::AbstractCard* this)
+         * ```
+         */
+        applyPowers: new NativeFunctionInfo(0x268, 'void', ['pointer']),
+        /**
+         * ```c
+         *  void AbstractCard::applyPowersToBlock(STS::AbstractCard* this)
+         * ```
+         */
+        applyPowersToBlock: new NativeFunctionInfo(0x270, 'void', ['pointer']),
+        /**
+         * ```c
          *  void AbstractCard::superFlash(STS::AbstractCard* this, GDX::Color* color)
          * ```
          */
@@ -787,6 +799,13 @@ export class AbstractCard extends NativeClassWrapper {
     Overrideuse(newVFunc: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => void) {
         let funcName = (AbstractCard.#vFuncNamePrefix + this.cardID + "_use").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, newVFunc);
+    }
+
+    applyPowers() {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.applyPowers)(this.rawPtr);
+    }
+    applyPowersToBlock() {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.applyPowersToBlock)(this.rawPtr);
     }
 
     superFlash(colorPtr: NativePointer) {
