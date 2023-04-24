@@ -2289,6 +2289,88 @@ namespace STS
         float arrowTimer;
     } __attribute__((aligned(4)));
 
+    struct GridCardSelectScreenVFuncMap
+    {
+        void * baseClassPtr;
+        void * vfuncMap;
+        uint8_t unk[24];
+        bool byte24;
+        uint8_t gap25[3];
+        dummyFunc_t open;
+        bool byte2C;
+        uint8_t gap2D[3];
+        dummyFunc_t open2;
+        bool byte34;
+        uint8_t gap35[3];
+        dummyFunc_t open3;
+        bool byte3C;
+        uint8_t gap3D[3];
+        dummyFunc_t open4;
+        bool byte44;
+        uint8_t gap45[3];
+        dummyFunc_t openConfirmationGrid;
+        bool byte4C;
+        uint8_t gap4D[3];
+        dummyFunc_t reopen;
+        bool byte54;
+        uint8_t gap55[3];
+        dummyFunc_t hide;
+        bool byte5C;
+        uint8_t gap5D[3];
+        dummyFunc_t cancelUpgrade;
+        bool byte64;
+        uint8_t gap65[3];
+        dummyFunc_t dword68;
+        bool byte6C;
+        uint8_t gap6D[3];
+        dummyFunc_t dword70;
+        bool byte74;
+        uint8_t gap75[3];
+        dummyFunc_t dword78;
+        bool byte7C;
+        uint8_t gap7D[3];
+    } __attribute__((aligned(4)));
+
+    struct GridCardSelectScreen
+    {
+        GridCardSelectScreen *self;
+        GridCardSelectScreenVFuncMap *vfuncMap;
+        float grabStartY;
+        float currentDiffY;
+        ArrayList<AbstractCard> *selectedCards;
+        CardGroup *targetGroup;
+        AbstractCard *hoveredCard;
+        AbstractCard *upgradePreviewCard;
+        int32_t numCards;
+        int32_t cardSelectAmount;
+        float scrollLowerBound;
+        float scrollUpperBound;
+        bool grabbedScreen;
+        bool canCancel;
+        bool forUpgrade;
+        bool forTransform;
+        bool forPurge;
+        bool confirmScreenUp;
+        bool isJustForConfirming;
+        uint8_t gap37;
+        void *confirmButton;
+        void *peekButton;
+        JString *tipMsg;
+        JString *lastTip;
+        float ritualAnimTimer;
+        int32_t prevDeckSize;
+        bool cancelWasOn;
+        bool anyNumber;
+        bool forClarity;
+        uint8_t gap53;
+        JString *cancelText;
+        void *scrollBar;
+        AbstractCard *controllerCard;
+        float arrowScale1;
+        float arrowScale2;
+        float arrowScale3;
+        float arrowTimer;
+    } __attribute__((aligned(4)));
 
 }
 
