@@ -12,6 +12,7 @@ import { AncestralRecall } from "./NewCards/AncestralRecall.js";
 import { Ephemerate } from "./NewCards/Ephemerate.js";
 import { ForceOfWill } from "./NewCards/ForceOfWill.js";
 import { TransgressTheMind } from "./NewCards/TransgressTheMind.js";
+import { TreasureCruise } from "./NewCards/TreasureCruise.js";
 
 /**
  * if you plan register a new card, add a function property to NewCardLibrary,the function code like follow:
@@ -63,4 +64,5 @@ export const newCardLibrary: STSCardCtor[] = [
     Ephemerate,
     ForceOfWill,
     TransgressTheMind,
+    TreasureCruise,
 ];
