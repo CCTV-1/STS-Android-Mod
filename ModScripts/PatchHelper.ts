@@ -55,6 +55,9 @@ export class PatchHelper {
         get AbstractDungeonInstancePtr() {
             return PatchHelper.STSModuleBaseAddress.add(0x3498EB0);
         },
+        get GameActionManagerConstantsPtr() {
+            return PatchHelper.STSModuleBaseAddress.add(0x34964E0);
+        },
         get EnergyPaneltotalCount() {
             return PatchHelper.#GetOffsetPtr(0x349ED34).readS32();
         }

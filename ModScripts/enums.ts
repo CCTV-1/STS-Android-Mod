@@ -243,3 +243,9 @@ export enum RoomType
     EVENT, 
     BOSS
 };
+
+export enum GamePhase
+{
+    WAITING_ON_USER = 0x0, 
+    EXECUTING_ACTIONS
+};

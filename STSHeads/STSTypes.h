@@ -369,6 +369,12 @@ namespace STS
         DEBUFF
     };
 
+    enum class GamePhase:uint32_t
+    {
+        WAITING_ON_USER = 0x0, 
+        EXECUTING_ACTIONS
+    };
+
     struct JString
     {
         uint32_t unk;
@@ -1339,7 +1345,6 @@ namespace STS
         bool byte64;
     } __attribute__((aligned(4)));
 
-
     struct AbstractGameAction
     {
         void *basePtr;
@@ -1360,6 +1365,90 @@ namespace STS
     {
 
     } __attribute__((aligned(4)));
+
+    struct CardQueueItem;
+    struct MonsterQueueItem;
+    struct AbstractOrb;
+
+    struct GameActionManagerVFuncMap
+    {
+        void *baseClassPtr;
+        void *vFuncMap;
+        uint8_t unk[24];
+        bool gap20[8];
+        dummyFunc_t useNextCombatActions;
+        bool byte2C;
+        uint8_t gap2D[3];
+        dummyFunc_t addToBottom;
+        bool byte34;
+        uint8_t gap35[3];
+        dummyFunc_t addCardQueueItem;
+        bool byte3C;
+        bool gap3D[11];
+        dummyFunc_t removeFromQueue;
+        bool byte4C;
+        uint8_t gap4D[3];
+        dummyFunc_t clearPostCombatActions;
+        bool byte54;
+        uint8_t gap55[3];
+        dummyFunc_t addToTop;
+        bool byte5C;
+        uint8_t gap5D[3];
+        dummyFunc_t addToTurnStart;
+        bool byte64;
+        uint8_t gap65[3];
+        dummyFunc_t dword68;
+        bool byte6C;
+        uint8_t gap6D[3];
+        dummyFunc_t endTurn;
+        bool byte74;
+        uint8_t gap75[3];
+        dummyFunc_t callEndTurnEarlySequence;
+        bool byte7C;
+        uint8_t gap7D[3];
+        dummyFunc_t cleanCardQueue;
+        bool byte84;
+        uint8_t gap85[3];
+        dummyFunc_t isEmpty;
+        bool byte8C;
+        uint8_t gap8D[3];
+        dummyFunc_t clearNextRoomCombatActions;
+        bool byte94;
+        uint8_t gap95[3];
+        dummyFunc_t clear;
+        bool byte9C;
+        uint8_t gap9D[3];
+        dummyFunc_t dwordA0;
+        bool byteA4;
+        uint8_t gapA5[3];
+    } __attribute__((aligned(4)));
+
+
+    struct GameActionManager
+    {
+        GameActionManager *selfPtr;
+        GameActionManagerVFuncMap *vfuncMap;
+        ArrayList<AbstractGameAction>* actions;
+        ArrayList<AbstractGameAction>* preTurnActions;
+        ArrayList<CardQueueItem>* cardQueue;
+        ArrayList<MonsterQueueItem>* monsterQueue;
+        ArrayList<AbstractCard>* cardsPlayedThisTurn;
+        ArrayList<AbstractCard>* cardsPlayedThisCombat;
+        ArrayList<AbstractOrb>* orbsChanneledThisCombat;
+        ArrayList<AbstractOrb>* orbsChanneledThisTurn;
+        void* uniqueStancesThisCombat;
+        int32_t mantraGained;
+        AbstractGameAction* currentAction;
+        AbstractGameAction* previousAction;
+        AbstractGameAction* turnStartCurrentAction;
+        AbstractCard lastCard;
+        GamePhase phase;
+        bool hasControl;
+        bool turnHasEnded;
+        bool usingCard;
+        bool monsterAttacksQueued;
+    } __attribute__((aligned(4)));
+
 
     //see System::Internal::__CreateRuntimeType<AbstractCard *>()
     //offset 0x25EA5C0
