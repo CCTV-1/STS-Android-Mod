@@ -35,7 +35,9 @@ export enum CardTags {
     STRIKE,
     EMPTY,
     STARTER_DEFEND,
-    STARTER_STRIKE
+    STARTER_STRIKE,
+    /** Mod Extra Tags */
+    GalvanicBombardment,
 };
 
 export enum CardColor {
