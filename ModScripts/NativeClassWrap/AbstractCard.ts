@@ -1062,6 +1062,11 @@ export class AbstractCard extends NativeClassWrapper {
         this.writeOffsetBool(0x64, value);
     }
 
+    /** ArrayList\<CardTags\>* */
+    get tags() {
+        return this.readOffsetPointer(0x68);
+    }
+
     get baseDamage() {
         return this.readOffsetS32(0x74);
     }

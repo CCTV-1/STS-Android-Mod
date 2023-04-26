@@ -1,31 +1,10 @@
 import { ArrayList } from "../NativeClassWrap/ArrayList.js";
 import { PatchHelper } from "../PatchHelper.js";
+import { CardTags } from "../enums.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 
 const STDLib = {
     ArrayList: {
-        JString: {
-            /**
-             * ```c
-             * ArrayList * ArrayList<JString>::Ctor(ArrayList * thisPtr)
-             * ```
-             */
-            Ctor: new NativeFunctionInfo(0x1386D19, 'pointer', ['pointer']),
-            /**
-             * ```c
-             * bool ArrayList<JString>::add(ArrayList * thisPtr, JString * strPtr)
-             * ```
-             */
-            Add: new NativeFunctionInfo(0x1386F7D, 'bool', ['pointer', 'pointer']),
-        },
-        AbstractGameEffect: {
-            /**
-             * ```c
-             * bool ArrayList<AbstractGameEffect>::add(ArrayList * thisPtr, STS::AbstractGameEffect * effectPtr)
-             * ```
-             */
-            Add: new NativeFunctionInfo(0x16706F9, 'bool', ['pointer', 'pointer']),
-        },
         AbstractCard: {
             /**
              * ```c
@@ -39,6 +18,14 @@ const STDLib = {
              * ```
              */
             get: new NativeFunctionInfo(0x205A631, 'pointer', ['pointer', 'uint32']),
+        },
+        AbstractGameEffect: {
+            /**
+             * ```c
+             * bool ArrayList<AbstractGameEffect>::add(ArrayList * thisPtr, STS::AbstractGameEffect * effectPtr)
+             * ```
+             */
+            Add: new NativeFunctionInfo(0x16706F9, 'bool', ['pointer', 'pointer']),
         },
         AbstractMonster: {
             /**
@@ -56,6 +43,34 @@ const STDLib = {
              * ```
              */
             Add: new NativeFunctionInfo(0x0175224D, 'bool', ['pointer', 'pointer']),
+        },
+        CardTags: {
+            /**
+             * ```c
+             * CardTags STS::ArrayList<CardTags>::getItem(STS::ArrayList<CardTags>* thisPtr, int index)
+             * ```
+             */
+            get: new NativeFunctionInfo(0x20594FD, 'pointer', ['pointer', 'uint32']),
+            /**
+             * ```c
+             * CardTags STS::ArrayList<CardTags>::add(STS::ArrayList<CardTags>* thisPtr, CardTags tag)
+             * ```
+             */
+            add: new NativeFunctionInfo(0x16EE00D, 'pointer', ['pointer', 'uint32']),
+        },
+        JString: {
+            /**
+             * ```c
+             * ArrayList * ArrayList<JString>::Ctor(ArrayList * thisPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1386D19, 'pointer', ['pointer']),
+            /**
+             * ```c
+             * bool ArrayList<JString>::add(ArrayList * thisPtr, JString * strPtr)
+             * ```
+             */
+            Add: new NativeFunctionInfo(0x1386F7D, 'bool', ['pointer', 'pointer']),
         },
         PowerTip: {
             /**
@@ -228,6 +243,14 @@ export const NativeSTDLib = {
         AbstractMonster: {
             get(arrayListPtr: ArrayList, index: number): NativePointer {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractMonster.get)(arrayListPtr.rawPtr, index);
+            },
+        },
+        CardTags: {
+            get(arrayListPtr: NativePointer, index: number): NativePointer {
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.CardTags.get)(arrayListPtr, index);
+            },
+            add(arrayListPtr: NativePointer, cardTag: CardTags) {
+                PatchHelper.GetNativeFunction(STDLib.ArrayList.CardTags.add)(arrayListPtr, Number(cardTag));
             },
         },
         PowerTip: {
