@@ -137,6 +137,9 @@ export class PatchHelper {
         F_PI32_Func(funcName: string) {
             return "float " + funcName + "(void * arg1, int arg2) { return 0; }";
         },
+        F_PF_Func(funcName: string) {
+            return "float " + funcName + "(void * arg1, float arg2) { return 0; }";
+        },
         /**if int != int32_t, this func not work. */
         I32_PI32P_Func(funcName: string) {
             return "int " + funcName + "(void * arg1, int arg2, void * arg3) { return 0; }";
@@ -144,6 +147,9 @@ export class PatchHelper {
         /**if int != int32_t, this func not work. */
         I32_PPI32_Func(funcName: string) {
             return "int " + funcName + "(void * arg1, void * arg2, int arg3) { return 0; }";
+        },
+        F_PFP_Func(funcName: string) {
+            return "float " + funcName + "(void * arg1, float arg2, void * arg3) { return 0; }";
         },
     };
 

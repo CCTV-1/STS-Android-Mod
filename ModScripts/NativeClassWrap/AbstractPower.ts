@@ -785,7 +785,7 @@ export class AbstractPower extends NativeClassWrapper {
          * void AbstractPower::onGainCharge(STS::AbstractPower* thisPtr, int32_t blockAmount)
          * ```
          */
-        onGainCharge: new NativeFunctionInfo(0x1C8, 'void', ['pointer', 'int32']),
+        onGainCharge: new NativeFunctionInfo(0x1C0, 'void', ['pointer', 'int32']),
         /**
          * ```c
          * void AbstractPower::onRemove(STS::AbstractPower* thisPtr)
@@ -932,9 +932,9 @@ export class AbstractPower extends NativeClassWrapper {
             funcName = "AbstractPower_BasicNewPower_onChangeStance";
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), VFuncMap.onChangeStance, VFuncProxys.onChangeStance);
             funcName = "AbstractPower_BasicNewPower_modifyBlock";
-            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.modifyBlock, VFuncProxys.modifyBlock);
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.F_PF_Func(funcName), VFuncMap.modifyBlock, VFuncProxys.modifyBlock);
             funcName = "AbstractPower_BasicNewPower_modifyBlock2";
-            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32P_Func(funcName), VFuncMap.modifyBlock2, VFuncProxys.modifyBlock2);
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.F_PFP_Func(funcName), VFuncMap.modifyBlock2, VFuncProxys.modifyBlock2);
             funcName = "AbstractPower_BasicNewPower_onGainedBlock";
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PF_Func(funcName), VFuncMap.onGainedBlock, VFuncProxys.onGainedBlock);
             funcName = "AbstractPower_BasicNewPower_onPlayerGainedBlock";
