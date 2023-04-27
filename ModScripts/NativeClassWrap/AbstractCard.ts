@@ -586,6 +586,12 @@ export class AbstractCard extends NativeClassWrapper {
         applyPowersToBlock: new NativeFunctionInfo(0x270, 'void', ['pointer']),
         /**
          * ```c
+         *  void AbstractCard::calculateCardDamage(STS::AbstractCard* this, AbstractMonster* monsterPtr)
+         * ```
+         */
+        calculateCardDamage: new NativeFunctionInfo(0x278, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
          *  void AbstractCard::superFlash(STS::AbstractCard* this, GDX::Color* color)
          * ```
          */
