@@ -450,6 +450,11 @@ export class AbstractDungeon extends NativeClassWrapper {
         return this.readOffsetPointer(0x118);
     }
 
+    /** GridCardSelectScreen* */
+    get gridSelectScreen() {
+        return this.readOffsetPointer(0x164);
+    }
+
     /** HandCardSelectScreen* */
     get handCardSelectScreen() {
         return this.readOffsetPointer(0x164);
