@@ -18,6 +18,12 @@ const STDLib = {
              * ```
              */
             get: new NativeFunctionInfo(0x205A631, 'pointer', ['pointer', 'uint32']),
+            /**
+             * ```c
+             * STS::AbstractCard* STS::ArrayList<AbstractCard>::RemoveAt(STS::ArrayList<AbstractCard>* thisPtr, int index)
+             * ```
+             */
+            RemoveAt: new NativeFunctionInfo(0x16716D5, 'void', ['pointer', 'uint32']),
         },
         AbstractGameEffect: {
             /**
@@ -238,6 +244,9 @@ export const NativeSTDLib = {
             },
             get(arrayListPtr: ArrayList, index: number): NativePointer {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.get)(arrayListPtr.rawPtr, index);
+            },
+            RemoveAt(arrayListPtr: ArrayList, index: number): NativePointer {
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.RemoveAt)(arrayListPtr.rawPtr, index);
             },
         },
         AbstractMonster: {
