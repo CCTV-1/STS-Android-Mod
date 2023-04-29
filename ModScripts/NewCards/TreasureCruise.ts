@@ -6,7 +6,7 @@ import { CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enum
 const vfuncs: NewCardVFuncType = {
     use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
         const wrapCard = new AbstractCard(thisPtr);
-        const drawCardAction = NativeActions.common.DrawCard.Ctor(playerPtr, 3, false);
+        const drawCardAction = NativeActions.common.DrawCard.Ctor(playerPtr, wrapCard.magicNumber, false);
         wrapCard.addToBot(drawCardAction);
     },
     didDiscard: (thisPtr) => {
