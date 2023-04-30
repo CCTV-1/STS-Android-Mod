@@ -19,9 +19,11 @@ const vfuncs: NewCardVFuncType = {
             }
         }
 
-        for (let index = 0; index < count; index++) {
+        const damageCount = count + 1;
+        const damage = count + 3;
+        for (let index = 0; index < damageCount; index++) {
             const wrapCard = new AbstractCard(thisPtr);
-            const dmgInfoObj = NativeCards.DamageInfo.Ctor(playerPtr, count, wrapCard.damageTypeForTurn);
+            const dmgInfoObj = NativeCards.DamageInfo.Ctor(playerPtr, damage, wrapCard.damageTypeForTurn);
             wrapCard.addToBot(NativeActions.common.Damage.Ctor(monsterPtr, dmgInfoObj, AttackEffect.SLASH_HORIZONTAL));
         }
     },
@@ -39,7 +41,7 @@ const vfuncs: NewCardVFuncType = {
 };
 
 export const GalvanicBombardment: STSCardCtor = (thisPtr: NativePointer) => {
-    let wrapCard = AbstractCard.NewCardCtor("GalvanicBombardment", "电流轰炸", "green/skill/GalvanicBombardment", 1, "造成X次X点伤害。 NL X为弃牌堆中名为电流轰炸的牌的数量。", CardType.ATTACK, CardColor.BLUE, CardRarity.COMMON, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
+    let wrapCard = AbstractCard.NewCardCtor("GalvanicBombardment", "电流轰炸", "green/skill/GalvanicBombardment", 1, "造成X次X + 3点伤害。 NL X为弃牌堆中名为电流轰炸的牌的数量加1。", CardType.ATTACK, CardColor.BLUE, CardRarity.COMMON, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
 
     wrapCard.baseMagicNumber = 3;
     wrapCard.magicNumber = 3;
