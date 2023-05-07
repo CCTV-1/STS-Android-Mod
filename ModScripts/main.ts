@@ -414,7 +414,7 @@ function PatchRelics() {
             let wrapCoffeeDripper = new AbstractRelic(thisPtr);
             wrapCoffeeDripper.counter++;
             let currentPlayer = AbstractDungeon.getInstance().player;
-            currentPlayer.heal(wrapCoffeeDripper.counter, true);
+            currentPlayer.heal2(wrapCoffeeDripper.counter);
             wrapCoffeeDripper.flash();
         });
         return coffeeDripperObj;

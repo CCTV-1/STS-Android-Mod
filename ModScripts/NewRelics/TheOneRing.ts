@@ -17,7 +17,7 @@ const vfuncs: NewRelicVFuncType = {
     atBattleStart: (thisPtr: NativePointer) => {
         const currentPlayer = AbstractDungeon.getInstance().player;
         const wrapRelic = new AbstractRelic(thisPtr);
-        currentPlayer.heal(-currentPlayer.currentHealth / 3, true);
+        currentPlayer.heal2(-currentPlayer.currentHealth / 3);
         wrapRelic.flash();
     },
     makeCopy: (thisPtr: NativePointer) => {

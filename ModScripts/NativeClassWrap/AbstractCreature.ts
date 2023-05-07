@@ -32,9 +32,16 @@ export class AbstractCreature extends NativeClassWrapper {
          * ```c
          * void STS::AbstractCreature::heal(STS::AbstractCreature* this, int32_t amount, bool showEffect);
          * ```
-         * 0x98 just call this.heal(amount, true);
          */
         heal: new NativeFunctionInfo(0x90, 'void', ['pointer', 'int32', 'bool']),
+        /**
+         * ```c
+         * void STS::AbstractCreature::heal(STS::AbstractCreature* this, int32_t amount);
+         * ```
+         * 
+         * in AbstractCreature heal2 just call `this.heal(amount, true);`, but AbstractMonster/AbstractPlayer will override it.
+         */
+        heal2: new NativeFunctionInfo(0x98, 'void', ['pointer', 'int32']),
         /**
          * ```c
          * void STS::AbstractCreature::addBlock(STS::AbstractCreature* this, int32_t blockAmount);
@@ -98,6 +105,11 @@ export class AbstractCreature extends NativeClassWrapper {
     heal(amount: number, showEffect: boolean) {
         let healFunc = this.getVirtualFunction(AbstractCreature.#vfunctionMap.heal);
         healFunc(this.rawPtr, amount, Number(showEffect));
+    }
+
+    /** subclass object(`AbstractMonster`,`AbstractPlayer`) shall call it. */
+    heal2(amount: number) {
+        this.getVirtualFunction(AbstractCreature.#vfunctionMap.heal)(this.rawPtr, amount);
     }
 
     addPower(powerPtr: NativePointer) {
