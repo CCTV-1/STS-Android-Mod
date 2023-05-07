@@ -8,11 +8,11 @@ import { AttackEffect, CardColor, CardRarity, CardTags, CardTarget, CardType, Da
 const vfuncs: NewCardVFuncType = {
     use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
         const currentPlayer = AbstractDungeon.getInstance().player;
-        const discardPie = currentPlayer.discardPile;
-        const discardPieSize = discardPie.size();
+        const masterDeck = currentPlayer.masterDeck;
+        const masterDeckSize = masterDeck.size();
         let count = 0;
-        for (let index = 0; index < discardPieSize; index++) {
-            const cardRef = NativeSTDLib.ArrayList.AbstractCard.get(discardPie.group, index);
+        for (let index = 0; index < masterDeckSize; index++) {
+            const cardRef = NativeSTDLib.ArrayList.AbstractCard.get(masterDeck.group, index);
             const wrapCard = new AbstractCard(cardRef);
             if (wrapCard.hasTag(CardTags.GalvanicBombardment)) {
                 count++;
@@ -41,7 +41,7 @@ const vfuncs: NewCardVFuncType = {
 };
 
 export const GalvanicBombardment: STSCardCtor = (thisPtr: NativePointer) => {
-    let wrapCard = AbstractCard.NewCardCtor("GalvanicBombardment", "电流轰炸", "green/skill/GalvanicBombardment", 1, "造成X次X + 3点伤害。 NL X为弃牌堆中名为电流轰炸的牌的数量加1。", CardType.ATTACK, CardColor.BLUE, CardRarity.COMMON, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
+    let wrapCard = AbstractCard.NewCardCtor("GalvanicBombardment", "电流轰炸", "green/skill/GalvanicBombardment", 1, "造成X次X + 3点伤害。 NL X为卡组中名为电流轰炸的牌的数量加1。", CardType.ATTACK, CardColor.BLUE, CardRarity.COMMON, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
 
     wrapCard.baseMagicNumber = 3;
     wrapCard.magicNumber = 3;
