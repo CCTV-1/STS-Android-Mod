@@ -35,8 +35,8 @@ const vfuncs: NewCardVFuncType = {
 export const GaugeTheory = (thisPtr: NativePointer): NativePointer => {
     let wrapCard = AbstractCard.NewCardCtor("GaugeTheory", "规范场论", "blue/power/GaugeTheory", -1, "获得X - !M! 点集中。", CardType.POWER,
         CardColor.BLUE, CardRarity.RARE, CardTarget.NONE, DamageType.NORMAL, vfuncs);
-    wrapCard.baseMagicNumber = 3;
-    wrapCard.magicNumber = 3;
+    wrapCard.baseMagicNumber = 1;
+    wrapCard.magicNumber = 1;
 
     return wrapCard.rawPtr;
 }
