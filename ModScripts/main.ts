@@ -493,14 +493,28 @@ function RegisterNewPotions() {
     let origPotionHelpergetPotions = NativeHelpers.PotionHelper.OverridegetPotions((playerClass: number, getAll: number) => {
         let rawPotionList = origPotionHelpergetPotions(playerClass, getAll);
         if (getAll) {
-            for (const k of NewPotionLibrary.PotionList.keys()) {
-                NativeSTDLib.ArrayList.JString.Add(rawPotionList, k);
+            for (const v of NewPotionLibrary.playerPotions(PlayerClass.DEFECT).values()) {
+                NativeSTDLib.ArrayList.JString.Add(rawPotionList, v);
+            }
+            for (const v of NewPotionLibrary.playerPotions(PlayerClass.THE_SILENT).values()) {
+                NativeSTDLib.ArrayList.JString.Add(rawPotionList, v);
+            }
+            for (const v of NewPotionLibrary.playerPotions(PlayerClass.DEFECT).values()) {
+                NativeSTDLib.ArrayList.JString.Add(rawPotionList, v);
+            }
+            for (const v of NewPotionLibrary.playerPotions(PlayerClass.WATCHER).values()) {
+                NativeSTDLib.ArrayList.JString.Add(rawPotionList, v);
             }
         } else {
             for (const v of NewPotionLibrary.playerPotions(playerClass).values()) {
                 NativeSTDLib.ArrayList.JString.Add(rawPotionList, v);
             }
         }
+
+        for (const k of NewPotionLibrary.PotionList.keys()) {
+            NativeSTDLib.ArrayList.JString.Add(rawPotionList, k);
+        }
+
         return rawPotionList;
     });
 
