@@ -98,18 +98,17 @@ export class AbstractCreature extends NativeClassWrapper {
     };
 
     addBlock(amount: number) {
-        let addBlockFunc = this.getVirtualFunction(AbstractCreature.#vfunctionMap.addBlock);
-        addBlockFunc(this.rawPtr, amount);
+        this.getVirtualFunction(AbstractCreature.#vfunctionMap.addBlock)(this.rawPtr, amount);
     }
 
+    /** subclass object(`AbstractMonster`,`AbstractPlayer`) shall call `heal2`. */
     heal(amount: number, showEffect: boolean) {
-        let healFunc = this.getVirtualFunction(AbstractCreature.#vfunctionMap.heal);
-        healFunc(this.rawPtr, amount, Number(showEffect));
+        this.getVirtualFunction(AbstractCreature.#vfunctionMap.heal)(this.rawPtr, amount, Number(showEffect));
     }
 
     /** subclass object(`AbstractMonster`,`AbstractPlayer`) shall call it. */
     heal2(amount: number) {
-        this.getVirtualFunction(AbstractCreature.#vfunctionMap.heal)(this.rawPtr, amount);
+        this.getVirtualFunction(AbstractCreature.#vfunctionMap.heal2)(this.rawPtr, amount);
     }
 
     addPower(powerPtr: NativePointer) {
@@ -118,23 +117,21 @@ export class AbstractCreature extends NativeClassWrapper {
 
     /** return AbstractPower* */
     getPower(powerId: string): NativePointer {
-        let nativePowerId = NativeSTDLib.JString.Ctor(powerId);
+        const nativePowerId = NativeSTDLib.JString.Ctor(powerId);
         return this.getVirtualFunction(AbstractCreature.#vfunctionMap.getPower)(this.rawPtr, nativePowerId);
     }
 
     hasPower(powerId: string): boolean {
-        let nativePowerId = NativeSTDLib.JString.Ctor(powerId);
+        const nativePowerId = NativeSTDLib.JString.Ctor(powerId);
         return this.getVirtualFunction(AbstractCreature.#vfunctionMap.hasPower)(this.rawPtr, nativePowerId);
     }
 
     loseGold(goldAmount: number) {
-        let loseGoldFunc = this.getVirtualFunction(AbstractCreature.#vfunctionMap.loseGold);
-        loseGoldFunc(this.rawPtr, goldAmount);
+        this.getVirtualFunction(AbstractCreature.#vfunctionMap.loseGold)(this.rawPtr, goldAmount);
     }
 
     gainGold(goldAmount: number) {
-        let gainGoldFunc = this.getVirtualFunction(AbstractCreature.#vfunctionMap.gainGold);
-        gainGoldFunc(this.rawPtr, goldAmount);
+        this.getVirtualFunction(AbstractCreature.#vfunctionMap.gainGold)(this.rawPtr, goldAmount);
     }
 
     get name() {
