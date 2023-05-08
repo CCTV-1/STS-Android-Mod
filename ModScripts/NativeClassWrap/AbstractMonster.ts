@@ -69,6 +69,12 @@ export class AbstractMonster extends AbstractCreature {
          * ```
          */
         addToTop: new NativeFunctionInfo(0x2D8, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
+         *  int32_t AbstractMonster::getIntentBaseDmg(STS::AbstractCard* this)
+         * ```
+         */
+        getIntentBaseDmg: new NativeFunctionInfo(0x2F8, 'int32', ['pointer']),
     };
 
     flashIntent() {
@@ -106,6 +112,10 @@ export class AbstractMonster extends AbstractCreature {
 
     addToTop(actionPtr: NativePointer): void {
         this.getVirtualFunction(AbstractMonster.#vfunctionMap.addToTop)(this.rawPtr, actionPtr);
+    }
+
+    getIntentBaseDmg(): number {
+        return this.getVirtualFunction(AbstractMonster.#vfunctionMap.getIntentBaseDmg)(this.rawPtr);
     }
 
     get deathTimer() {
