@@ -762,16 +762,16 @@ export class AbstractCard extends NativeClassWrapper {
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractCard.#vfunctionMap.upgrade, newVFunc);
     }
 
-    upgradeDamage(newDamage: number) {
-        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgradeDamage)(this.rawPtr, newDamage);
+    upgradeDamage(changeAmount: number) {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgradeDamage)(this.rawPtr, changeAmount);
     }
 
-    upgradeBlock(newBlock: number) {
-        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgradeBlock)(this.rawPtr, newBlock);
+    upgradeBlock(changeAmount: number) {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgradeBlock)(this.rawPtr, changeAmount);
     }
 
-    upgradeMagicNumber(newMagicNumber: number) {
-        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgradeMagicNumber)(this.rawPtr, newMagicNumber);
+    upgradeMagicNumber(changeAmount: number) {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.upgradeMagicNumber)(this.rawPtr, changeAmount);
     }
 
     upgradeName() {
