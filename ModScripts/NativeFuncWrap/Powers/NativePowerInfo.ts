@@ -48,6 +48,14 @@ export const NativePowerInfo = {
              */
             Ctor: new NativeFunctionInfo(0x19693B9, 'pointer', ['pointer', 'pointer', 'int32'])
         },
+        Metallicize: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::MetallicizePower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x196D279, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
         Slow: {
             /**
              * ```c
@@ -63,6 +71,14 @@ export const NativePowerInfo = {
              * ```
              */
             Ctor: new NativeFunctionInfo(0x1977711, 'pointer', ['pointer', 'pointer', 'int32'])
+        },
+        Vulnerable: {
+            /**
+             * ```c
+             * STS::AbstractPower* Powers::VulnerablePower(STS::AbstractPower* thisPtr, STS::AbstractCreature* owner, int32_t amount, bool isSourceMonster)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x197AD39, 'pointer', ['pointer', 'pointer', 'int32', 'bool'])
         },
     },
     defect: {
