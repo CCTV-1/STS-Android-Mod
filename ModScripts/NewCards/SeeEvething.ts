@@ -31,7 +31,7 @@ const vfuncs: NewCardVFuncType = {
 };
 
 export const SeeEvething = (thisPtr: NativePointer): NativePointer => {
-    const wrapCard = AbstractCard.NewCardCtor("SeeEvething", "洞若观火", "green/skill/SeeEvething", 1, "如果一名敌人的意图是攻击，你获得 !M! 点 敏捷 。", CardType.SKILL, CardColor.GREEN, CardRarity.RARE, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
+    const wrapCard = AbstractCard.NewCardCtor("SeeEvething", "洞若观火", "green/skill/SeeEvething", 1, "如果一名敌人的意图是攻击，你获得 !M! 点 敏捷 。", CardType.SKILL, CardColor.GREEN, CardRarity.UNCOMMON, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
     wrapCard.baseMagicNumber = 1;
     wrapCard.magicNumber = 1;
 
