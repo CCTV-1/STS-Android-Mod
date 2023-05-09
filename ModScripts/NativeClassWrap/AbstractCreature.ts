@@ -148,6 +148,11 @@ export class AbstractCreature extends NativeClassWrapper {
         this.writeOffsetJString(0xC, JString.CreateJString(value));
     }
 
+    /** ArrayList\<AbstractPower\> * */
+    get powers() {
+        return this.readOffsetPointer(0x10);
+    }
+
     get isPlayer() {
         return this.readOffsetBool(0x14);
     }
