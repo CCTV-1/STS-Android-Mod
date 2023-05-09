@@ -739,7 +739,7 @@ namespace STS
     {
         void *basePtr;
         void *vfuncMap;
-        ArrayList<AbstractMonster>* monsters;
+        ArrayList<AbstractMonster *>* monsters;
         AbstractMonster* hoveredMonster;
     } __attribute__((aligned(4)));
 
@@ -759,7 +759,7 @@ namespace STS
         JString* name;
         JString* description;
         int32_t slot;
-        ArrayList<void*>* tips;
+        ArrayList<PowerTip*>* tips;
         void * containerImg;
         void * liquidImg;
         void * hybridImg;
@@ -955,7 +955,7 @@ namespace STS
         void *vfuncMap;
         JString *name;
         JString *id;
-        ArrayList<void *> *powers;
+        ArrayList<AbstractPower *> *powers;
         bool isPlayer;
         bool isBloodied;
         uint8_t gap16[2];
@@ -975,7 +975,7 @@ namespace STS
         float escapeTimer;
         bool isEscaping;
         uint8_t gap41[3];
-        ArrayList<void *> *tips;
+        ArrayList<PowerTip *> *tips;
         void *healthHb;
         float healthHideTimer;
         int32_t lastDamageTaken;
@@ -1284,7 +1284,7 @@ namespace STS
         float hoverTimer;
         bool cannotEscape;
         uint8_t pad2A[3];
-        ArrayList<DamageInfo> *damage;
+        ArrayList<DamageInfo *> *damage;
         void *move;
         float intentParticleTimer;
         float intentAngle;
@@ -1428,14 +1428,14 @@ namespace STS
     {
         GameActionManager *selfPtr;
         GameActionManagerVFuncMap *vfuncMap;
-        ArrayList<AbstractGameAction>* actions;
-        ArrayList<AbstractGameAction>* preTurnActions;
-        ArrayList<CardQueueItem>* cardQueue;
-        ArrayList<MonsterQueueItem>* monsterQueue;
-        ArrayList<AbstractCard>* cardsPlayedThisTurn;
-        ArrayList<AbstractCard>* cardsPlayedThisCombat;
-        ArrayList<AbstractOrb>* orbsChanneledThisCombat;
-        ArrayList<AbstractOrb>* orbsChanneledThisTurn;
+        ArrayList<AbstractGameAction *>* actions;
+        ArrayList<AbstractGameAction *>* preTurnActions;
+        ArrayList<CardQueueItem *>* cardQueue;
+        ArrayList<MonsterQueueItem *>* monsterQueue;
+        ArrayList<AbstractCard *>* cardsPlayedThisTurn;
+        ArrayList<AbstractCard *>* cardsPlayedThisCombat;
+        ArrayList<AbstractOrb *>* orbsChanneledThisCombat;
+        ArrayList<AbstractOrb *>* orbsChanneledThisTurn;
         void* uniqueStancesThisCombat;
         int32_t mantraGained;
         AbstractGameAction* currentAction;
@@ -1953,7 +1953,7 @@ namespace STS
         int32_t cost;
         int32_t counter;
         RelicTier tier;
-        ArrayList<PowerTip> *tips;
+        ArrayList<PowerTip *> *tips;
         void *img;
         void *largeImg;
         void *outlineImg;
@@ -2067,7 +2067,7 @@ namespace STS
         JString * name;
         JString * description;
         int32_t slot;
-        ArrayList<void *> *tips;
+        ArrayList<PowerTip *> *tips;
         void * containerImg;
         void * liquidImg;
         void * hybridImg;
