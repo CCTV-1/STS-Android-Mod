@@ -140,7 +140,7 @@ export class AbstractPotion extends NativeClassWrapper {
          * bool AbstractPotion::canUse(STS::AbstractPotion* thisPtr)
          * ```
          */
-        canUse: new NativeFunctionInfo(0x58, 'void', ['pointer']),
+        canUse: new NativeFunctionInfo(0x58, 'bool', ['pointer']),
         /**
          * ```c
          * int32_t AbstractPotion::getPotency(STS::AbstractPotion* thisPtr, int32_t ascensionLevel)
@@ -149,7 +149,13 @@ export class AbstractPotion extends NativeClassWrapper {
          * 0xB8: `int32_t AbstractPotion::getPotency(STS::AbstractPotion* thisPtr)` call `getPotency(thisPtr, AbstractDungeon.ascensionLevel)`
          * and implement Relic SacredBark abilit. 
          */
-        getPotency: new NativeFunctionInfo(0xB0, 'void', ['pointer', 'int32']),
+        getPotency: new NativeFunctionInfo(0xB0, 'int32', ['pointer', 'int32']),
+        /**
+         * ```c
+         * int32_t AbstractPotion::getPotency(STS::AbstractPotion* thisPtr)
+         * ```
+         */
+        getPotency2 : new NativeFunctionInfo(0xB8, 'int32', ['pointer']),
         /**
          * ```c
          * bool AbstractPotion::onPlayerDeath(STS::AbstractPotion* thisPtr)
@@ -175,7 +181,6 @@ export class AbstractPotion extends NativeClassWrapper {
     static NewPotionCtor(name: string, id: string, rarity: PotionRarity, size: PotionSize, color: PotionColor, vfuncs: NewPotionVFuncType): NativePointer {
         let origPotionPtr = NativePotions.Abstract.Ctor(name, id, rarity, size, color);
 
-        vfuncs.initializeData(origPotionPtr);
         //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
         AbstractPotion.#rewriteVFuncMap.set(origPotionPtr.toUInt32(), vfuncs);
 
@@ -190,12 +195,14 @@ export class AbstractPotion extends NativeClassWrapper {
             funcName = "AbstractPotion_BasicNewPotion_initializeData";
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.initializeData, VFuncProxys.initializeData);
             funcName = "AbstractPotion_BasicNewPotion_getPotency";
-            wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PP_Func(funcName), VFuncMap.getPotency, VFuncProxys.getPotency);
+            wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.getPotency, VFuncProxys.getPotency);
             funcName = "AbstractPotion_BasicNewPotion_onPlayerDeath";
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_P_Func(funcName), VFuncMap.onPlayerDeath, VFuncProxys.onPlayerDeath);
             AbstractPotion.#rewriteVFuncMap.set(-1, AbstractPotion.#NewRelicVFuncProxys);
         }
 
+        //initializeData maybe need call getPotency,so we call it after vfuncs registerd.
+        vfuncs.initializeData(origPotionPtr);
         return origPotionPtr;
     }
 
@@ -236,6 +243,9 @@ export class AbstractPotion extends NativeClassWrapper {
     OverridegetPotency(newVFunc: (thisPtr: NativePointer, ascensionLevel: number) => number) {
         let funcName = (AbstractPotion.#vFuncNamePrefix + this.potionId + "_getPotency").replace(/\s+/g, "");
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), AbstractPotion.#vfunctionMap.getPotency, newVFunc);
+    }
+    getPotency2(): number {
+        return this.getVirtualFunction(AbstractPotion.#vfunctionMap.getPotency2)(this.rawPtr);
     }
 
     addToBot(actionPtr: NativePointer): void {
