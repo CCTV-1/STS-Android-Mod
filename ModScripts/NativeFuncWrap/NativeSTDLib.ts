@@ -50,6 +50,14 @@ const STDLib = {
              */
             Add: new NativeFunctionInfo(0x0175224D, 'bool', ['pointer', 'pointer']),
         },
+        AbstractPower: {
+            /**
+             * ```c
+             * STS::AbstractPower* STS::ArrayList<AbstractPower>::getItem(STS::ArrayList<AbstractPower>* thisPtr, int index)
+             * ```
+             */
+            get: new NativeFunctionInfo(0x20A37FD, 'pointer', ['pointer', 'uint32']),
+        },
         CardTags: {
             /**
              * ```c
@@ -216,28 +224,6 @@ const STDLib = {
 
 export const NativeSTDLib = {
     ArrayList: {
-        JString: {
-            Ctor(): NativePointer {
-                return PatchHelper.GetNativeFunction(STDLib.ArrayList.JString.Ctor)(NULL);
-            },
-            AddNativeStr(thisPtr: NativePointer, JStringPtr: NativePointer): boolean {
-                return PatchHelper.GetNativeFunction(STDLib.ArrayList.JString.Add)(thisPtr, JStringPtr);
-            },
-            Add(thisPtr: NativePointer, str: string): boolean {
-                let nativeStr = NativeSTDLib.JString.Ctor(str);
-                return NativeSTDLib.ArrayList.JString.AddNativeStr(thisPtr, nativeStr);
-            },
-        },
-        AbstractGameEffect: {
-            Add(thisPtr: NativePointer, effectPtr: NativePointer): boolean {
-                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractGameEffect.Add)(thisPtr, effectPtr);
-            },
-        },
-        AbstractPotion: {
-            Add(thisPtr: NativePointer, potionPtr: NativePointer): boolean {
-                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractPotion.Add)(thisPtr, potionPtr);
-            },
-        },
         AbstractCard: {
             Ctor(): NativePointer {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.Ctor)(NULL);
@@ -249,9 +235,24 @@ export const NativeSTDLib = {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.RemoveAt)(arrayListPtr.rawPtr, index);
             },
         },
+        AbstractGameEffect: {
+            Add(thisPtr: NativePointer, effectPtr: NativePointer): boolean {
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractGameEffect.Add)(thisPtr, effectPtr);
+            },
+        },
         AbstractMonster: {
             get(arrayListPtr: ArrayList, index: number): NativePointer {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractMonster.get)(arrayListPtr.rawPtr, index);
+            },
+        },
+        AbstractPotion: {
+            Add(thisPtr: NativePointer, potionPtr: NativePointer): boolean {
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractPotion.Add)(thisPtr, potionPtr);
+            },
+        },
+        AbstractPower: {
+            get(arrayListPtr: ArrayList, index: number): NativePointer {
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractPower.get)(arrayListPtr.rawPtr, index);
             },
         },
         CardTags: {
@@ -260,6 +261,18 @@ export const NativeSTDLib = {
             },
             add(arrayListPtr: NativePointer, cardTag: CardTags) {
                 PatchHelper.GetNativeFunction(STDLib.ArrayList.CardTags.add)(arrayListPtr, Number(cardTag));
+            },
+        },
+        JString: {
+            Ctor(): NativePointer {
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.JString.Ctor)(NULL);
+            },
+            AddNativeStr(thisPtr: NativePointer, JStringPtr: NativePointer): boolean {
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.JString.Add)(thisPtr, JStringPtr);
+            },
+            Add(thisPtr: NativePointer, str: string): boolean {
+                let nativeStr = NativeSTDLib.JString.Ctor(str);
+                return NativeSTDLib.ArrayList.JString.AddNativeStr(thisPtr, nativeStr);
             },
         },
         PowerTip: {
@@ -278,7 +291,6 @@ export const NativeSTDLib = {
         CreateInternal(typePtr: NativePointer, elementSize: number, arrSizeInfo: NativePointer, len: number): NativePointer {
             return PatchHelper.GetNativeFunction(STDLib.Array.CreateInternal)(typePtr, elementSize, arrSizeInfo, len);
         },
-
         CreateByteArray(arrLen: number): NativePointer {
             let sizeMem = Memory.alloc(4*3);
             sizeMem.writeS32(arrLen);
