@@ -19,12 +19,24 @@ const Characters = {
     Ironclad: {
         /**
          * ```c
+         * Ironclad* Ironclad::Ctor(STS::Ironclad* thisPtr)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x1777539, 'pointer', ['pointer']),
+        /**
+         * ```c
          * ArrayList* Ironclad::getStartingDeck(STS::Ironclad* thisPtr)
          * ```
          */
         getStartingDeck: new NativeFunctionInfo(0x1777921, 'pointer', ['pointer']),
     },
     TheSilent: {
+        /**
+         * ```c
+         * TheSilent* TheSilent::Ctor(STS::TheSilent* thisPtr)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x1778A19, 'pointer', ['pointer']),
         /**
          * ```c
          * ArrayList* TheSilent::getStartingDeck(STS::TheSilent* thisPtr)
@@ -35,12 +47,24 @@ const Characters = {
     Defect: {
         /**
          * ```c
+         * Defect* Defect::Ctor(STS::Defect* thisPtr)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x1775F1D, 'pointer', ['pointer']),
+        /**
+         * ```c
          * ArrayList* Defect::getStartingDeck(STS::Defect* thisPtr)
          * ```
          */
         getStartingDeck: new NativeFunctionInfo(0x1776289, 'pointer', ['pointer']),
     },
     Watcher: {
+        /**
+         * ```c
+         * Watcher* Watcher::Ctor(STS::Watcher* thisPtr)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x177A0B9, 'pointer', ['pointer']),
         /**
          * ```c
          * ArrayList* Watcher::getStartingDeck(STS::Watcher* thisPtr)
@@ -66,6 +90,9 @@ export const NativeCharacters = {
         },
     },
     Ironclad: {
+        Ctor(): NativePointer {
+            return PatchHelper.GetNativeFunction(Characters.Ironclad.Ctor)(NULL);
+        },
         getStartingDeck(thisPtr: NativePointer): NativePointer {
             return PatchHelper.GetNativeFunction(Characters.Ironclad.getStartingDeck)(thisPtr);
         },
@@ -74,6 +101,9 @@ export const NativeCharacters = {
         },
     },
     TheSilent: {
+        Ctor(): NativePointer {
+            return PatchHelper.GetNativeFunction(Characters.TheSilent.Ctor)(NULL);
+        },
         getStartingDeck(thisPtr: NativePointer): NativePointer {
             return PatchHelper.GetNativeFunction(Characters.TheSilent.getStartingDeck)(thisPtr);
         },
@@ -82,6 +112,9 @@ export const NativeCharacters = {
         },
     },
     Defect: {
+        Ctor(): NativePointer {
+            return PatchHelper.GetNativeFunction(Characters.Defect.Ctor)(NULL);
+        },
         getStartingDeck(thisPtr: NativePointer): NativePointer {
             return PatchHelper.GetNativeFunction(Characters.Defect.getStartingDeck)(thisPtr);
         },
@@ -90,6 +123,9 @@ export const NativeCharacters = {
         },
     },
     Watcher: {
+        Ctor(): NativePointer {
+            return PatchHelper.GetNativeFunction(Characters.Watcher.Ctor)(NULL);
+        },
         getStartingDeck(thisPtr: NativePointer): NativePointer {
             return PatchHelper.GetNativeFunction(Characters.Watcher.getStartingDeck)(thisPtr);
         },

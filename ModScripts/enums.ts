@@ -119,6 +119,11 @@ export enum PlayerClass {
     THE_SILENT = 0x1,
     DEFECT = 0x2,
     WATCHER = 0x3,
+    /** Mod Extra Class */
+    Johnny = 0x4,
+    Timmy = 0x5,
+    Spike = 0x6,
+    Vorthos = 0x7,
 };
 
 export enum PotionEffect {
@@ -250,4 +255,11 @@ export enum GamePhase
 {
     WAITING_ON_USER = 0x0, 
     EXECUTING_ACTIONS
+};
+
+export enum GameMode {
+    CHAR_SELECT = 0x0,
+    GAMEPLAY,
+    DUNGEON_TRANSITION,
+    SPLASH
 };

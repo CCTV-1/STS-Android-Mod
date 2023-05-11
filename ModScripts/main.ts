@@ -22,6 +22,7 @@ import { ModUtility } from "./ModUtility.js";
 import { Random } from "./NativeClassWrap/Random.js";
 import { AbstractPower } from "./NativeClassWrap/AbstractPower.js";
 import { AbstractPotion } from "./NativeClassWrap/AbstractPotion.js";
+import { ArrayList } from "./NativeClassWrap/ArrayList.js";
 
 function FixGDXFileHandlereadBytes() {
     let origOpenAssetFile = NativeSTSLib.OverrideopenAssestFile((thisPtr: NativePointer) => {
@@ -528,6 +529,25 @@ function RegisterNewPotions() {
     });
 }
 
+function RegisterNewCharacters() {
+    const origCharacterManagerCtor = NativeSTSLib.CharacterManager.OverrideCtor((thisPtr: NativePointer) => {
+        let charactersListPtr = PatchHelper.STSGlobalVars.masterCharacterList;
+        let addNewCharacter = false;
+        if (charactersListPtr.isNull()) {
+            addNewCharacter = true
+        }
+        const managerObj = origCharacterManagerCtor(thisPtr);
+        if (addNewCharacter) {
+            charactersListPtr = PatchHelper.STSGlobalVars.masterCharacterList;
+            const wrapList = new ArrayList(charactersListPtr);
+            if (wrapList.size === 4) {
+                //NativeSTDLib.ArrayList.AbstractPlayer.Add(charactersListPtr, NativeCharacters.Watcher.Ctor());
+            }
+        }
+        return managerObj;
+    });
+}
+
 function ListenNativeObjectAlloc() {
     //let origLoadPlayerSaveFunc = NativeSTSLib.OverrideloadPlayerSave((gameInstance, playerPtr) => {
     //    AbstractCard.OnGameSaveLoad();
@@ -583,6 +603,7 @@ function main() {
     RegisterNewCards();
     RegisterNewRelic();
     RegisterNewPotions();
+    RegisterNewCharacters();
 
     ListenNativeObjectAlloc();
 }
