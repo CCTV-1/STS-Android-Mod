@@ -60,7 +60,13 @@ export class PatchHelper {
         },
         get EnergyPaneltotalCount() {
             return PatchHelper.#GetOffsetPtr(0x349ED34).readS32();
-        }
+        },
+        get masterCharacterList() {
+            return PatchHelper.#GetOffsetPtr(0x349840C).readPointer();
+        },
+        get GameContextPtr() {
+            return PatchHelper.STSModuleBaseAddress.add(0x34985E0);
+        },
     };
 
     static readonly fakeCodeGen = {
