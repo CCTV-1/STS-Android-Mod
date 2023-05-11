@@ -42,6 +42,14 @@ const STDLib = {
             get: new NativeFunctionInfo(0x2096269, 'pointer', ['pointer', 'uint32']),
             
         },
+        AbstractPlayer: {
+            /**
+             * ```c
+             * bool ArrayList<AbstractPlayer>::add(ArrayList * thisPtr, STS::AbstractPlayer * plyaerPtr)
+             * ```
+             */
+            Add: new NativeFunctionInfo(0x1773349, 'bool', ['pointer', 'pointer']),
+        },
         AbstractPotion: {
             /**
              * ```c
@@ -243,6 +251,11 @@ export const NativeSTDLib = {
         AbstractMonster: {
             get(arrayListPtr: ArrayList, index: number): NativePointer {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractMonster.get)(arrayListPtr.rawPtr, index);
+            },
+        },
+        AbstractPlayer: {
+            Add(thisPtr: NativePointer, plyaerPtr: NativePointer): boolean {
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractPlayer.Add)(thisPtr, plyaerPtr);
             },
         },
         AbstractPotion: {

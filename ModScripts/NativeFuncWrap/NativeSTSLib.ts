@@ -22,6 +22,14 @@ const NativeSTSLibInfo = {
          */
         Ctor: new NativeFunctionInfo(0x1983719, 'pointer', ['pointer']),
     },
+    CharacterManager: {
+        /**
+         * ```c
+         * CharacterManager* STS::CharacterManager::Ctor(CharacterManager* thisPtr)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x1773089, 'pointer', ['pointer']),
+    },
 };
 
 export const NativeSTSLib = {
@@ -51,5 +59,14 @@ export const NativeSTSLib = {
         Ctor(): NativePointer {
             return PatchHelper.GetNativeFunction(NativeSTSLibInfo.Random.Ctor)(NULL);
         }
-    }
+    },
+
+    CharacterManager: {
+        Ctor(): NativePointer {
+            return PatchHelper.GetNativeFunction(NativeSTSLibInfo.CharacterManager.Ctor)(NULL);
+        },
+        OverrideCtor(newCtor: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
+            return PatchHelper.HookSTSFunction(NativeSTSLibInfo.CharacterManager.Ctor, newCtor);
+        }
+    },
 };
