@@ -93,7 +93,7 @@ export class AbstractGameAction extends NativeClassWrapper {
         AbstractGameAction.#rewriteVFuncMap.set(actionId, newFuncs);
 
         if (!AbstractGameAction.#rewriteVFuncMap.has(-1)) {
-            let funcName = "AbstractGameAction_BasicNewAction_update";
+            let funcName = "AbstractGameActionVFuncProxy_update";
             wrapAction.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), AbstractGameAction.#vfunctionMap.update, AbstractGameAction.#NewGameActionVFuncProxys.update);
             AbstractGameAction.#rewriteVFuncMap.set(-1, AbstractGameAction.#NewGameActionVFuncProxys);
         }

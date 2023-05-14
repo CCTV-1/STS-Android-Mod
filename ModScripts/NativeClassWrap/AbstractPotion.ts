@@ -188,15 +188,15 @@ export class AbstractPotion extends NativeClassWrapper {
             const wrapPotion = new AbstractPotion(origPotionPtr);
             const VFuncMap = AbstractPotion.#vfunctionMap;
             const VFuncProxys = AbstractPotion.#NewRelicVFuncProxys;
-            let funcName = "AbstractPotion_BasicNewPotion_getPrice";
+            let funcName = "AbstractPotionVFuncProxy_getPrice";
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_P_Func(funcName), VFuncMap.getPrice, VFuncProxys.getPrice);
-            funcName = "AbstractPotion_BasicNewPotion_use";
+            funcName = "AbstractPotionVFuncProxy_use";
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.use, VFuncProxys.use);
-            funcName = "AbstractPotion_BasicNewPotion_initializeData";
+            funcName = "AbstractPotionVFuncProxy_initializeData";
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.initializeData, VFuncProxys.initializeData);
-            funcName = "AbstractPotion_BasicNewPotion_getPotency";
+            funcName = "AbstractPotionVFuncProxy_getPotency";
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.getPotency, VFuncProxys.getPotency);
-            funcName = "AbstractPotion_BasicNewPotion_onPlayerDeath";
+            funcName = "AbstractPotionVFuncProxy_onPlayerDeath";
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_P_Func(funcName), VFuncMap.onPlayerDeath, VFuncProxys.onPlayerDeath);
             AbstractPotion.#rewriteVFuncMap.set(-1, AbstractPotion.#NewRelicVFuncProxys);
         }
