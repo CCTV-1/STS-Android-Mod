@@ -23,6 +23,8 @@ import { Random } from "./NativeClassWrap/Random.js";
 import { AbstractPower } from "./NativeClassWrap/AbstractPower.js";
 import { AbstractPotion } from "./NativeClassWrap/AbstractPotion.js";
 import { ArrayList } from "./NativeClassWrap/ArrayList.js";
+import { NativeOrbs } from "./NativeFuncWrap/NativeOrbs.js";
+import { AbstractOrb } from "./NativeClassWrap/AbstractOrb.js";
 
 function FixGDXFileHandlereadBytes() {
     let origOpenAssetFile = NativeSTSLib.OverrideopenAssestFile((thisPtr: NativePointer) => {
@@ -548,6 +550,29 @@ function RegisterNewCharacters() {
     });
 }
 
+function RegisterNewOrbs() {
+    let origAbstractOrbgetRandomOrb = NativeOrbs.AbstractOrb.OverridegetRandomOrb((thisPtr: NativePointer, useCardRng: boolean) => {
+        const orbs = new Array<NativePointer>(
+            NativeOrbs.Dark.Ctor(),
+            NativeOrbs.Frost.Ctor(),
+            NativeOrbs.Lightning.Ctor(),
+            NativeOrbs.Plasma.Ctor(),
+            /** Mod Extra Orb */
+
+        );
+
+        let randValue: number = 0;
+        if (useCardRng) {
+            const cardRng = AbstractDungeon.getInstance().cardRandomRng;
+            const RNGWrap = new Random(cardRng);
+            randValue = RNGWrap.randomI32_2(0, orbs.length - 1);
+        }
+
+        randValue = ModUtility.FakeRandom(0, orbs.length - 1);
+        return orbs[randValue];
+    });
+}
+
 function ListenNativeObjectAlloc() {
     //let origLoadPlayerSaveFunc = NativeSTSLib.OverrideloadPlayerSave((gameInstance, playerPtr) => {
     //    AbstractCard.OnGameSaveLoad();
@@ -586,6 +611,12 @@ function ListenNativeObjectAlloc() {
         AbstractPotion.OnNativeObjectAlloc(rawPtr.toUInt32());
         return rawPtr;
     });
+
+    let origAbstractOrbCtor = NativeOrbs.AbstractOrb.OverrideCtor((thisPtr: NativePointer) => {
+        const rawPtr = origAbstractOrbCtor(thisPtr);
+        AbstractOrb.OnNativeObjectAlloc(rawPtr.toUInt32());
+        return rawPtr;
+    });
 };
 
 function main() {
@@ -604,6 +635,7 @@ function main() {
     RegisterNewRelic();
     RegisterNewPotions();
     RegisterNewCharacters();
+    RegisterNewOrbs();
 
     ListenNativeObjectAlloc();
 }
