@@ -58,6 +58,54 @@ export class AbstractPlayer extends AbstractCreature {
         hasPotion: new NativeFunctionInfo(0x420, 'bool', ['pointer', 'pointer']),
         /**
          * ```c
+         * void AbstractPlayer::evokeOrb(STS::AbstractPlayer * this);
+         * ```
+         */
+        evokeOrb: new NativeFunctionInfo(0x488, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPlayer::evokeNewestOrb(STS::AbstractPlayer * this);
+         * ```
+         */
+        evokeNewestOrb: new NativeFunctionInfo(0x490, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPlayer::evokeWithoutLosingOrb(STS::AbstractPlayer * this);
+         * ```
+         */
+        evokeWithoutLosingOrb: new NativeFunctionInfo(0x498, 'void', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPlayer::removeNextOrb(STS::AbstractPlayer * this);
+         * ```
+         */
+        removeNextOrb: new NativeFunctionInfo(0x4A0, 'void', ['pointer']),
+        /**
+         * ```c
+         * bool AbstractPlayer::hasEmptyOrb(STS::AbstractPlayer * this);
+         * ```
+         */
+        hasEmptyOrb: new NativeFunctionInfo(0x4A8, 'bool', ['pointer']),
+        /**
+         * ```c
+         * bool AbstractPlayer::hasOrb(STS::AbstractPlayer * this);
+         * ```
+         */
+        hasOrb: new NativeFunctionInfo(0x4B0, 'bool', ['pointer']),
+        /**
+         * ```c
+         * int32_t AbstractPlayer::filledOrbCount(STS::AbstractPlayer * this);
+         * ```
+         */
+        filledOrbCount: new NativeFunctionInfo(0x4B8, 'int32', ['pointer']),
+        /**
+         * ```c
+         * void AbstractPlayer::removeNextOrb(STS::AbstractPlayer * this, AbstractOrb* orbToSet);
+         * ```
+         */
+        channelOrb: new NativeFunctionInfo(0x4C0, 'void', ['pointer', 'pointer']),
+        /**
+         * ```c
          * void AbstractPlayer::increaseMaxOrbSlots(STS::AbstractPlayer * this, int32_t amount, bool playSfx);
          * ```
          */
@@ -92,6 +140,38 @@ export class AbstractPlayer extends AbstractCreature {
         return hasPotionFunc(this.rawPtr, nativeStr);
     }
 
+    evokeOrb() {
+        this.getVirtualFunction(AbstractPlayer.#vfunctionMap.evokeOrb)(this.rawPtr);
+    }
+
+    evokeNewestOrb() {
+        this.getVirtualFunction(AbstractPlayer.#vfunctionMap.evokeNewestOrb)(this.rawPtr);
+    }
+
+    evokeWithoutLosingOrb() {
+        this.getVirtualFunction(AbstractPlayer.#vfunctionMap.evokeWithoutLosingOrb)(this.rawPtr);
+    }
+
+    removeNextOrb() {
+        this.getVirtualFunction(AbstractPlayer.#vfunctionMap.removeNextOrb)(this.rawPtr);
+    }
+
+    hasEmptyOrb(): boolean {
+        return this.getVirtualFunction(AbstractPlayer.#vfunctionMap.hasEmptyOrb)(this.rawPtr);
+    }
+
+    hasOrb(): boolean {
+        return this.getVirtualFunction(AbstractPlayer.#vfunctionMap.hasOrb)(this.rawPtr);
+    }
+
+    filledOrbCount(): number {
+        return this.getVirtualFunction(AbstractPlayer.#vfunctionMap.filledOrbCount)(this.rawPtr);
+    }
+
+    channelOrb(orbToSet: NativePointer) {
+        this.getVirtualFunction(AbstractPlayer.#vfunctionMap.removeNextOrb)(this.rawPtr, orbToSet);
+    }
+    
     get chosenClass(): PlayerClass {
         return this.readOffsetS32(0x104);
     }
