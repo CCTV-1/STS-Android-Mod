@@ -45,5 +45,6 @@ export const FastFourierTransform: STSCardCtor = (thisPtr: NativePointer) => {
     const wrapCard = AbstractCard.NewCardCtor("FastFourierTransform", "快速傅里叶变换", "blue/skill/FastFourierTransform", 1,
         "移除所有 充能球，创造等量的随机充能球。 NL 消耗。", CardType.SKILL, CardColor.BLUE, CardRarity.UNCOMMON, CardTarget.NONE, DamageType.NORMAL, vfuncs);
 
+    wrapCard.exhaust = true;
     return wrapCard.rawPtr;
 };
