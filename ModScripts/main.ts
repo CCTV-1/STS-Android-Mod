@@ -551,7 +551,7 @@ function RegisterNewCharacters() {
 }
 
 function RegisterNewOrbs() {
-    let origAbstractOrbgetRandomOrb = NativeOrbs.AbstractOrb.OverridegetRandomOrb((thisPtr: NativePointer, useCardRng: boolean) => {
+    NativeOrbs.AbstractOrb.OverridegetRandomOrb((useCardRng: boolean) => {
         const orbs = new Array<NativePointer>(
             NativeOrbs.Dark.Ctor(),
             NativeOrbs.Frost.Ctor(),

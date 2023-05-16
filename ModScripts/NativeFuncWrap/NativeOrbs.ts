@@ -66,16 +66,16 @@ export const NativeOrbs = {
         },
 
         getRandomOrb(useCardRng: boolean): NativePointer {
-            return PatchHelper.GetNativeFunction(Orbs.AbstractOrb.getRandomOrb)(NULL, Number(useCardRng));
+            return PatchHelper.GetNativeFunction(Orbs.AbstractOrb.getRandomOrb)(Number(useCardRng));
         },
-        OverridegetRandomOrb(newImp: (thisPtr: NativePointer, useCardRng: boolean) => NativePointer): (thisPtr: NativePointer, useCardRng: boolean) => NativePointer {
+        OverridegetRandomOrb(newImp: (useCardRng: boolean) => NativePointer): (useCardRng: boolean) => NativePointer {
             return PatchHelper.HookSTSFunction(Orbs.AbstractOrb.getRandomOrb, newImp);
         },
 
-        applyLockOn(dmg: number): number {
-            return PatchHelper.GetNativeFunction(Orbs.AbstractOrb.applyLockOn)(NULL, dmg);
+        applyLockOn(targetCreaturePtr: NativePointer, dmg: number): number {
+            return PatchHelper.GetNativeFunction(Orbs.AbstractOrb.applyLockOn)(targetCreaturePtr, dmg);
         },
-        OverrideapplyLockOn(newImp: (thisPtr: NativePointer, dmg: number) => number): (thisPtr: NativePointer, dmg: number) => number {
+        OverrideapplyLockOn(newImp: (targetCreaturePtr: NativePointer, dmg: number) => number): (targetCreaturePtr: NativePointer, dmg: number) => number {
             return PatchHelper.HookSTSFunction(Orbs.AbstractOrb.applyLockOn, newImp);
         },
     },
