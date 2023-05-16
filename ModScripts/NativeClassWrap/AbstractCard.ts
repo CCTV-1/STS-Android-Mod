@@ -361,7 +361,7 @@ export class AbstractCard extends NativeClassWrapper {
          * void AbstractCard::initializeDescription(STS::AbstractCard* this)
          * ```
          */
-        initializeDescription: new NativeFunctionInfo(0x48, 'void', ['pointer']),
+        initializeDescription: new NativeFunctionInfo(0x38, 'void', ['pointer']),
         /**
          * ```c
          * bool AbstractCard::hasTag(STS::AbstractCard* this, CardTags tagToCheck)
