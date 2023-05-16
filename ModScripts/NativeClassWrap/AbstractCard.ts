@@ -358,6 +358,12 @@ export class AbstractCard extends NativeClassWrapper {
     static readonly #vfunctionMap = {
         /**
          * ```c
+         * void AbstractCard::initializeDescription(STS::AbstractCard* this)
+         * ```
+         */
+        initializeDescription: new NativeFunctionInfo(0x48, 'void', ['pointer']),
+        /**
+         * ```c
          * bool AbstractCard::hasTag(STS::AbstractCard* this, CardTags tagToCheck)
          * ```
          */
@@ -743,6 +749,10 @@ export class AbstractCard extends NativeClassWrapper {
             }
             AbstractCard.#rewriteVFuncMap.delete(ptrValue);
         }
+    }
+
+    initializeDescription() {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.initializeDescription)(this.rawPtr);
     }
 
     hasTag(tag: CardTags): boolean {
