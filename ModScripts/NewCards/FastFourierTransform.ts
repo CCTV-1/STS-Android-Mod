@@ -31,7 +31,8 @@ const vfuncs: NewCardVFuncType = {
         if (!wrapCard.upgraded) {
             wrapCard.upgradeName();
             wrapCard.upgradeBaseCost(2);
-            wrapCard.rawDescription = "激发所有 充能球，创造等量的随机充能球。 NL 消耗。";
+            wrapCard.exhaust = false;
+            wrapCard.rawDescription = "激发所有 充能球，创造等量的随机充能球。";
             wrapCard.initializeDescription();
         }
     },
@@ -42,7 +43,7 @@ const vfuncs: NewCardVFuncType = {
 };
 
 export const FastFourierTransform: STSCardCtor = (thisPtr: NativePointer) => {
-    const wrapCard = AbstractCard.NewCardCtor("FastFourierTransform", "快速傅里叶变换", "blue/skill/FastFourierTransform", 1,
+    const wrapCard = AbstractCard.NewCardCtor("FastFourierTransform", "快速傅里叶变换", "blue/skill/FastFourierTransform", 0,
         "移除所有 充能球，创造等量的随机充能球。 NL 消耗。", CardType.SKILL, CardColor.BLUE, CardRarity.UNCOMMON, CardTarget.NONE, DamageType.NORMAL, vfuncs);
 
     wrapCard.exhaust = true;
