@@ -751,6 +751,96 @@ namespace STS
         int32_t energyMaster;
     } __attribute__((aligned(4)));
 
+    struct AbstractOrbVFuncMap
+    {
+        void *gap0;
+        void *gap04;
+        dummyFunc_t gap8;
+        bool InitC;
+        uint8_t padd[3];
+        dummyFunc_t gap10;
+        bool Init14;
+        uint8_t pad15[3];
+        dummyFunc_t gap18;
+        bool Init1C;
+        uint8_t pad1d[3];
+        dummyFunc_t updateDescription;
+        bool Init24;
+        uint8_t pad25[3];
+        dummyFunc_t onEvoke;
+        bool Init2C;
+        uint8_t pad2d[3];
+        dummyFunc_t onStartOfTurn;
+        bool Init34;
+        uint8_t pad35[3];
+        dummyFunc_t onEndOfTurn;
+        bool Init3C;
+        uint8_t pad3d[3];
+        dummyFunc_t applyFocus;
+        bool Init44;
+        uint8_t pad45[3];
+        dummyFunc_t makeCopy;
+        bool Init4C;
+        uint8_t pad4d[3];
+        dummyFunc_t update;
+        bool Init54;
+        uint8_t pad55[3];
+        dummyFunc_t updateAnimation;
+        bool Init5C;
+        uint8_t pad5d[3];
+        dummyFunc_t setSlot;
+        bool Init64;
+        uint8_t pad65[3];
+        dummyFunc_t render;
+        bool Init6C;
+        uint8_t pad6d[3];
+        dummyFunc_t renderText;
+        bool Init74;
+        uint8_t pad75[3];
+        dummyFunc_t triggerEvokeAnimation;
+        bool Init7C;
+        uint8_t pad7d[3];
+        dummyFunc_t showEvokeValue;
+        bool Init84;
+        uint8_t pad85[3];
+        dummyFunc_t hideEvokeValues;
+        bool Init8C;
+        uint8_t pad8d[3];
+        dummyFunc_t playChannelSFX;
+        bool Init94;
+        uint8_t pad95[3];
+    } __attribute__((aligned(4)));
+
+
+    struct AbstractOrb
+    {
+        AbstractOrb *thisPtr;
+        AbstractOrbVFuncMap *vfuncMap;
+        JString *name;
+        JString *description;
+        JString *ID;
+        void *tips;
+        int32_t evokeAmount;
+        int32_t passiveAmount;
+        int32_t baseEvokeAmount;
+        int32_t basePassiveAmount;
+        float cX;
+        float cY;
+        float tX;
+        float tY;
+        GDX::Graphics::Color *c;
+        GDX::Graphics::Color *shineColor;
+        void *hb;
+        void *img;
+        void *bobEffect;
+        float angle;
+        float scale;
+        float fontScale;
+        bool showEvokeValue;
+        uint8_t pad[3];
+        float channelAnimTimer;
+    } __attribute__((aligned(4)));
+
     struct AbstractPotion
     {
         void *basePtr;
@@ -1060,12 +1150,36 @@ namespace STS
         dummyFunc_t hasPotion;
         bool InithasPotion;
         uint8_t gap425[3];
-        uint8_t unk5[160];
+        uint8_t unk5[96];
+        dummyFunc_t evokeOrb;
+        bool InitevokeOrb;
+        uint8_t pad48D[3];
+        dummyFunc_t evokeNewestOrb;
+        bool InitevokeNewestOrb;
+        uint8_t pad495[3];
+        dummyFunc_t evokeWithoutLosingOrb;
+        bool InitevokeWithoutLosingOrb;
+        uint8_t pad49D[3];
+        dummyFunc_t removeNextOrb;
+        bool InitremoveNextOrb;
+        uint8_t pad4A5[3];
+        dummyFunc_t hasEmptyOrb;
+        bool InithasEmptyOrb;
+        uint8_t pad4AD[3];
+        dummyFunc_t hasOrb;
+        bool InithasOrb;
+        uint8_t pad4B5[3];
+        dummyFunc_t filledOrbCount;
+        bool InitfilledOrbCount;
+        uint8_t pad4BD[3];
+        dummyFunc_t channelOrb;
+        bool InitchannelOrb;
+        uint8_t pad4C5[3];
         dummyFunc_t increaseMaxOrbSlots;
         bool InitincreaseMaxOrbSlots;
         dummyFunc_t decreaseMaxOrbSlots;
         bool InitdecreaseMaxOrbSlots;
-        uint8_t unk5[72];
+        uint8_t unk6[72];
     }  __attribute__((aligned(4)));
 
 
