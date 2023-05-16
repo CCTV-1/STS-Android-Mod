@@ -197,6 +197,149 @@ export const NativeGDXLibInfo = {
                  */
                 setRegion2: new NativeFunctionInfo(0x1603111, 'void', ['pointer', 'int32', 'int32', 'int32', 'int32']),
             },
+            SpriteBatch: {
+                /**
+                 * ```c
+                 * SpriteBatch* GDX::Graphics::g2d::SpriteBatch::Ctor(SpriteBatch* thisPtr)
+                 * ```
+                 */
+                Ctor: new NativeFunctionInfo(0x15FC049, 'pointer', ['pointer']),
+                /**
+                 * ```c
+                 * SpriteBatch* GDX::Graphics::g2d::SpriteBatch::Ctor(SpriteBatch* thisPtr, int size, gdx::graphics::glutils::ShaderProgram* defaultShader)
+                 * ```
+                 */
+                Ctor2: new NativeFunctionInfo(0x15FC0F5, 'pointer', ['pointer', 'int32', 'pointer']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::begin(SpriteBatch* thisPtr)
+                 * ```
+                 */
+                begin: new NativeFunctionInfo(0x15FCAE1, 'void', ['pointer']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::end(SpriteBatch* thisPtr)
+                 * ```
+                 */
+                end: new NativeFunctionInfo(0x15FCD81, 'void', ['pointer']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::setColor(SpriteBatch* thisPtr, float r, float g, float b, float a)
+                 * ```
+                 */
+                setColor: new NativeFunctionInfo(0x15FD065, 'void', ['pointer', 'float', 'float', 'float', 'float']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::setColor(SpriteBatch* thisPtr, GDX::Graphics::Color* color)
+                 * ```
+                 */
+                setColor2: new NativeFunctionInfo(0x15FCD81, 'void', ['pointer', 'pointer']),
+                /**
+                 * ```c
+                 * GDX::Graphics::Color* GDX::Graphics::g2d::SpriteBatch::getColor(SpriteBatch* thisPtr)
+                 * ```
+                 */
+                getColor: new NativeFunctionInfo(0x15FCFAD, 'pointer', ['pointer']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::draw(SpriteBatch* thisPtr, gdx::graphics::Texture * texturePtr,
+                 * System::Array<Float,1>* spriteVertices, int32_t offset, int32_t count)
+                 * ```
+                 */
+                draw: new NativeFunctionInfo(0x15FE169, 'void', ['pointer', 'pointer', 'pointer', 'int32', 'int32']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::draw(SpriteBatch* thisPtr, gdx::graphics::Texture * texturePtr,
+                 * float x, float y, float width, float height)
+                 * ```
+                 */
+                draw2: new NativeFunctionInfo(0x15FDCA1, 'void', ['pointer', 'pointer', 'float', 'float', 'float', 'float']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::draw(SpriteBatch* thisPtr, gdx::graphics::Texture * texturePtr,
+                 * float x, float y, float originX, float originY, float width, float height, float scaleX, float scaleY, float rotation,
+                 * int srcX, int srcY, int srcWidth, int srcHeight, bool flipX, bool flipY)
+                 * ```
+                 */
+                draw3: new NativeFunctionInfo(0x15FD0E1, 'void', ['pointer', 'pointer', 'float', 'float', 'float', 'float', 'float', 'float',
+                    'float', 'float', 'float', 'int32', 'int32', 'int32', 'int32', 'bool', 'bool']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::draw(SpriteBatch* thisPtr, gdx::graphics::Texture * texturePtr,
+                 * float x, float y, float width, float height, int srcX, int srcY, int srcWidth, int srcHeight, bool flipX, bool flipY)
+                 * ```
+                 */
+                draw4: new NativeFunctionInfo(0x15FD759, 'void', ['pointer', 'pointer', 'float', 'float', 'float', 'float', 'int32', 'int32', 'int32', 'int32', 'bool', 'bool']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::draw(SpriteBatch* thisPtr, gdx::graphics::TextureRegion * regionPtr,
+                 * float x, float y, float width, float height)
+                 * ```
+                 */
+                draw5: new NativeFunctionInfo(0x15FE2C9, 'void', ['pointer', 'pointer', 'float', 'float', 'float', 'float']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::draw(SpriteBatch* thisPtr, gdx::graphics::TextureRegion * regionPtr,
+                 * float x, float y, float originX, float originY, float width, float height, float scaleX, float scaleY, float rotation)
+                 * ```
+                 */
+                draw6: new NativeFunctionInfo(0x15FE2C9, 'void', ['pointer', 'pointer', 'float', 'float', 'float', 'float', 'float', 'float',
+                    'float', 'float', 'float']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::flush(SpriteBatch* thisPtr)
+                 * ```
+                 */
+                flush: new NativeFunctionInfo(0x15FEDA1, 'void', ['pointer']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::setBlendFunction(SpriteBatch* thisPtr, int32_t srcFunc, int32_t dstFunc)
+                 * ```
+                 */
+                setBlendFunction: new NativeFunctionInfo(0x15FF0A5, 'void', ['pointer', 'int32', 'int32']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::dispose(SpriteBatch* thisPtr)
+                 * ```
+                 */
+                dispose: new NativeFunctionInfo(0x15FF0E5, 'void', ['pointer']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::setProjectionMatrix(SpriteBatch* thisPtr, gdx::math::Matrix4 * projection)
+                 * ```
+                 */
+                setProjectionMatrix: new NativeFunctionInfo(0x15FF151, 'void', ['pointer', 'pointer']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::setTransformMatrix(SpriteBatch* thisPtr, gdx::math::Matrix4 * transform)
+                 * ```
+                 */
+                setTransformMatrix: new NativeFunctionInfo(0x15FF1C5, 'void', ['pointer', 'pointer']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::setupMatrices(SpriteBatch* thisPtr)
+                 * ```
+                 */
+                setupMatrices: new NativeFunctionInfo(0x15FCC29, 'void', ['pointer']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::switchTexture(SpriteBatch* thisPtr, gdx::graphics::Texture * texture)
+                 * ```
+                 */
+                switchTexture: new NativeFunctionInfo(0x15FF239, 'void', ['pointer', 'pointer']),
+                /**
+                 * ```c
+                 * void GDX::Graphics::g2d::SpriteBatch::setShader(SpriteBatch* thisPtr, gdx::graphics::glutils::ShaderProgram *shader)
+                 * ```
+                 */
+                setShader: new NativeFunctionInfo(0x15FF2E5, 'void', ['pointer', 'pointer']),
+                /**
+                 * ```c
+                 * bool GDX::Graphics::g2d::SpriteBatch::isBlendingEnabled(SpriteBatch* thisPtr)
+                 * ```
+                 */
+                isBlendingEnabled: new NativeFunctionInfo(0x15FF3BD, 'bool', ['pointer']),
+            },
         },
         Glutils: {
             PixmapTextureData: {
