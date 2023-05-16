@@ -609,7 +609,18 @@ export const NativeActionInfo = {
 
         },
         Channel: {
-
+            /**
+             * ```c
+             * AbstractGameAction* Channel(AbstractGameAction* this, AbstractOrb* newOrbPtr)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x168C40D, 'pointer', ['pointer', 'pointer']),
+            /**
+             * ```c
+             * AbstractGameAction* Channel(AbstractGameAction* this, AbstractOrb* newOrbPtr, bool autoEvoke)
+             * ```
+             */
+            Ctor2: new NativeFunctionInfo(0x168C491, 'pointer', ['pointer', 'pointer', 'bool']),
         },
         CompileDriver: {
 
@@ -636,10 +647,20 @@ export const NativeActionInfo = {
 
         },
         EvokeAllOrbs: {
-
+            /**
+             * ```c
+             * AbstractGameAction* EvokeAllOrbs(AbstractGameAction* this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x168D88D, 'pointer', ['pointer']),
         },
         EvokeOrb: {
-
+            /**
+             * ```c
+             * AbstractGameAction* EvokeOrb(AbstractGameAction* this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x168DA01, 'pointer', ['pointer']),
         },
         EvokeWithoutRemovingOrb: {
 
@@ -696,10 +717,12 @@ export const NativeActionInfo = {
 
         },
         RemoveAllOrbs: {
-
-        },
-        RemoveNextOrb: {
-
+            /**
+             * ```c
+             * AbstractGameAction* RemoveAllOrbs(AbstractGameAction* this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1690DE5, 'pointer', ['pointer']),
         },
         Reprieve: {
 
