@@ -358,6 +358,12 @@ export class AbstractCard extends NativeClassWrapper {
     static readonly #vfunctionMap = {
         /**
          * ```c
+         * void AbstractCard::initializeTitle(STS::AbstractCard* this)
+         * ```
+         */
+        initializeTitle: new NativeFunctionInfo(0x30, 'void', ['pointer']),
+        /**
+         * ```c
          * void AbstractCard::initializeDescription(STS::AbstractCard* this)
          * ```
          */
@@ -749,6 +755,10 @@ export class AbstractCard extends NativeClassWrapper {
             }
             AbstractCard.#rewriteVFuncMap.delete(ptrValue);
         }
+    }
+
+    initializeTitle() {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.initializeTitle)(this.rawPtr);
     }
 
     initializeDescription() {

@@ -16,6 +16,7 @@ import { TreasureCruise } from "./NewCards/TreasureCruise.js";
 import { GalvanicBombardment } from "./NewCards/GalvanicBombardment.js";
 import { SeeEvething } from "./NewCards/SeeEvething.js";
 import { FastFourierTransform } from "./NewCards/FastFourierTransform.js";
+import { CompilePrinciples } from "./NewCards/CompilePrinciples.js";
 
 /**
  * if you plan register a new card, add a function property to NewCardLibrary,the function code like follow:
@@ -71,4 +72,5 @@ export const newCardLibrary: STSCardCtor[] = [
     TreasureCruise,
     GalvanicBombardment,
     SeeEvething,
+    CompilePrinciples,
 ];
