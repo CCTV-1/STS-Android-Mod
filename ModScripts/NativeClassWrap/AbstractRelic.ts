@@ -8,7 +8,7 @@ import { NativeRelics } from "../NativeFuncWrap/NativeRelics.js";
 import { JObjectArray } from "./JObjectArray.js";
 import { ArrayList } from "./ArrayList.js";
 import { PowerTip } from "./PowerTip.js";
-import { NativeImageMaster } from "../NativeFuncWrap/nativeImageMaster.js";
+import { NativeImageMaster } from "../NativeFuncWrap/NativeImageMaster.js";
 
 /**
  * thisPtr will is ```nullptr```.
