@@ -31,6 +31,13 @@
 | 混乱能力          | 现在随机范围为[0, min(3, cost + 1)] |
 | 初始套牌          | 四个角色的初始套牌调整              |
 
+# 修改/添加图片
+1. 解压(ZIP)`/storage/emulated/0/Android/obb/com.humble.SlayTheSpire/main.2.com.humble.SlayTheSpire.obb`。
+2. `npm install texture-compressor`。
+3. `node .\node_modules\texture-compressor\bin\texture-compressor.js -i .\input.png -t etc -c ETC2_RGBA -q etcfastperceptual -o .\output.ktx -y -m -vb`。
+4. 将`ktx`后缀改为`png`放于解压后的obb的文件夹对应路径里。
+5. 压缩(ZIP)`/storage/emulated/0/Android/obb/com.humble.SlayTheSpire/main.2.com.humble.SlayTheSpire.obb`，替换原文件。
+
 # 构建
 
 1. 从Google Play搜索`com.humble.SlayTheSpire`下载游戏。

@@ -8,7 +8,7 @@ import { NativeRelics } from "../NativeFuncWrap/NativeRelics.js";
 import { JObjectArray } from "./JObjectArray.js";
 import { ArrayList } from "./ArrayList.js";
 import { PowerTip } from "./PowerTip.js";
-import { NativeGDXLib } from "../NativeFuncWrap/NativeGDXLib.js";
+import { NativeImageMaster } from "../NativeFuncWrap/nativeImageMaster.js";
 
 /**
  * thisPtr will is ```nullptr```.
@@ -930,8 +930,6 @@ export class AbstractRelic extends NativeClassWrapper {
         wasHPLost: new NativeFunctionInfo(0x340, 'void', ['pointer', 'int32']),
     };
 
-    static readonly #NewRelicImageTextureCache = new Map<string, NativePointer>();
-
     static readonly #vFuncNamePrefix = "AbstractRelic_";
 
     static NewRelicCtor(relicId: string, relicName: string, description: string, flavorText: string, imgName: string, tier: RelicTier, sfx: LandingSound, newVFuncs: NewRelicVFuncType): NativePointer {
@@ -941,32 +939,26 @@ export class AbstractRelic extends NativeClassWrapper {
         //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
         AbstractRelic.#rewriteVFuncMap.set(origRelicPtr.toUInt32(), newVFuncs);
 
-
         wrapRelic.relicId = relicId;
         wrapRelic.name = relicName;
+        wrapRelic.imgUrl = imgName;
         wrapRelic.description = description;
         wrapRelic.flavorText = flavorText;
+
+        NativeImageMaster.loadRelicImg(relicId, imgName);
+        const relicImg = NativeImageMaster.getRelicImg(relicId);
+        if (!relicImg.isNull()) {
+            wrapRelic.img = relicImg;
+        }
+        const relicOutlineImg = NativeImageMaster.getRelicOutlineImg(relicId);
+        if (!relicOutlineImg.isNull()) {
+            wrapRelic.outlineImg = relicOutlineImg;
+        }
 
         let wrapTips = new ArrayList(wrapRelic.tips);
         let wrapTip = new PowerTip(NativeSTDLib.ArrayList.PowerTip.get(wrapTips.rawPtr, 0));
         wrapTip.header = relicName;
         wrapTip.body = description;
-
-        const imgPath = PatchHelper.ResourceDir + imgName;
-        let newRelicImg = AbstractRelic.#NewRelicImageTextureCache.get(imgPath);
-        if (newRelicImg === undefined) {
-            try {
-                let imgHandle = NativeGDXLib.Files.FileHandle.Ctor2(imgPath, GDXFileType.Absolute);
-                if (NativeGDXLib.Files.FileHandle.exists(imgHandle)) {
-                    newRelicImg = NativeGDXLib.Graphics.Texture.Ctor2(imgHandle);
-                    wrapRelic.img = newRelicImg;
-                }
-            } catch (error) {
-                PatchHelper.LogV("" + (error as Error).stack);
-            }
-        } else {
-            wrapRelic.img = newRelicImg;
-        }
 
         if (!AbstractRelic.#rewriteVFuncMap.has(-1)) {
             const VFuncMap = AbstractRelic.#vfunctionMap;
@@ -1288,10 +1280,20 @@ export class AbstractRelic extends NativeClassWrapper {
         this.writeOffsetPointer(0x38, value);
     }
 
+    /**
+     * GDX::graphics::Texture *
+     */
     get outlineImg() {
         return this.readOffsetPointer(0x3C);
     }
     set outlineImg(value) {
         this.writeOffsetPointer(0x3C, value);
+    }
+
+    get imgUrl() {
+        return this.readOffsetJString(0x40).content;
+    }
+    set imgUrl(value) {
+        this.writeOffsetJString(0x40, JString.CreateJString(value));
     }
 }
