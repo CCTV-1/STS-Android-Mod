@@ -1,3 +1,4 @@
+import { JString } from "../NativeClassWrap/JString.js";
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 import { NativeSTDLib } from "./NativeSTDLib.js";
@@ -37,24 +38,43 @@ const ImageMasterFuncInfo = {
 
 export const NativeImageMaster = {
     loadRelicImg(relicId: string, relicImgUrl: string): NativePointer {
-        const nativeId = NativeSTDLib.JString.Ctor(relicId);
-        const nativeUrl = NativeSTDLib.JString.Ctor(relicImgUrl);
+        let nativeId = NativeSTDLib.JString.Ctor(relicId);
+        let nativeUrl = NativeSTDLib.JString.Ctor(relicImgUrl);
         return PatchHelper.GetNativeFunction(ImageMasterFuncInfo.loadRelicImg)(nativeId, nativeUrl);
     },
+    loadRelicImg2(relicId: JString, relicImgUrl: JString): NativePointer {
+        return PatchHelper.GetNativeFunction(ImageMasterFuncInfo.loadRelicImg)(relicId.rawPtr, relicImgUrl.rawPtr);
+    },
+
     getRelicImg(relicId: string): NativePointer {
-        const nativeId = NativeSTDLib.JString.Ctor(relicId);
+        let nativeId = NativeSTDLib.JString.Ctor(relicId);
         return PatchHelper.GetNativeFunction(ImageMasterFuncInfo.getRelicImg)(nativeId);
     },
+    getRelicImg2(relicId: JString): NativePointer {
+        return PatchHelper.GetNativeFunction(ImageMasterFuncInfo.getRelicImg)(relicId.rawPtr);
+    },
+
     getRelicOutlineImg(relicId: string): NativePointer {
-        const nativeId = NativeSTDLib.JString.Ctor(relicId);
+        let nativeId = NativeSTDLib.JString.Ctor(relicId);
         return PatchHelper.GetNativeFunction(ImageMasterFuncInfo.getRelicOutlineImg)(nativeId);
     },
+    getRelicOutlineImg2(relicId: JString): NativePointer {
+        return PatchHelper.GetNativeFunction(ImageMasterFuncInfo.getRelicOutlineImg)(relicId.rawPtr);
+    },
+
     loadImage(relicImgUrl: string): NativePointer {
-        const nativeUrl = NativeSTDLib.JString.Ctor(relicImgUrl);
+        let nativeUrl = NativeSTDLib.JString.Ctor(relicImgUrl);
         return PatchHelper.GetNativeFunction(ImageMasterFuncInfo.loadImage)(nativeUrl);
     },
-    loadImage2(relicImgUrl: string, linearFiltering: boolean): NativePointer {
-        const nativeUrl = NativeSTDLib.JString.Ctor(relicImgUrl);
+    loadImage2(relicImgUrl: JString): NativePointer {
+        return PatchHelper.GetNativeFunction(ImageMasterFuncInfo.loadImage)(relicImgUrl.rawPtr);
+    },
+
+    loadImage3(relicImgUrl: string, linearFiltering: boolean): NativePointer {
+        let nativeUrl = NativeSTDLib.JString.Ctor(relicImgUrl);
         return PatchHelper.GetNativeFunction(ImageMasterFuncInfo.loadImage2)(nativeUrl, Number(linearFiltering));
+    },
+    loadImage4(relicImgUrl: JString, linearFiltering: boolean): NativePointer {
+        return PatchHelper.GetNativeFunction(ImageMasterFuncInfo.loadImage2)(relicImgUrl.rawPtr, Number(linearFiltering));
     },
 };
