@@ -941,18 +941,18 @@ export class AbstractRelic extends NativeClassWrapper {
 
         wrapRelic.relicId = relicId;
         wrapRelic.name = relicName;
-        wrapRelic.imgUrl = imgName;
         wrapRelic.description = description;
         wrapRelic.flavorText = flavorText;
 
         NativeImageMaster.loadRelicImg(relicId, imgName);
-        const relicImg = NativeImageMaster.getRelicImg(relicId);
+        let relicImg = NativeImageMaster.getRelicImg(relicId);
         if (!relicImg.isNull()) {
             wrapRelic.img = relicImg;
-        }
-        const relicOutlineImg = NativeImageMaster.getRelicOutlineImg(relicId);
-        if (!relicOutlineImg.isNull()) {
-            wrapRelic.outlineImg = relicOutlineImg;
+            wrapRelic.imgUrl = imgName;
+            let relicOutlineImg = NativeImageMaster.getRelicOutlineImg(relicId);
+            if (!relicOutlineImg.isNull()) {
+                wrapRelic.outlineImg = relicOutlineImg;
+            }
         }
 
         let wrapTips = new ArrayList(wrapRelic.tips);
