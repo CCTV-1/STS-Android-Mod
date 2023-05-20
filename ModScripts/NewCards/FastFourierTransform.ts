@@ -31,6 +31,9 @@ const vfuncs: NewCardVFuncType = {
         if (!wrapCard.upgraded) {
             wrapCard.upgradeName();
             wrapCard.upgradeBaseCost(2);
+            //if current costForTurn is 0,AbstractCard::upgradeBaseCost don't update costForTurn.so we manually set it.
+            //but it maybe break freecast effect.
+            wrapCard.costForTurn = 2;
             wrapCard.exhaust = false;
             wrapCard.rawDescription = "激发所有 充能球，创造等量的随机充能球。";
             wrapCard.initializeDescription();
