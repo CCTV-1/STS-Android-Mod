@@ -1,6 +1,6 @@
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
-import { EnemyType } from "../enums.js";
+import { EnemyType, MonsterIntent } from "../enums.js";
 import { AbstractCreature } from "./AbstractCreature.js";
 
 export interface NewMonsterVFuncType {
@@ -154,6 +154,14 @@ export class AbstractMonster extends AbstractCreature {
 
     get nextMove() {
         return this.readOffsetU8(0x148);
+    }
+
+    get intent(): MonsterIntent {
+        return this.readOffsetU32(0x154);
+    }
+
+    get tipIntent(): MonsterIntent {
+        return this.readOffsetU32(0x158);
     }
 
     /** GDX::Texture* */

@@ -11,6 +11,12 @@ const Monsters = {
          */
         Ctor: new NativeFunctionInfo(0x18BFEC5, 'pointer', ['pointer', 'pointer', 'pointer', 'int32', 'float', 'float', 'float', 'float', 'pointer',
             'float', 'float', 'bool']),
+        /**
+         * ```
+         * void* AbstractMonster::Ctor(AbstractMonster* this)
+         * ```
+         */
+        updateIntentTip: new NativeFunctionInfo(0x18C143D, 'void', ['pointer']),
     },
 }
 
@@ -23,6 +29,10 @@ export const NativeMonsters = {
             const nativeimgUrl = NativeSTDLib.JString.Ctor(imgUrl);
             return PatchHelper.GetNativeFunction(Monsters.Abstract.Ctor)(NULL, nativeName, nativeid, maxHealth, hb_x, hb_y, hb_w, hb_h, nativeimgUrl,
                 offsetX, offsetY, Number(ignoreBlights));
+        },
+
+        OverrideupdateIntentTip(newImp: (thisPtr: NativePointer) => void): (thisPtr: NativePointer) => void {
+            return PatchHelper.HookSTSFunction(Monsters.Abstract.updateIntentTip, newImp);
         }
     },
 };

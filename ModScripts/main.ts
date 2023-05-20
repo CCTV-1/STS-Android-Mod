@@ -1,7 +1,7 @@
 import { PatchHelper } from "./PatchHelper.js";
 import { AbstractCard } from "./NativeClassWrap/AbstractCard.js";
 import { AbstractRelic } from "./NativeClassWrap/AbstractRelic.js";
-import { PlayerClass } from "./enums.js";
+import { MonsterIntent, PlayerClass } from "./enums.js";
 import { AbstractGameAction } from "./NativeClassWrap/AbstractGameAction.js";
 import { newCardLibrary } from "./NewCardLibrary.js";
 import { newRelicLibrary } from "./NewRelicLibrary.js";
@@ -25,6 +25,9 @@ import { AbstractPotion } from "./NativeClassWrap/AbstractPotion.js";
 import { ArrayList } from "./NativeClassWrap/ArrayList.js";
 import { NativeOrbs } from "./NativeFuncWrap/NativeOrbs.js";
 import { AbstractOrb } from "./NativeClassWrap/AbstractOrb.js";
+import { NativeMonsters } from "./NativeFuncWrap/NativeMonsters.js";
+import { AbstractMonster } from "./NativeClassWrap/AbstractMonster.js";
+import { PowerTip } from "./NativeClassWrap/PowerTip.js";
 
 function FixGDXFileHandlereadBytes() {
     let origOpenAssetFile = NativeSTSLib.OverrideopenAssestFile((thisPtr: NativePointer) => {
@@ -472,6 +475,28 @@ function PatchRelics() {
     });
 }
 
+function PatchMonsters() {
+    let origupdateIntentTip = NativeMonsters.Abstract.OverrideupdateIntentTip((thisPtr: NativePointer) => {
+        origupdateIntentTip(thisPtr);
+        let wrapMonster = new AbstractMonster(thisPtr);
+        if (wrapMonster.isMultiDmg) {
+            switch (wrapMonster.intent) {
+                case MonsterIntent.ATTACK:
+                case MonsterIntent.ATTACK_BUFF:
+                case MonsterIntent.ATTACK_DEFEND: {
+                    let intentTip = wrapMonster.intentTip;
+                    let wrapTip = new PowerTip(intentTip);
+                    wrapTip.body += "(" + wrapMonster.intentDmg * wrapMonster.intentMultiAmt + ")";
+                }
+                default: {
+                    break;
+                }
+            }
+        }
+    });
+    //todo: Override AbstractMonster::renderDamageRange change "AXB" to display "AXB(C)".
+}
+
 function RegisterNewCards() {
     let origCardLibraryInitialize = NativeHelpers.CardLibrary.Overrideinitialize((thisPtr: NativePointer) => {
         for (const newCardCtor of newCardLibrary) {
@@ -630,6 +655,7 @@ function main() {
     Patchcharacters();
     PatchPowers();
     PatchRelics();
+    PatchMonsters();
 
     RegisterNewCards();
     RegisterNewRelic();
