@@ -9,11 +9,11 @@ const vfuncs: NewCardVFuncType = {
     },
     canUpgrade: (thisPtr) => {
         const wrapCard = new AbstractCard(thisPtr);
-        return Number(wrapCard.timesUpgraded <= 3);
+        return Number(wrapCard.timesUpgraded < 3);
     },
     upgrade: (thisPtr: NativePointer) => {
         const wrapCard = new AbstractCard(thisPtr);
-        if (wrapCard.timesUpgraded <= 3) {
+        if (wrapCard.timesUpgraded < 3) {
             wrapCard.timesUpgraded++;
             wrapCard.name = "编译原理+" + wrapCard.timesUpgraded;
             wrapCard.upgraded = true;
