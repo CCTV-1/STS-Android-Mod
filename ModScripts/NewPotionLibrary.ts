@@ -1,3 +1,4 @@
+import { ApocalypsePotion } from "./NewPotions/ApocalypsePotion.js";
 import { OmniscientPotion } from "./NewPotions/OmniscientPotion.js";
 import { ResetPotion } from "./NewPotions/ResetPotion.js";
 import { SuperPolymerizationPotion } from "./NewPotions/SuperPolymerizationActionPotion.js";
@@ -21,6 +22,7 @@ export class NewPotionLibrary {
         ["ResetPotion", ResetPotion],
         ["SuperPolymerizationPotion", SuperPolymerizationPotion],
         ["SwapLifePotion", SwapLifePotion],
+        ["ApocalypsePotion", ApocalypsePotion],
     ]);
 
     static playerPotions(playerClass: PlayerClass): Array<string> {
