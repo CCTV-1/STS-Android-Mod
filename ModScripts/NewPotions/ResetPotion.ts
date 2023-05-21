@@ -7,7 +7,6 @@ import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { NativeHelpers } from "../NativeFuncWrap/NativeHelpers.js";
 import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
 import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
-import { PatchHelper } from "../PatchHelper.js";
 import { EnemyType, PotionColor, PotionRarity, PotionSize, RoomPhase } from "../enums.js";
 
 const vfunc: NewPotionVFuncType = {
