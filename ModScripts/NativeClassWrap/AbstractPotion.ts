@@ -181,7 +181,7 @@ export class AbstractPotion extends NativeClassWrapper {
     static NewPotionCtor(name: string, id: string, rarity: PotionRarity, size: PotionSize, color: PotionColor, vfuncs: NewPotionVFuncType): NativePointer {
         let origPotionPtr = NativePotions.Abstract.Ctor(name, id, rarity, size, color);
 
-        //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
+        //previous potion object memory maybe will be reused, so origPotionPtr value not necessarily unique.
         AbstractPotion.#rewriteVFuncMap.set(origPotionPtr.toUInt32(), vfuncs);
 
         if (!AbstractPotion.#rewriteVFuncMap.has(-1)) {

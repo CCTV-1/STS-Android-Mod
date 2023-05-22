@@ -860,7 +860,7 @@ export class AbstractPower extends NativeClassWrapper {
         let origPowerPtr = NativePowers.Abstract.Ctor();
 
         let wrapPower = new AbstractPower(origPowerPtr);
-        //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
+        //previous power object memory maybe will be reused, so origPowerPtr value not necessarily unique.
         AbstractPower.#rewriteVFuncMap.set(origPowerPtr.toUInt32(), newVFuncs);
 
         wrapPower.ID = powerId;

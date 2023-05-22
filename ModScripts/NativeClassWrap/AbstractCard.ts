@@ -660,7 +660,7 @@ export class AbstractCard extends NativeClassWrapper {
         let origCardPtr = NativeCards.AbstractCard.Ctor(id, name, imgUrl, cost, rawDescription, type, color, rarity, target, dType);
 
         let wrapCard = new AbstractCard(origCardPtr);
-        //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
+        //previous card object memory maybe will be reused, so origCardPtr value not necessarily unique.
         AbstractCard.#rewriteVFuncMap.set(origCardPtr.toUInt32(), newFuncs);
 
         if (!AbstractCard.#rewriteVFuncMap.has(-1)) {

@@ -1,4 +1,4 @@
-import { GDXFileType, LandingSound, PlayerClass, RelicTier } from "../enums.js";
+import { LandingSound, PlayerClass, RelicTier } from "../enums.js";
 import { JString } from "./JString.js";
 import { NativeClassWrapper } from "./NativeClassWrapper.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
@@ -936,7 +936,7 @@ export class AbstractRelic extends NativeClassWrapper {
         let origRelicPtr = NativeRelics.AbstractRelic.Ctor("Circlet", "Circlet.png", tier, sfx);
 
         let wrapRelic = new AbstractRelic(origRelicPtr);
-        //previous action object memory maybe will be reused, so origActionPtr value not necessarily unique.
+        //previous relic object memory maybe will be reused, so origRelicPtr value not necessarily unique.
         AbstractRelic.#rewriteVFuncMap.set(origRelicPtr.toUInt32(), newVFuncs);
 
         wrapRelic.relicId = relicId;
