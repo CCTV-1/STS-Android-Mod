@@ -1,33 +1,33 @@
-import { PatchHelper } from "./PatchHelper.js";
 import { AbstractCard } from "./NativeClassWrap/AbstractCard.js";
-import { AbstractRelic } from "./NativeClassWrap/AbstractRelic.js";
-import { MonsterIntent, PlayerClass } from "./enums.js";
+import { AbstractDungeon } from "./NativeClassWrap/AbstractDungeon.js";
 import { AbstractGameAction } from "./NativeClassWrap/AbstractGameAction.js";
-import { newCardLibrary } from "./NewCardLibrary.js";
-import { newRelicLibrary } from "./NewRelicLibrary.js";
-import { NativeSTDLib } from "./NativeFuncWrap/NativeSTDLib.js";
+import { AbstractMonster } from "./NativeClassWrap/AbstractMonster.js";
+import { AbstractOrb } from "./NativeClassWrap/AbstractOrb.js";
+import { AbstractPotion } from "./NativeClassWrap/AbstractPotion.js";
+import { AbstractPower } from "./NativeClassWrap/AbstractPower.js";
+import { AbstractRelic } from "./NativeClassWrap/AbstractRelic.js";
+import { ArrayList } from "./NativeClassWrap/ArrayList.js";
+import { JString } from "./NativeClassWrap/JString.js";
+import { ModUtility } from "./ModUtility.js";
+import { MonsterIntent, PlayerClass } from "./enums.js";
 import { NativeActions } from "./NativeFuncWrap/NativeActions.js";
 import { NativeCards } from "./NativeFuncWrap/NativeCards.js";
-import { NativeHelpers } from "./NativeFuncWrap/NativeHelpers.js";
 import { NativeCharacters } from "./NativeFuncWrap/NativeCharacters.js";
-import { NativeRelics } from "./NativeFuncWrap/NativeRelics.js";
+import { NativeGDXLib } from "./NativeFuncWrap/NativeGDXLib.js";
+import { NativeHelpers } from "./NativeFuncWrap/NativeHelpers.js";
+import { NativeMonsters } from "./NativeFuncWrap/NativeMonsters.js";
+import { NativeOrbs } from "./NativeFuncWrap/NativeOrbs.js";
 import { NativePotions } from "./NativeFuncWrap/NativePotions.js";
 import { NativePowers } from "./NativeFuncWrap/NativePowers.js";
-import { NativeGDXLib } from "./NativeFuncWrap/NativeGDXLib.js";
-import { JString } from "./NativeClassWrap/JString.js";
+import { NativeRelics } from "./NativeFuncWrap/NativeRelics.js";
+import { NativeSTDLib } from "./NativeFuncWrap/NativeSTDLib.js";
 import { NativeSTSLib } from "./NativeFuncWrap/NativeSTSLib.js";
-import { AbstractDungeon } from "./NativeClassWrap/AbstractDungeon.js";
+import { newCardLibrary } from "./NewCardLibrary.js";
 import { NewPotionLibrary } from "./NewPotionLibrary.js";
-import { ModUtility } from "./ModUtility.js";
-import { Random } from "./NativeClassWrap/Random.js";
-import { AbstractPower } from "./NativeClassWrap/AbstractPower.js";
-import { AbstractPotion } from "./NativeClassWrap/AbstractPotion.js";
-import { ArrayList } from "./NativeClassWrap/ArrayList.js";
-import { NativeOrbs } from "./NativeFuncWrap/NativeOrbs.js";
-import { AbstractOrb } from "./NativeClassWrap/AbstractOrb.js";
-import { NativeMonsters } from "./NativeFuncWrap/NativeMonsters.js";
-import { AbstractMonster } from "./NativeClassWrap/AbstractMonster.js";
+import { newRelicLibrary } from "./NewRelicLibrary.js";
+import { PatchHelper } from "./PatchHelper.js";
 import { PowerTip } from "./NativeClassWrap/PowerTip.js";
+import { Random } from "./NativeClassWrap/Random.js";
 
 function FixGDXFileHandlereadBytes() {
     let origOpenAssetFile = NativeSTSLib.OverrideopenAssestFile((thisPtr: NativePointer) => {
@@ -647,7 +647,7 @@ function ListenNativeObjectAlloc() {
 function main() {
     //FixGDXFileHandlereadBytes();
 
-    PatchNativeExceptions();
+    //PatchNativeExceptions();
     PatchAbstractCardFunctions();
 
     PatchRedCards();
