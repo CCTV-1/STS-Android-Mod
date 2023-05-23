@@ -827,6 +827,10 @@ export class AbstractCard extends NativeClassWrapper {
         this.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PPP_Func(funcName), AbstractCard.#vfunctionMap.use, newVFunc);
     }
 
+    onChoseThisOption() {
+        this.getVirtualFunction(AbstractCard.#vfunctionMap.onChoseThisOption)(this.rawPtr);
+    }
+
     applyPowers() {
         this.getVirtualFunction(AbstractCard.#vfunctionMap.applyPowers)(this.rawPtr);
     }

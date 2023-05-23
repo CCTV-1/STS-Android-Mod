@@ -8,6 +8,18 @@ const STDLib = {
         AbstractCard: {
             /**
              * ```c
+             * bool ArrayList<AbstractCard>::add(ArrayList * thisPtr, STS::AbstractCard * cardPtr)
+             * ```
+             */
+            Add: new NativeFunctionInfo(0x1678D5D, 'bool', ['pointer', 'pointer']),
+            /**
+             * ```c
+             * void ArrayList<AbstractCard>::Clear(ArrayList * thisPtr)
+             * ```
+             */
+            Clear: new NativeFunctionInfo(0x1678C45, 'void', ['pointer']),
+            /**
+             * ```c
              * ArrayList * ArrayList<AbstractCard>::Ctor(ArrayList * thisPtr)
              * ```
              */
@@ -233,14 +245,20 @@ const STDLib = {
 export const NativeSTDLib = {
     ArrayList: {
         AbstractCard: {
+            Add(arrayListPtr: ArrayList, cardPtr: NativePointer): void {
+                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.Add)(arrayListPtr.rawPtr, cardPtr);
+            },
+            Clear(arrayListPtr: ArrayList) {
+                PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.Clear)(arrayListPtr.rawPtr);
+            },
             Ctor(): NativePointer {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.Ctor)(NULL);
             },
             get(arrayListPtr: ArrayList, index: number): NativePointer {
                 return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.get)(arrayListPtr.rawPtr, index);
             },
-            RemoveAt(arrayListPtr: ArrayList, index: number): NativePointer {
-                return PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.RemoveAt)(arrayListPtr.rawPtr, index);
+            RemoveAt(arrayListPtr: ArrayList, index: number) {
+                PatchHelper.GetNativeFunction(STDLib.ArrayList.AbstractCard.RemoveAt)(arrayListPtr.rawPtr, index);
             },
         },
         AbstractGameEffect: {

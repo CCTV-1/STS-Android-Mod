@@ -263,3 +263,12 @@ export enum GameMode {
     DUNGEON_TRANSITION,
     SPLASH
 };
+
+export enum LibraryType {
+    RED = 0x0,
+    GREEN,
+    BLUE,
+    PURPLE,
+    CURSE,
+    COLORLESS
+};

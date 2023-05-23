@@ -1,5 +1,5 @@
 import { PatchHelper } from "../PatchHelper.js";
-import { PlayerClass } from "../enums.js";
+import { LibraryType, PlayerClass } from "../enums.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 import { NativeSTDLib } from "./NativeSTDLib.js";
 
@@ -16,6 +16,13 @@ const CardLibrary = {
      * ```
      */
     Add: new NativeFunctionInfo(0x1832405, 'void', ['pointer']),
+    /**
+     * ```c
+     * ArrayList<AbstractCard>* getCardList(LibraryType type)
+     * ```
+     */
+    getCardList: new NativeFunctionInfo(0x18342CD, 'pointer', ['uint32']),
+    
 };
 const RelicLibrary = {
     /**
@@ -79,7 +86,11 @@ export const NativeHelpers = {
         },
         OverrideAdd(newFunc: (cardPtr: NativePointer) => void): (cardPtr: NativePointer) => void {
             return PatchHelper.HookSTSFunction(CardLibrary.Add, newFunc);
-        }
+        },
+        /** ArrayList\<AbstractCard\>* */
+        getCardList(libraryType: LibraryType): NativePointer {
+            return PatchHelper.GetNativeFunction(CardLibrary.getCardList)(Number(libraryType));
+        },
     },
     RelicLibrary: {
         initialize() {
