@@ -13,7 +13,7 @@ const vfunc: NewPotionVFuncType = {
         if (currentRoom.phase === RoomPhase.COMBAT) {
             let currentPlayer = AbstractDungeon.getInstance().player;
             let handSize = currentPlayer.hand.group.size;
-            for (let i = 0; i < handSize - 1; i++) {
+            for (let i = 0; i < handSize; i++) {
                 let handCard = NativeSTDLib.ArrayList.AbstractCard.get(currentPlayer.hand.group, i);
                 let wrapCard = new AbstractCard(handCard);
                 if (wrapCard.cost > 0) {
