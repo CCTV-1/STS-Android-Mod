@@ -3,7 +3,7 @@ import { IllusionPotion } from "./NewPotions/IllusionPotion.js";
 import { MutationPotion } from "./NewPotions/MutationPotion.js";
 import { OmniscientPotion } from "./NewPotions/OmniscientPotion.js";
 import { ResetPotion } from "./NewPotions/ResetPotion.js";
-import { SuperPolymerizationPotion } from "./NewPotions/SuperPolymerizationActionPotion.js";
+import { SuperPolymerizationPotion } from "./NewPotions/SuperPolymerizationPotion.js";
 import { SwapLifePotion } from "./NewPotions/SwapLifePotion.js";
 import { PlayerClass } from "./enums.js";
 
