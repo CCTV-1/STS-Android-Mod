@@ -1,4 +1,6 @@
 import { ApocalypsePotion } from "./NewPotions/ApocalypsePotion.js";
+import { IllusionPotion } from "./NewPotions/IllusionPotion.js";
+import { MutationPotion } from "./NewPotions/MutationPotion.js";
 import { OmniscientPotion } from "./NewPotions/OmniscientPotion.js";
 import { ResetPotion } from "./NewPotions/ResetPotion.js";
 import { SuperPolymerizationPotion } from "./NewPotions/SuperPolymerizationActionPotion.js";
@@ -18,11 +20,13 @@ import { PlayerClass } from "./enums.js";
 */
 export class NewPotionLibrary {
     static PotionList = new Map<string, Function>([
+        ["ApocalypsePotion", ApocalypsePotion],
+        ["IllusionPotion", IllusionPotion],
+        ["MutationPotion", MutationPotion],
         ["OmniscientPotion", OmniscientPotion],
         ["ResetPotion", ResetPotion],
         ["SuperPolymerizationPotion", SuperPolymerizationPotion],
         ["SwapLifePotion", SwapLifePotion],
-        ["ApocalypsePotion", ApocalypsePotion],
     ]);
 
     static playerPotions(playerClass: PlayerClass): Array<string> {
