@@ -18,7 +18,7 @@ export class ModUtility {
         let masterDeckGroup = currentPlayer.masterDeck.group;
         let deckSize = masterDeckGroup.size;
         let canUpgradeCards = new Array<AbstractCard>();
-        for (let i = 0; i < deckSize - 1; i++) {
+        for (let i = 0; i < deckSize; i++) {
             let randCard = NativeSTDLib.ArrayList.AbstractCard.get(masterDeckGroup, i);
             let wrapCard = new AbstractCard(randCard);
             if (wrapCard.canUpgrade()) {
