@@ -18,6 +18,8 @@ import { SeeEvething } from "./NewCards/SeeEvething.js";
 import { FastFourierTransform } from "./NewCards/FastFourierTransform.js";
 import { CompilePrinciples } from "./NewCards/CompilePrinciples.js";
 import { BringToLight } from "./NewCards/BringToLight.js";
+import { AbsoluteDefend } from "./NewCards/AbsoluteDefend.js";
+import { DeadlyStrike } from "./NewCards/DeadlyStrike.js";
 
 /**
  * if you plan register a new card, add a function property to NewCardLibrary,the function code like follow:
@@ -75,4 +77,6 @@ export const newCardLibrary: STSCardCtor[] = [
     SeeEvething,
     CompilePrinciples,
     BringToLight,
+    AbsoluteDefend,
+    DeadlyStrike,
 ];
