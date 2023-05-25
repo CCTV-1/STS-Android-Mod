@@ -4,7 +4,6 @@ import { AbstractPlayer } from "./NativeClassWrap/AbstractPlayer.js";
 import { AbstractRoom } from "./NativeClassWrap/AbstractRoom.js";
 import { MapRoomNode } from "./NativeClassWrap/MapRoomNode.js";
 import { MonsterGroup } from "./NativeClassWrap/MonsterGroup.js";
-import { Random } from "./NativeClassWrap/Random.js";
 import { NativeSTDLib } from "./NativeFuncWrap/NativeSTDLib.js";
 import { NativeVFX } from "./NativeFuncWrap/NativeVFX.js";
 import { PatchHelper } from "./PatchHelper.js";
@@ -14,7 +13,18 @@ export class ModUtility {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    static UpgradeRandomCard(currentPlayer: AbstractPlayer) {
+    static Shuffle<T>(arr: Array<T>) {
+        for (let i = 1; i < arr.length; i++) {
+            const random = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[random]] = [arr[random], arr[i]];
+        }
+    }
+
+    static UpgradeRandomCard(currentPlayer: AbstractPlayer, upgradeCount: number = 1) {
+        if (upgradeCount <= 0) {
+            return;
+        }
+
         let masterDeckGroup = currentPlayer.masterDeck.group;
         let deckSize = masterDeckGroup.size;
         let canUpgradeCards = new Array<AbstractCard>();
@@ -25,18 +35,29 @@ export class ModUtility {
                 canUpgradeCards.push(wrapCard);
             }
         }
-        if (canUpgradeCards.length > 0) {
-            const eventRng = new Random(AbstractDungeon.getInstance().eventRng);
-            let index = eventRng.randomI32_2(0, canUpgradeCards.length - 1);
-            let upgradeCard = canUpgradeCards[index];
+
+        if(canUpgradeCards.length === 0) {
+            return ;
+        }
+
+        //player can't use save/load change the result,so we don't need use game rng.
+        ModUtility.Shuffle(canUpgradeCards);
+        let upgradeNumber = upgradeCount;
+        if (canUpgradeCards.length < upgradeCount) {
+            upgradeNumber = canUpgradeCards.length;
+        }
+        const topLevelEffects = AbstractDungeon.getInstance().topLevelEffects;
+        
+        for (let i = 0; i < upgradeNumber; i++) {
+            let upgradeCard = canUpgradeCards[i];
             upgradeCard.upgrade();
-            let topLevelEffects = AbstractDungeon.getInstance().topLevelEffects;
             let statCopyCard = upgradeCard.makeStatEquivalentCopy();
             let cardBrieflyEffectObj = NativeVFX.ShowCardBrieflyEffect.Ctor(statCopyCard);
-            let upgradeShineEffectObj = NativeVFX.UpgradeShineEffect.Ctor(PatchHelper.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchHelper.STSGlobalVars.STSSetting_HEIGHT * 0.5);
             NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
-            NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
         }
+
+        let upgradeShineEffectObj = NativeVFX.UpgradeShineEffect.Ctor(PatchHelper.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchHelper.STSGlobalVars.STSSetting_HEIGHT * 0.5);
+        NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
     };
 
     static foreachCurrentRoomMonster(applyFunc: (monsterPtr: NativePointer) => void) {

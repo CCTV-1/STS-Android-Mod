@@ -5,8 +5,7 @@ import { AbstractPower, NewPowerVFuncType } from "../NativeClassWrap/AbstractPow
 const vfuncs: NewPowerVFuncType = {
     onVictory: (thisPtr) => {
         const currentPlayer = AbstractDungeon.getInstance().player;
-        ModUtility.UpgradeRandomCard(currentPlayer);
-        ModUtility.UpgradeRandomCard(currentPlayer);
+        ModUtility.UpgradeRandomCard(currentPlayer, 2);
     },
 };
 
