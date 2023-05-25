@@ -36,8 +36,8 @@ export class ModUtility {
             }
         }
 
-        if(canUpgradeCards.length === 0) {
-            return ;
+        if (canUpgradeCards.length === 0) {
+            return;
         }
 
         //player can't use save/load change the result,so we don't need use game rng.
@@ -47,16 +47,23 @@ export class ModUtility {
             upgradeNumber = canUpgradeCards.length;
         }
         const topLevelEffects = AbstractDungeon.getInstance().topLevelEffects;
-        
+        const width = PatchHelper.STSGlobalVars.STSSetting_WIDTH;
+        const height = PatchHelper.STSGlobalVars.STSSetting_HEIGHT;
+
         for (let i = 0; i < upgradeNumber; i++) {
             let upgradeCard = canUpgradeCards[i];
             upgradeCard.upgrade();
             let statCopyCard = upgradeCard.makeStatEquivalentCopy();
-            let cardBrieflyEffectObj = NativeVFX.ShowCardBrieflyEffect.Ctor(statCopyCard);
-            NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
+            //prevent add too much animation
+            if (i <= 9) {
+                let x = Math.random() * width;
+                let y = height * 0.5;
+                let cardBrieflyEffectObj = NativeVFX.ShowCardBrieflyEffect.Ctor2(statCopyCard, x, y);
+                NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, cardBrieflyEffectObj);
+            }
         }
 
-        let upgradeShineEffectObj = NativeVFX.UpgradeShineEffect.Ctor(PatchHelper.STSGlobalVars.STSSetting_WIDTH * 0.5, PatchHelper.STSGlobalVars.STSSetting_HEIGHT * 0.5);
+        let upgradeShineEffectObj = NativeVFX.UpgradeShineEffect.Ctor(width * 0.5, height * 0.5);
         NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
     };
 
