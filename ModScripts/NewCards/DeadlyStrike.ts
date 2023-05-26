@@ -29,7 +29,7 @@ const vfuncs: NewCardVFuncType = {
 
 export const DeadlyStrike: STSCardCtor = (thisPtr: NativePointer) => {
     const wrapCard = AbstractCard.NewCardCtor("DeadlyStrike", "致命一击", "colorless/attack/DeadlyStrike", 1,
-        "可无限升级。 NL 获得 !B! 点格挡。", CardType.ATTACK, CardColor.COLORLESS, CardRarity.COMMON, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
+        "可无限升级。 NL 获得 !D! 点伤害。", CardType.ATTACK, CardColor.COLORLESS, CardRarity.COMMON, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
 
     wrapCard.baseDamage = 6;
     return wrapCard.rawPtr;
