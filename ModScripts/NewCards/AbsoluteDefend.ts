@@ -1,6 +1,7 @@
 import { AbstractCard, NewCardVFuncType, STSCardCtor } from "../NativeClassWrap/AbstractCard.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
-import { CardType, CardColor, CardRarity, CardTarget, DamageType } from "../enums.js";
+import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
+import { CardType, CardColor, CardRarity, CardTarget, DamageType, CardTags } from "../enums.js";
 
 const vfuncs: NewCardVFuncType = {
     use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
@@ -29,5 +30,7 @@ export const AbsoluteDefend: STSCardCtor = (thisPtr: NativePointer) => {
         "可无限升级。 NL 获得 !B! 点格挡。", CardType.SKILL, CardColor.COLORLESS, CardRarity.COMMON, CardTarget.NONE, DamageType.NORMAL, vfuncs);
 
     wrapCard.baseBlock = 6;
+    const tags = wrapCard.tags;
+    NativeSTDLib.ArrayList.CardTags.add(tags, CardTags.STARTER_DEFEND);
     return wrapCard.rawPtr;
 };

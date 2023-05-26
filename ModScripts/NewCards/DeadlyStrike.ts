@@ -1,7 +1,8 @@
 import { AbstractCard, NewCardVFuncType, STSCardCtor } from "../NativeClassWrap/AbstractCard.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
-import { CardType, CardColor, CardRarity, CardTarget, DamageType, AttackEffect } from "../enums.js";
+import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
+import { CardType, CardColor, CardRarity, CardTarget, DamageType, AttackEffect, CardTags } from "../enums.js";
 
 const vfuncs: NewCardVFuncType = {
     use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
@@ -32,5 +33,7 @@ export const DeadlyStrike: STSCardCtor = (thisPtr: NativePointer) => {
         "可无限升级。 NL 获得 !D! 点伤害。", CardType.ATTACK, CardColor.COLORLESS, CardRarity.COMMON, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
 
     wrapCard.baseDamage = 6;
+    const tags = wrapCard.tags;
+    NativeSTDLib.ArrayList.CardTags.add(tags, CardTags.STARTER_STRIKE);
     return wrapCard.rawPtr;
 };
