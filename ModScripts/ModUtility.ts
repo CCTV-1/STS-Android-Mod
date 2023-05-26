@@ -46,6 +46,10 @@ export class ModUtility {
         if (canUpgradeCards.length < upgradeCount) {
             upgradeNumber = canUpgradeCards.length;
         }
+        ModUtility.upgradeCards(canUpgradeCards, upgradeNumber);
+    };
+
+    static upgradeCards(canUpgradeCards: Array<AbstractCard>, upgradeNumber: number) {
         const topLevelEffects = AbstractDungeon.getInstance().topLevelEffects;
         const width = PatchHelper.STSGlobalVars.STSSetting_WIDTH;
         const height = PatchHelper.STSGlobalVars.STSSetting_HEIGHT;
@@ -65,7 +69,7 @@ export class ModUtility {
 
         let upgradeShineEffectObj = NativeVFX.UpgradeShineEffect.Ctor(width * 0.5, height * 0.5);
         NativeSTDLib.ArrayList.AbstractGameEffect.Add(topLevelEffects, upgradeShineEffectObj);
-    };
+    }
 
     static foreachCurrentRoomMonster(applyFunc: (monsterPtr: NativePointer) => void) {
         const abstractDungeon = AbstractDungeon.getInstance();
