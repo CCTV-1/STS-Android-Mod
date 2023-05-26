@@ -270,7 +270,7 @@ export class CardGroup extends NativeClassWrapper {
         return this.getVirtualFunction(CardGroup.#vfunctionMap.size)(this.rawPtr);
     }
 
-    /** ArrayList<AbstractCard> */
+    /** ArrayList\<AbstractCard\> */
     get group() {
         return new ArrayList(this.readOffsetPointer(0x8));
     }
@@ -279,12 +279,12 @@ export class CardGroup extends NativeClassWrapper {
         return this.readOffsetU32(0x14);
     }
 
-    /** ArrayList<AbstractCard> */
+    /** ArrayList\<AbstractCard\> */
     get queued() {
         return new ArrayList(this.readOffsetPointer(0x1C));
     }
 
-    /** ArrayList<AbstractCard> */
+    /** ArrayList\<AbstractCard\> */
     get inHand() {
         return new ArrayList(this.readOffsetPointer(0x20));
     }
