@@ -42,11 +42,7 @@ export class ModUtility {
 
         //player can't use save/load change the result,so we don't need use game rng.
         ModUtility.Shuffle(canUpgradeCards);
-        let upgradeNumber = upgradeCount;
-        if (canUpgradeCards.length < upgradeCount) {
-            upgradeNumber = canUpgradeCards.length;
-        }
-        ModUtility.upgradeCards(canUpgradeCards, upgradeNumber);
+        ModUtility.upgradeCards(canUpgradeCards, upgradeCount);
     };
 
     static upgradeCards(canUpgradeCards: Array<AbstractCard>, upgradeNumber: number) {
@@ -54,6 +50,12 @@ export class ModUtility {
         const width = PatchHelper.STSGlobalVars.STSSetting_WIDTH;
         const height = PatchHelper.STSGlobalVars.STSSetting_HEIGHT;
 
+        if (canUpgradeCards.length < upgradeNumber) {
+            upgradeNumber = canUpgradeCards.length;
+        }
+        if (upgradeNumber == 0) {
+            return ;
+        }
         for (let i = 0; i < upgradeNumber; i++) {
             let upgradeCard = canUpgradeCards[i];
             upgradeCard.upgrade();
