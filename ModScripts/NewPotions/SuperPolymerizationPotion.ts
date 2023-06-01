@@ -31,5 +31,7 @@ const vfunc: NewPotionVFuncType = {
 export const SuperPolymerizationPotion = (): NativePointer => {
     let rawPotionPtr = AbstractPotion.NewPotionCtor("超融合药水", "SuperPolymerizationPotion", PotionRarity.RARE, PotionSize.CARD, PotionColor.FEAR, vfunc);
 
+    const wrapPotion = new AbstractPotion(rawPotionPtr);
+    wrapPotion.isThrown = false;
     return rawPotionPtr;
 }

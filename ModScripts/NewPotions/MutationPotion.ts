@@ -33,6 +33,6 @@ export const MutationPotion = (): NativePointer => {
     let rawPotionPtr = AbstractPotion.NewPotionCtor("突变药剂", "MutationPotion", PotionRarity.COMMON, PotionSize.JAR, PotionColor.SNECKO, vfunc);
 
     const wrapPotion = new AbstractPotion(rawPotionPtr);
-    wrapPotion.isThrown = true;
+    wrapPotion.isThrown = false;
     return rawPotionPtr;
 }

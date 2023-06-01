@@ -47,6 +47,6 @@ export const IllusionPotion = (): NativePointer => {
     let rawPotionPtr = AbstractPotion.NewPotionCtor("致幻药剂", "IllusionPotion", PotionRarity.UNCOMMON, PotionSize.JAR, PotionColor.SMOKE, vfunc);
 
     const wrapPotion = new AbstractPotion(rawPotionPtr);
-    wrapPotion.isThrown = true;
+    wrapPotion.isThrown = false;
     return rawPotionPtr;
 }

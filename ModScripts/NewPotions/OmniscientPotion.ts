@@ -40,5 +40,7 @@ const vfunc: NewPotionVFuncType = {
 export const OmniscientPotion = (): NativePointer => {
     let rawPotionPtr = AbstractPotion.NewPotionCtor("全知全能药水", "OmniscientPotion", PotionRarity.RARE, PotionSize.EYE, PotionColor.ENERGY, vfunc);
 
+    const wrapPotion = new AbstractPotion(rawPotionPtr);
+    wrapPotion.isThrown = false;
     return rawPotionPtr;
 }

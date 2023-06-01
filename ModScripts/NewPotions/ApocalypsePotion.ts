@@ -36,6 +36,6 @@ export const ApocalypsePotion = (): NativePointer => {
     let rawPotionPtr = AbstractPotion.NewPotionCtor("天启药剂", "ApocalypsePotion", PotionRarity.UNCOMMON, PotionSize.SPHERE, PotionColor.SKILL, vfunc);
 
     const wrapPotion = new AbstractPotion(rawPotionPtr);
-    wrapPotion.isThrown = true;
+    wrapPotion.isThrown = false;
     return rawPotionPtr;
 }
