@@ -3,12 +3,20 @@ import { CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enum
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { AbstractMonster } from "../NativeClassWrap/AbstractMonster.js";
 import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
+import { AbstractDungeon } from "../NativeClassWrap/AbstractDungeon.js";
+import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
+import { NativeVFX } from "../NativeFuncWrap/NativeVFX.js";
+import { AbstractPlayer } from "../NativeClassWrap/AbstractPlayer.js";
 
 const vfuncs: NewCardVFuncType = {
     use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
         if (!monsterPtr.isNull()) {
             const wrapMonster = new AbstractMonster(monsterPtr);
-            if (wrapMonster.getIntentBaseDmg() <= 0) {
+            if (wrapMonster.getIntentBaseDmg() < 0) {
+                const wrapPlayer = new AbstractPlayer(playerPtr);
+                const effectList = AbstractDungeon.getInstance().effectList;
+                const thoughtBubbleEffect = NativeVFX.ThoughtBubble.Ctor(wrapPlayer.dialogX, wrapPlayer.dialogY, 3.0, "这个敌人的意图不是攻击！", true);
+                NativeSTDLib.ArrayList.AbstractGameEffect.Add(effectList, thoughtBubbleEffect);
                 return;
             }
             const wrapCard = new AbstractCard(thisPtr);

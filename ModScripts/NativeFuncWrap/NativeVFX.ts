@@ -1,5 +1,6 @@
 import { PatchHelper } from "../PatchHelper.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
+import { NativeSTDLib } from "./NativeSTDLib.js";
 
 const VFX = {
     ShowCardBrieflyEffect: {
@@ -15,6 +16,14 @@ const VFX = {
          * ```
          */
         Ctor2: new NativeFunctionInfo(0x1B58B0D, 'pointer', ['pointer', 'pointer', 'float', 'float']),
+    },
+    ThoughtBubble: {
+        /**
+         * ```c
+         * STS::AbstractGameEffect * VFX::ThoughtBubble::Ctor(STS::AbstractGameEffect * thisPtr, float x, float y, float duration, JString* msg, bool isPlayer)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x1BD7365, 'pointer', ['pointer', 'float', 'float', 'float', 'pointer', 'bool']),
     },
     UpgradeShineEffect: {
         /**
@@ -33,6 +42,12 @@ export const NativeVFX = {
         },
         Ctor2(cardPtr: NativePointer, x: number, y: number): NativePointer {
             return PatchHelper.GetNativeFunction(VFX.ShowCardBrieflyEffect.Ctor2)(NULL, cardPtr, x, y);
+        },
+    },
+    ThoughtBubble: {
+        Ctor(x: number, y: number, duration: number, msg: string, isPlayer: boolean): NativePointer {
+            let nativeMsg = NativeSTDLib.JString.Ctor(msg);
+            return PatchHelper.GetNativeFunction(VFX.ThoughtBubble.Ctor)(NULL, x, y, duration, nativeMsg, Number(isPlayer));
         },
     },
     UpgradeShineEffect: {

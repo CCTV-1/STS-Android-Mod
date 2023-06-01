@@ -167,6 +167,22 @@ export class AbstractCreature extends NativeClassWrapper {
         this.writeOffsetBool(0x15, value);
     }
 
+    get drawX() {
+        return this.readOffsetFloat(0x18);
+    }
+
+    get drawY() {
+        return this.readOffsetFloat(0x1C);
+    }
+
+    get dialogX() {
+        return this.readOffsetFloat(0x20);
+    }
+
+    get dialogY() {
+        return this.readOffsetFloat(0x24);
+    }
+
     get gold() {
         return this.readOffsetS32(0x2C);
     }
