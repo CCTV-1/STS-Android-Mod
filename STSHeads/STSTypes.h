@@ -2575,6 +2575,28 @@ namespace STS
         float arrowTimer;
     } __attribute__((aligned(4)));
 
+    struct PotionViewScreen
+    {
+        PotionViewScreen *thisPtr;
+        void *vfuncMap;
+        bool grabbedScreen;
+        uint8_t gap09[3];
+        float scrollY;
+        float targetY;
+        float scrollUpperBound;
+        float scrollLowerBound;
+        int32_t row;
+        int32_t col;
+        void *button;
+        ArrayList<AbstractPotion> *commonPotions;
+        ArrayList<AbstractPotion> *uncommonPotions;
+        ArrayList<AbstractPotion> *rarePotions;
+        float grabStartY;
+        void *controllerPotionHb;
+        void * scrollBar;
+    } __attribute__((aligned(4)));
+
+
 }
 
 
