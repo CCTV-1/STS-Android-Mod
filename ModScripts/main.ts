@@ -28,6 +28,7 @@ import { newRelicLibrary } from "./NewRelicLibrary.js";
 import { PatchHelper } from "./PatchHelper.js";
 import { PowerTip } from "./NativeClassWrap/PowerTip.js";
 import { Random } from "./NativeClassWrap/Random.js";
+import { NativeScreens } from "./NativeFuncWrap/NativeScreens.js";
 
 function FixGDXFileHandlereadBytes() {
     let origOpenAssetFile = NativeSTSLib.OverrideopenAssestFile((thisPtr: NativePointer) => {
@@ -297,7 +298,7 @@ function Patchcharacters() {
 
     Memory.patchCode(PatchHelper.InstructionPtr.rewardCardNumber, 64, function (code) {
         let numCardsModifyer = new ThumbWriter(code);
-        //modify to 017BE846 04 25 MOVS R5, #5  ;set numCards = 4
+        //modify to 017BE846 04 25 MOVS R5, #4  ;set numCards = 4
         numCardsModifyer.putBytes([0x4, 0x25]);
         numCardsModifyer.flush();
     });
@@ -553,6 +554,13 @@ function RegisterNewPotions() {
             return newPotionCtor();
         }
         return origPotionHelpergetPotion(potionId);
+    });
+
+    //make PotionViewScreen can scroll
+    let origPotionViewScreenCtor = NativeScreens.PotionViewScreen.OverrideCtor((thisPtr: NativePointer) => {
+        let origPtr = origPotionViewScreenCtor(thisPtr);
+        PatchHelper.STSGlobalVars.STSSetting_isModded = 1;
+        return origPtr;
     });
 }
 
