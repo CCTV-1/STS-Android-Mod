@@ -28,7 +28,7 @@ const vfunc: NewPotionVFuncType = {
     initializeData: (thisPtr: NativePointer) => {
         const wrapPotion = new AbstractPotion(thisPtr);
         wrapPotion.potency = 0;
-        const abilityStr = "使手牌中的所有牌耗能减少 [E]，且额外具有消耗。";
+        const abilityStr = "使手牌中的所有牌耗能减少1，且额外具有消耗。";
         wrapPotion.description = abilityStr;
         let potionTips = wrapPotion.tips;
         NativeSTDLib.ArrayList.PowerTip.clear(potionTips);
