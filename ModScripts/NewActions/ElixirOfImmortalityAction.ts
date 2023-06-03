@@ -33,6 +33,7 @@ const vfuncs: NewGameActionVFuncType = {
             wrapCard.exhaust = false;
             wrapCard.rawDescription += " NL 失去消耗。";
             wrapCard.initializeDescription();
+            currentPlayer.hand.addToTop(selectCard);
         }
         wrapAction.tickDuration();
     }
