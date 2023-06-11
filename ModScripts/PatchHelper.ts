@@ -46,18 +46,6 @@ export class PatchHelper {
     };
 
     static readonly STSGlobalVars = {
-        get STSSetting_WIDTH() {
-            return PatchHelper.#GetOffsetPtr(0x34987C0).readS32();
-        },
-        get STSSetting_HEIGHT() {
-            return PatchHelper.#GetOffsetPtr(0x34987C4).readS32();
-        },
-        get STSSetting_isModded() {
-            return PatchHelper.#GetOffsetPtr(0x3498762).readU8();
-        },
-        set STSSetting_isModded(value) {
-            PatchHelper.#GetOffsetPtr(0x3498762).writeU8(value);
-        },
         get AbstractDungeonInstancePtr() {
             return PatchHelper.STSModuleBaseAddress.add(0x3498EB0);
         },

@@ -4,9 +4,9 @@ import { AbstractPlayer } from "./NativeClassWrap/AbstractPlayer.js";
 import { AbstractRoom } from "./NativeClassWrap/AbstractRoom.js";
 import { MapRoomNode } from "./NativeClassWrap/MapRoomNode.js";
 import { MonsterGroup } from "./NativeClassWrap/MonsterGroup.js";
+import { Settings } from "./NativeClassWrap/Settings.js";
 import { NativeSTDLib } from "./NativeFuncWrap/NativeSTDLib.js";
 import { NativeVFX } from "./NativeFuncWrap/NativeVFX.js";
-import { PatchHelper } from "./PatchHelper.js";
 
 export class ModUtility {
     static FakeRandom(min: number, max: number): number {
@@ -47,8 +47,9 @@ export class ModUtility {
 
     static upgradeCards(canUpgradeCards: Array<AbstractCard>, upgradeNumber: number) {
         const topLevelEffects = AbstractDungeon.getInstance().topLevelEffects;
-        const width = PatchHelper.STSGlobalVars.STSSetting_WIDTH;
-        const height = PatchHelper.STSGlobalVars.STSSetting_HEIGHT;
+        const gameSettings = Settings.getInstance();
+        const width = gameSettings.WIDTH;
+        const height = gameSettings.HEIGHT;
 
         if (canUpgradeCards.length < upgradeNumber) {
             upgradeNumber = canUpgradeCards.length;

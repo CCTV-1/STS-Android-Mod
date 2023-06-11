@@ -29,6 +29,8 @@ import { PatchHelper } from "./PatchHelper.js";
 import { PowerTip } from "./NativeClassWrap/PowerTip.js";
 import { Random } from "./NativeClassWrap/Random.js";
 import { NativeScreens } from "./NativeFuncWrap/NativeScreens.js";
+import { NativeSettings } from "./NativeFuncWrap/NativeSettings.js";
+import { Settings } from "./NativeClassWrap/Settings.js";
 
 function FixGDXFileHandlereadBytes() {
     let origOpenAssetFile = NativeSTSLib.OverrideopenAssestFile((thisPtr: NativePointer) => {
@@ -557,10 +559,9 @@ function RegisterNewPotions() {
     });
 
     //make PotionViewScreen can scroll
-    let origPotionViewScreenCtor = NativeScreens.PotionViewScreen.OverrideCtor((thisPtr: NativePointer) => {
-        let origPtr = origPotionViewScreenCtor(thisPtr);
-        PatchHelper.STSGlobalVars.STSSetting_isModded = 1;
-        return origPtr;
+    let origSettingsStaticCtor = NativeSettings.OverrideStaticCtor(() => {
+        origSettingsStaticCtor();
+        Settings.getInstance().isModded = true;
     });
 }
 
