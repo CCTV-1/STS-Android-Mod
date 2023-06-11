@@ -73,6 +73,9 @@ export class PatchHelper {
         get GameContextPtr() {
             return PatchHelper.STSModuleBaseAddress.add(0x34985E0);
         },
+        get SettingsPtr() {
+            return PatchHelper.STSModuleBaseAddress.add(0x3498760);
+        }
     };
 
     static readonly fakeCodeGen = {

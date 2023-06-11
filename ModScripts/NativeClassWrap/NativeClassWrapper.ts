@@ -96,6 +96,14 @@ export class NativeClassWrapper {
         this.rawPtr.add(offset).writeS32(value);
     }
 
+    protected readOffsetS64(offset: number) {
+        return this.rawPtr.add(offset).readS64();
+    }
+
+    protected writeOffsetS64(offset: number, value: Int64) {
+        this.rawPtr.add(offset).writeS64(value);
+    }
+
     protected readOffsetFloat(offset: number) {
         return this.rawPtr.add(offset).readFloat();
     }
