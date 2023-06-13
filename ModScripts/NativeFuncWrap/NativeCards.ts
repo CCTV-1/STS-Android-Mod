@@ -74,6 +74,16 @@ const Cards = {
          */
         Ctor5: new NativeFunctionInfo(0x170EBF1, 'pointer', ['pointer', 'pointer', 'bool', 'int32', 'bool', 'bool']),
     },
+    Colorless: {
+        Discovery: {
+            /**
+             * ```c
+             * STS::AbstractCard * Cards::Colorless::Discovery::Ctor(STS::AbstractCard * this)
+             * ```
+             */
+            Ctor: new NativeFunctionInfo(0x1710869, 'pointer', ['pointer']),
+        },
+    },
     DamageInfo: {
         /**
          * ```c
@@ -250,6 +260,13 @@ export const NativeCards = {
         },
         Ctor5(cardPtr: NativePointer, randomTarget: boolean, setEnergyOnUse: number, ignoreEnergyTotal: boolean, autoplayCard: boolean): NativePointer {
             return PatchHelper.GetNativeFunction(Cards.CardQueueItem.Ctor5)(NULL, cardPtr, Number(randomTarget), setEnergyOnUse, Number(ignoreEnergyTotal), Number(autoplayCard));
+        },
+    },
+    Colorless: {
+        Discovery: {
+            Ctor(): NativePointer {
+                return PatchHelper.GetNativeFunction(Cards.Colorless.Discovery.Ctor)(NULL);
+            },
         },
     },
     DamageInfo: {
