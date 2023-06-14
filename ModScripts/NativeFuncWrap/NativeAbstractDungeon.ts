@@ -57,6 +57,24 @@ const AbstractDungeonFuncInfo = {
      * ```
      */
     returnRandomCurse: new NativeFunctionInfo(0x17BA951, 'pointer', []),
+    /**
+     * ```c
+     * void AbstractDungeon::transformCard(AbstractCard* transformCardPtr)
+     * ```
+     */
+    transformCard: new NativeFunctionInfo(0x17B7635, 'void', ['pointer']),
+    /**
+     * ```c
+     * void AbstractDungeon::transformCard(AbstractCard* transformCardPtr, bool autoUpgrade)
+     * ```
+     */
+    transformCard2: new NativeFunctionInfo(0x17B764D, 'void', ['pointer', 'bool']),
+    /**
+     * ```c
+     * void AbstractDungeon::transformCard(AbstractCard* transformCardPtr, bool autoUpgrade, STS::Random* rngPtr)
+     * ```
+     */
+    transformCard3: new NativeFunctionInfo(0x17B7669, 'void', ['pointer', 'bool', 'pointer'])
 };
 
 export const NativeAbstractDungeon = {
@@ -88,5 +106,14 @@ export const NativeAbstractDungeon = {
     },
     returnRandomCurse(): NativePointer {
         return PatchHelper.GetNativeFunction(AbstractDungeonFuncInfo.returnRandomCurse)();
+    },
+    transformCard(targetCard: NativePointer) {
+        PatchHelper.GetNativeFunction(AbstractDungeonFuncInfo.transformCard)(targetCard);
+    },
+    transformCard2(targetCard: NativePointer, autoUpgrade: boolean) {
+        PatchHelper.GetNativeFunction(AbstractDungeonFuncInfo.transformCard2)(targetCard, Number(autoUpgrade));
+    },
+    transformCard3(targetCard: NativePointer, autoUpgrade: boolean, STSRngPtr: NativePointer) {
+        PatchHelper.GetNativeFunction(AbstractDungeonFuncInfo.transformCard3)(targetCard, Number(autoUpgrade), STSRngPtr);
     },
 };
