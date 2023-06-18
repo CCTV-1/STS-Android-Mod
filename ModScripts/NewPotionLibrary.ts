@@ -1,6 +1,7 @@
 import { ApocalypsePotion } from "./NewPotions/ApocalypsePotion.js";
 import { BlightsPotion } from "./NewPotions/BlightsPotion.js";
 import { ElixirOfImmortality } from "./NewPotions/ElixirOfImmortality.js";
+import { EndlessCyclePotion } from "./NewPotions/EndlessCyclePotion.js";
 import { IllusionPotion } from "./NewPotions/IllusionPotion.js";
 import { MadnessPotion } from "./NewPotions/MadnessPotion.js";
 import { MutationPotion } from "./NewPotions/MutationPotion.js";
@@ -8,6 +9,7 @@ import { OmniscientPotion } from "./NewPotions/OmniscientPotion.js";
 import { ResetPotion } from "./NewPotions/ResetPotion.js";
 import { SuperPolymerizationPotion } from "./NewPotions/SuperPolymerizationPotion.js";
 import { SwapLifePotion } from "./NewPotions/SwapLifePotion.js";
+import { TransformPotion } from "./NewPotions/TransformPotion.js";
 import { PlayerClass } from "./enums.js";
 
 /**
@@ -26,6 +28,7 @@ export class NewPotionLibrary {
         ["ApocalypsePotion", ApocalypsePotion],
         ["BlightsPotion", BlightsPotion],
         ["ElixirOfImmortality", ElixirOfImmortality],
+        ["EndlessCyclePotion", EndlessCyclePotion],
         ["IllusionPotion", IllusionPotion],
         ["MadnessPotion", MadnessPotion],
         ["MutationPotion", MutationPotion],
@@ -33,6 +36,7 @@ export class NewPotionLibrary {
         ["ResetPotion", ResetPotion],
         ["SuperPolymerizationPotion", SuperPolymerizationPotion],
         ["SwapLifePotion", SwapLifePotion],
+        ["TransformPotion", TransformPotion],
     ]);
 
     static playerPotions(playerClass: PlayerClass): Array<string> {

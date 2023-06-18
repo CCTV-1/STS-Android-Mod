@@ -57,6 +57,7 @@ export interface NewPowerVFuncType {
     onLoseHp?: (thisPtr: NativePointer, damageAmount: number) => number,
     onVictory?: (thisPtr: NativePointer) => void,
     canPlayCard?: (thisPtr: NativePointer, cardPtr: NativePointer) => number,
+    onObjectDector?: (thisPtrValue: number) => void,
 };
 
 export class AbstractPower extends NativeClassWrapper {
@@ -970,6 +971,10 @@ export class AbstractPower extends NativeClassWrapper {
     static OnNativeObjectAlloc(ptrValue: number) {
         const vfuncs = AbstractPower.#rewriteVFuncMap.get(ptrValue);
         if (vfuncs !== undefined) {
+            const deCtor = vfuncs.onObjectDector;
+            if (deCtor !== undefined) {
+                deCtor(ptrValue);
+            }
             AbstractPower.#rewriteVFuncMap.delete(ptrValue);
         }
     }
