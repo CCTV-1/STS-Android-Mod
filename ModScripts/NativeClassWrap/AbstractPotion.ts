@@ -77,6 +77,17 @@ export class AbstractPotion extends NativeClassWrapper {
                 }
             }
         },
+        canUse: (thisPtr: NativePointer) => {
+            let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(thisPtr.toUInt32());
+            if (potionVFuncMap !== undefined) {
+                const Func = potionVFuncMap.canUse;
+                if (Func !== undefined) {
+                    return Func(thisPtr);
+                }
+            }
+
+            return NativePotions.Abstract.canUse(thisPtr);
+        },
         getPotency: (thisPtr: NativePointer, ascensionLevel: number) => {
             let wrapPotion = new AbstractPotion(thisPtr);
             let potionVFuncMap = AbstractPotion.#rewriteVFuncMap.get(thisPtr.toUInt32());
@@ -194,6 +205,8 @@ export class AbstractPotion extends NativeClassWrapper {
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_PP_Func(funcName), VFuncMap.use, VFuncProxys.use);
             funcName = "AbstractPotionVFuncProxy_initializeData";
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.initializeData, VFuncProxys.initializeData);
+            funcName = "AbstractPotionVFuncProxy_canUse";
+            wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.B_P_Func(funcName), VFuncMap.canUse, VFuncProxys.canUse);
             funcName = "AbstractPotionVFuncProxy_getPotency";
             wrapPotion.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.I32_PI32_Func(funcName), VFuncMap.getPotency, VFuncProxys.getPotency);
             funcName = "AbstractPotionVFuncProxy_onPlayerDeath";

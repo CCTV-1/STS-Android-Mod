@@ -7,6 +7,12 @@ const Potions = {
     Abstract: {
         /**
          * ```c
+         * bool AbstractPotion::canUse(STS::AbstractPotion* thisPtr)
+         * ```
+         */
+        canUse: new NativeFunctionInfo(0x1942F55, 'bool', ['pointer']),
+        /**
+         * ```c
          * STS::AbstractPotion* AbstractPotion::Ctor(STS::AbstractPotion* thisPtr, JString* name, JString* id, PotionRarity rarity, PotionSize size, PotionColor color)
          * ```
          */
@@ -31,6 +37,9 @@ const Potions = {
 
 export const NativePotions = {
     Abstract: {
+        canUse(thisPtr: NativePointer) {
+            return PatchHelper.GetNativeFunction(Potions.Abstract.canUse)(thisPtr);
+        },
         Ctor(name: string, id: string, rarity: PotionRarity, size: PotionSize, color: PotionColor): NativePointer {
             let nativeName = NativeSTDLib.JString.Ctor(name);
             let nativeId = NativeSTDLib.JString.Ctor(id);
