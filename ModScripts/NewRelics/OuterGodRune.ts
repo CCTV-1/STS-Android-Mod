@@ -1,10 +1,12 @@
 import { AbstractCard } from "../NativeClassWrap/AbstractCard.js";
 import { AbstractDungeon } from "../NativeClassWrap/AbstractDungeon.js";
 import { AbstractRelic, NewRelicVFuncType } from "../NativeClassWrap/AbstractRelic.js";
+import { Settings } from "../NativeClassWrap/Settings.js";
 import { NativeAbstractDungeon } from "../NativeFuncWrap/NativeAbstractDungeon.js";
 import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
-import { PatchHelper } from "../PatchHelper.js";
+import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
+import { NativeVFX } from "../NativeFuncWrap/NativeVFX.js";
 import { CardRarity, LandingSound, RelicTier } from "../enums.js";
 
 const vfuncs: NewRelicVFuncType = {
@@ -20,12 +22,15 @@ const vfuncs: NewRelicVFuncType = {
             }
             default: {
                 const abstractDungeonInstance = AbstractDungeon.getInstance();
+                const settingInstance = Settings.getInstance();
                 const currentPlayer = abstractDungeonInstance.player;
                 const wrapRelic = new AbstractRelic(thisPtr);
                 if (wrapCard.rarity === CardRarity.RARE) {
                     wrapRelic.counter++;
                 }
                 const randCardPtr = currentPlayer.masterDeck.getRandomCard(abstractDungeonInstance.miscRng);
+                const purgeCardEffect = NativeVFX.PurgeCardEffect.Ctor2(randCardPtr, settingInstance.WIDTH / 2.0, settingInstance.HEIGHT / 2.0);
+                NativeSTDLib.ArrayList.AbstractGameEffect.Add(abstractDungeonInstance.topLevelEffects, purgeCardEffect);
                 currentPlayer.masterDeck.removeCard(randCardPtr);
                 NativeAbstractDungeon.transformCard3(randCardPtr, false, abstractDungeonInstance.miscRng);
                 currentPlayer.masterDeck.addToTop(abstractDungeonInstance.transformedCard);
