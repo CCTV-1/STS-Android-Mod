@@ -54,6 +54,8 @@ const vfuncs: NewGameActionVFuncType = {
                     wrapCopyCard.upgradeBaseCost(0);
                 }
                 wrapCopyCard.exhaust = true;
+                wrapCopyCard.rawDescription += " NL 消耗。";
+                wrapCopyCard.initializeDescription();
                 wrapAction.addToBot(NativeActions.common.MakeTempCardInHand.Ctor(copyCard, 1, false));
             }
             NativeSTDLib.ArrayList.AbstractCard.Clear(selectCards);
