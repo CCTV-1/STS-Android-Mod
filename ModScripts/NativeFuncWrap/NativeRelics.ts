@@ -43,6 +43,12 @@ const Relics = {
          * ```
          */
         Ctor: new NativeFunctionInfo(0x19A67A5, 'pointer', ['pointer']),
+        /**
+         * ```c
+         * void Relics::SacredBark::onEquip(STS::AbstractRelic *)
+         * ```
+         */
+        onEquip: new NativeFunctionInfo(0x19A68A5, 'void', ['pointer']),
     },
     CoffeeDripper: {
         /**
@@ -106,6 +112,10 @@ export const NativeRelics = {
         },
         OverrideCtor(newCtor: (thisPtr: NativePointer) => NativePointer): (thisPtr: NativePointer) => NativePointer {
             return PatchHelper.HookSTSFunction(Relics.SacredBark.Ctor, newCtor);
+        },
+
+        OverrideonEquip(newImp: (thisPtr: NativePointer) => void): (thisPtr: NativePointer) => void {
+            return PatchHelper.HookSTSFunction(Relics.SacredBark.onEquip, newImp);
         },
     },
     CoffeeDripper: {

@@ -385,22 +385,17 @@ function PatchRelics() {
         return gingerObj;
     });
 
-    //SacredBark::onEquip don't exist,can't hook it,so we will set the function Pointer in SacredBark::Ctor.
-    let origSacredBarkCtor = NativeRelics.SacredBark.OverrideCtor((thisPtr: NativePointer) => {
-        let sacredBarkObj = origSacredBarkCtor(thisPtr);
-        let wrapSacredBark = new AbstractRelic(sacredBarkObj);
-        wrapSacredBark.OverrideonEquip((thisPtr: NativePointer) => {
-            let currentPlayer = AbstractDungeon.getInstance().player;
-            currentPlayer.potionSlots += 2;
-            let playerPotions = currentPlayer.potions;
-            for (let index = 2; index > 0; index--) {
-                let newPotionSlot = NativePotions.PotionSlot.Ctor(currentPlayer.potionSlots - index);
-                NativeSTDLib.ArrayList.AbstractPotion.Add(playerPotions.rawPtr, newPotionSlot);
-            }
-            let wrapSacredBark = new AbstractRelic(sacredBarkObj);
-            wrapSacredBark.flash();
-        });
-        return sacredBarkObj;
+    let origSacredBarkonEquip = NativeRelics.SacredBark.OverrideonEquip((thisPtr: NativePointer) => {
+        let wrapSacredBark = new AbstractRelic(thisPtr);
+        let currentPlayer = AbstractDungeon.getInstance().player;
+        currentPlayer.potionSlots += 2;
+        let playerPotions = currentPlayer.potions;
+        for (let index = 2; index > 0; index--) {
+            let newPotionSlot = NativePotions.PotionSlot.Ctor(currentPlayer.potionSlots - index);
+            NativeSTDLib.ArrayList.AbstractPotion.Add(playerPotions.rawPtr, newPotionSlot);
+        }
+        wrapSacredBark.flash();
+        origSacredBarkonEquip(thisPtr);
     });
 
     //GoldenEye ability hard-code in ScryAction ctor
