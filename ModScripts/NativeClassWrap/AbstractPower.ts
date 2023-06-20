@@ -360,7 +360,9 @@ export class AbstractPower extends NativeClassWrapper {
                     return Func(thisPtr, blockAmount, cardPtr);
                 }
             }
-            return blockAmount;
+
+            const wrapPower = new AbstractPower(thisPtr);
+            return wrapPower.modifyBlock(blockAmount);
         },
         onGainedBlock: (thisPtr: NativePointer, blockAmount: number) => {
             let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
@@ -1007,6 +1009,10 @@ export class AbstractPower extends NativeClassWrapper {
 
     reducePower(reduceAmount: number): void {
         this.getVirtualFunction(AbstractPower.#vfunctionMap.reducePower)(this.rawPtr, reduceAmount);
+    }
+
+    modifyBlock(amount: number): number {
+        return this.getVirtualFunction(AbstractPower.#vfunctionMap.modifyBlock)(this.rawPtr, amount);
     }
 
     flash(): void {
