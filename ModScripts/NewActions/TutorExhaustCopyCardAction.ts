@@ -14,6 +14,7 @@ interface TutorExhaustCopyCardActionVars {
     libraryType: LibraryType;
     freeCost: Boolean;
     tutorNumber: number;
+    maxCost: number;
 };
 
 const actionVarMap = new Map<number, TutorExhaustCopyCardActionVars>();
@@ -35,9 +36,13 @@ const vfuncs: NewGameActionVFuncType = {
             let wrapCardGroup = new CardGroup(choosenCards);
             for (let index = 0; index < wrapCardList.size; index++) {
                 let cardRef = NativeSTDLib.ArrayList.AbstractCard.get(wrapCardList, index);
-                wrapCardGroup.addToTop(cardRef);
+                let wrapCard = new AbstractCard(cardRef);
+                if ((wrapCard.cost > -2) && (wrapCard.cost <= varMap.maxCost)) {
+                    wrapCardGroup.addToTop(cardRef);
+                }
             }
 
+            wrapCardGroup.sortByRarity(false);
             gridSelectScreen.open2(wrapCardGroup.rawPtr, varMap.tutorNumber, "选择要生成的牌。", false, false, true, false);
             wrapAction.tickDuration();
             return;
@@ -54,7 +59,7 @@ const vfuncs: NewGameActionVFuncType = {
                     wrapCopyCard.upgradeBaseCost(0);
                 }
                 wrapCopyCard.exhaust = true;
-                wrapCopyCard.rawDescription += " NL 消耗。";
+                wrapCopyCard.rawDescription += " NL 消耗 。";
                 wrapCopyCard.initializeDescription();
                 wrapAction.addToBot(NativeActions.common.MakeTempCardInHand.Ctor(copyCard, 1, false));
             }
@@ -65,9 +70,9 @@ const vfuncs: NewGameActionVFuncType = {
     }
 };
 
-export const TutorExhaustCopyCardAction = (libraryType: LibraryType, freeCost: boolean = false, tutorNumber: number = 1) => {
+export const TutorExhaustCopyCardAction = (libraryType: LibraryType, freeCost: boolean = false, maxCost: number = -1, tutorNumber: number = 1) => {
     const actionObj = AbstractGameAction.NewActionCtor(vfuncs);
-    actionVarMap.set(actionObj.toUInt32(), { libraryType: libraryType, freeCost: freeCost, tutorNumber: tutorNumber });
+    actionVarMap.set(actionObj.toUInt32(), { libraryType: libraryType, freeCost: freeCost, tutorNumber: tutorNumber, maxCost: maxCost });
 
     let wrapAction = new AbstractGameAction(actionObj);
     wrapAction.startDuration = 0.1;

@@ -10,14 +10,20 @@ import { PurpleCardGen } from "./OptionCards/PurpleCardGen.js";
 import { RedCardGen } from "./OptionCards/RedCardGen.js";
 
 const vfuncs: NewCardVFuncType = {
+    canUpgrade: (thisPtr) => {
+        let wrapCard = new AbstractCard(thisPtr);
+        return Number(wrapCard.timesUpgraded < 4);
+    },
     use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
         let wrapCard = new AbstractCard(thisPtr);
+        let castCost = wrapCard.cost;
+
         let cardArr = new Array<NativePointer>();
-        cardArr.push(BlueCardGen(NULL));
-        cardArr.push(ColorLessCardGen(NULL));
-        cardArr.push(GreenCardGen(NULL));
-        cardArr.push(PurpleCardGen(NULL));
-        cardArr.push(RedCardGen(NULL));
+        cardArr.push(RedCardGen(castCost));
+        cardArr.push(GreenCardGen(castCost));
+        cardArr.push(BlueCardGen(castCost));
+        cardArr.push(PurpleCardGen(castCost));
+        cardArr.push(ColorLessCardGen(castCost));
 
         let optionCards = NativeSTDLib.ArrayList.AbstractCard.Ctor();
         const wrapOptionCardList = new ArrayList(optionCards);
@@ -32,11 +38,17 @@ const vfuncs: NewCardVFuncType = {
     },
     upgrade: (thisPtr: NativePointer) => {
         let wrapCard = new AbstractCard(thisPtr);
-        if (!wrapCard.upgraded) {
-            wrapCard.upgradeName();
-            wrapCard.upgradeBaseCost(5);
-            wrapCard.rawDescription = "消耗。 NL 将任意一张牌的复制品置于你的手上，其费用变为0且额外具有 消耗。";
-            wrapCard.initializeDescription();
+        if (wrapCard.timesUpgraded < 4) {
+            wrapCard.timesUpgraded++;
+            wrapCard.name = "得见天光+" + wrapCard.timesUpgraded;
+            wrapCard.initializeTitle();
+            wrapCard.upgradeBaseCost(wrapCard.timesUpgraded);
+            wrapCard.costForTurn = wrapCard.timesUpgraded;
+            if (wrapCard.timesUpgraded > 2) {
+                wrapCard.upgraded = true;
+                wrapCard.rawDescription = "选择一张费用小于等于得见天光费用的牌的复制品置于你的手上，其费用为0且额外具有消耗。 NL 消耗 。";
+                wrapCard.initializeDescription();
+            }
         }
     },
     makeCopy: (thisPtr: NativePointer) => {
@@ -46,7 +58,7 @@ const vfuncs: NewCardVFuncType = {
 };
 
 export const BringToLight = (thisPtr: NativePointer): NativePointer => {
-    let wrapCard = AbstractCard.NewCardCtor("BringToLight", "得见天光", "purple/skill/BringToLight", 3, "消耗。 NL 将任意一张牌的复制品置于你的手上，其额外具有 消耗。", CardType.SKILL, CardColor.PURPLE, CardRarity.RARE, CardTarget.NONE, DamageType.NORMAL, vfuncs);
+    let wrapCard = AbstractCard.NewCardCtor("BringToLight", "得见天光", "purple/skill/BringToLight", 0, "选择一张费用小于等于得见天光的牌的复制品置于你的手上，其额外具有消耗。 NL 消耗 。", CardType.SKILL, CardColor.PURPLE, CardRarity.RARE, CardTarget.NONE, DamageType.NORMAL, vfuncs);
 
     wrapCard.exhaust = true;
     return wrapCard.rawPtr;

@@ -15,16 +15,18 @@ const vfuncs: NewCardVFuncType = {
     },
     onChoseThisOption: (thisPtr) => {
         let wrapCard = new AbstractCard(thisPtr);
-        wrapCard.addToBot(TutorExhaustCopyCardAction(LibraryType.PURPLE, wrapCard.upgraded));
+        wrapCard.addToBot(TutorExhaustCopyCardAction(LibraryType.PURPLE, wrapCard.upgraded, wrapCard.magicNumber));
     },
     makeCopy: (thisPtr: NativePointer) => {
-        let copyObj = PurpleCardGen(thisPtr);
+        let wrapCard = new AbstractCard(thisPtr);
+        let copyObj = PurpleCardGen(wrapCard.magicNumber);
         return copyObj;
     },
 };
 
-export const PurpleCardGen = (thisPtr: NativePointer): NativePointer => {
-    let wrapCard = AbstractCard.NewCardCtor("PurpleCardGen", "生成紫色牌", "colorless/skill/PurpleCardGen", -2, "选择一张要生成的紫色牌。", CardType.SKILL, CardColor.COLORLESS, CardRarity.SPECIAL, CardTarget.NONE, DamageType.NORMAL, vfuncs);
+export const PurpleCardGen = (castCost: number): NativePointer => {
+    let wrapCard = AbstractCard.NewCardCtor("PurpleCardGen", "生成紫色牌", "purple/skill/omniscience", -2, "选择一张要生成的紫色牌。", CardType.SKILL, CardColor.COLORLESS, CardRarity.SPECIAL, CardTarget.NONE, DamageType.NORMAL, vfuncs);
 
+    wrapCard.magicNumber = castCost;
     return wrapCard.rawPtr;
 }
