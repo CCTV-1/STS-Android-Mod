@@ -16,7 +16,7 @@ const vfuncs: NewCardVFuncType = {
     },
     use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
         let wrapCard = new AbstractCard(thisPtr);
-        let castCost = wrapCard.cost;
+        let castCost = wrapCard.costForTurn;
 
         let cardArr = new Array<NativePointer>();
         cardArr.push(RedCardGen(castCost));
