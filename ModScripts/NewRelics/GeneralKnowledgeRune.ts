@@ -59,7 +59,7 @@ const vfuncs: NewRelicVFuncType = {
             return;
         }
 
-        let canUpgradeCards = new Array<AbstractCard>();
+        let canUpgradeCards = new Array<NativePointer>();
         let targetTag = CardTags.STARTER_STRIKE;
         if (diff >= 20) {
             targetTag = CardTags.STARTER_DEFEND;
@@ -71,7 +71,7 @@ const vfuncs: NewRelicVFuncType = {
             const cardRef = NativeSTDLib.ArrayList.AbstractCard.get(masterDeck.group, index);
             const wrapCard = new AbstractCard(cardRef);
             if (wrapCard.hasTag(targetTag) && wrapCard.canUpgrade()) {
-                canUpgradeCards.push(wrapCard);
+                canUpgradeCards.push(cardRef);
             }
         }
 

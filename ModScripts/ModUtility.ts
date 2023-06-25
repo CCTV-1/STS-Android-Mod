@@ -27,12 +27,12 @@ export class ModUtility {
 
         let masterDeckGroup = currentPlayer.masterDeck.group;
         let deckSize = masterDeckGroup.size;
-        let canUpgradeCards = new Array<AbstractCard>();
+        let canUpgradeCards = new Array<NativePointer>();
         for (let i = 0; i < deckSize; i++) {
             let randCard = NativeSTDLib.ArrayList.AbstractCard.get(masterDeckGroup, i);
             let wrapCard = new AbstractCard(randCard);
             if (wrapCard.canUpgrade()) {
-                canUpgradeCards.push(wrapCard);
+                canUpgradeCards.push(randCard);
             }
         }
 
@@ -45,22 +45,21 @@ export class ModUtility {
         ModUtility.upgradeCards(canUpgradeCards, upgradeCount);
     };
 
-    static upgradeCards(canUpgradeCards: Array<AbstractCard>, upgradeNumber: number) {
+    static upgradeCards(canUpgradeCards: Array<NativePointer>, upgradeNumber: number = 0) {
         const topLevelEffects = AbstractDungeon.getInstance().topLevelEffects;
         const gameSettings = Settings.getInstance();
         const width = gameSettings.WIDTH;
         const height = gameSettings.HEIGHT;
 
-        if (canUpgradeCards.length < upgradeNumber) {
+        if ((canUpgradeCards.length < upgradeNumber) || (upgradeNumber <= 0)) {
             upgradeNumber = canUpgradeCards.length;
         }
-        if (upgradeNumber == 0) {
-            return ;
-        }
+
         for (let i = 0; i < upgradeNumber; i++) {
             let upgradeCard = canUpgradeCards[i];
-            upgradeCard.upgrade();
-            let statCopyCard = upgradeCard.makeStatEquivalentCopy();
+            let wrapCard = new AbstractCard(upgradeCard);
+            wrapCard.upgrade();
+            let statCopyCard = wrapCard.makeStatEquivalentCopy();
             //prevent add too much animation
             if (i <= 9) {
                 let x = Math.random() * width;
