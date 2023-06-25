@@ -167,6 +167,42 @@ export class CardGroup extends NativeClassWrapper {
          * ```
          */
         size: new NativeFunctionInfo(0x1D8, 'int32', ['pointer']),
+        /**
+         * ```c
+         * void CardGroup::sortByRarity(CardGroup* this, bool ascending)
+         * ```
+         */
+        sortByRarity: new NativeFunctionInfo(0x208, 'void', ['pointer', 'bool']),
+        /**
+         * ```c
+         * void CardGroup::sortByRarityPlusStatusCardType(CardGroup* this, bool ascending)
+         * ```
+         */
+        sortByRarityPlusStatusCardType: new NativeFunctionInfo(0x210, 'void', ['pointer', 'bool']),
+        /**
+         * ```c
+         * void CardGroup::sortByType(CardGroup* this, bool ascending)
+         * ```
+         */
+        sortByType: new NativeFunctionInfo(0x218, 'void', ['pointer', 'bool']),
+        /**
+         * ```c
+         * void CardGroup::sortByStatus(CardGroup* this, bool ascending)
+         * ```
+         */
+        sortByStatus: new NativeFunctionInfo(0x228, 'void', ['pointer', 'bool']),
+        /**
+         * ```c
+         * void CardGroup::sortAlphabetically(CardGroup* this, bool ascending)
+         * ```
+         */
+        sortAlphabetically: new NativeFunctionInfo(0x230, 'void', ['pointer', 'bool']),
+        /**
+         * ```c
+         * void CardGroup::sortByCost(CardGroup* this, bool ascending)
+         * ```
+         */
+        sortByCost: new NativeFunctionInfo(0x238, 'void', ['pointer', 'bool']),
     };
 
     clear(): void {
@@ -272,6 +308,30 @@ export class CardGroup extends NativeClassWrapper {
 
     size(): number {
         return this.getVirtualFunction(CardGroup.#vfunctionMap.size)(this.rawPtr);
+    }
+
+    sortByRarity(ascending: boolean): void {
+        return this.getVirtualFunction(CardGroup.#vfunctionMap.sortByRarity)(this.rawPtr, Number(ascending));
+    }
+
+    sortByRarityPlusStatusCardType(ascending: boolean): void {
+        return this.getVirtualFunction(CardGroup.#vfunctionMap.sortByRarityPlusStatusCardType)(this.rawPtr, Number(ascending));
+    }
+
+    sortByType(ascending: boolean): void {
+        return this.getVirtualFunction(CardGroup.#vfunctionMap.sortByType)(this.rawPtr, Number(ascending));
+    }
+
+    sortByStatus(ascending: boolean): void {
+        return this.getVirtualFunction(CardGroup.#vfunctionMap.sortByStatus)(this.rawPtr, Number(ascending));
+    }
+
+    sortAlphabetically(ascending: boolean): void {
+        return this.getVirtualFunction(CardGroup.#vfunctionMap.sortAlphabetically)(this.rawPtr, Number(ascending));
+    }
+
+    sortByCost(ascending: boolean): void {
+        return this.getVirtualFunction(CardGroup.#vfunctionMap.sortByCost)(this.rawPtr, Number(ascending));
     }
 
     /** ArrayList\<AbstractCard\> */
