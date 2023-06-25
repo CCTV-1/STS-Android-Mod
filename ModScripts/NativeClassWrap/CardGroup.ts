@@ -64,13 +64,13 @@ export class CardGroup extends NativeClassWrapper {
          * AbstractCard* CardGroup::getTopCad(CardGroup* this)
          * ```
          */
-        getTopCad: new NativeFunctionInfo(0xC8, 'pointer', ['pointer']),
+        getTopCard: new NativeFunctionInfo(0xC8, 'pointer', ['pointer']),
         /**
          * ```c
          * AbstractCard* CardGroup::getBottomCard(CardGroup* this)
          * ```
          */
-        getBottomCard: new NativeFunctionInfo(0xD0, 'pointer', ['pointer']),
+        getBottomCard: new NativeFunctionInfo(0xD8, 'pointer', ['pointer']),
         /**
          * ```c
          * AbstractCard* CardGroup::getRandomCard(CardGroup* this, Random* rng)
@@ -202,8 +202,12 @@ export class CardGroup extends NativeClassWrapper {
         this.getVirtualFunction(CardGroup.#vfunctionMap.addToRandomSpot)(this.rawPtr, cardPtr);
     }
 
+    getTopCard(): NativePointer {
+        return this.getVirtualFunction(CardGroup.#vfunctionMap.getTopCard)(this.rawPtr);
+    }
+
     getBottomCard(): NativePointer {
-        return this.getVirtualFunction(CardGroup.#vfunctionMap.addToRandomSpot)(this.rawPtr);
+        return this.getVirtualFunction(CardGroup.#vfunctionMap.getBottomCard)(this.rawPtr);
     }
 
     getRandomCard(rngPtr: NativePointer): NativePointer {
