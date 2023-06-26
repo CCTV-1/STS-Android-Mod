@@ -5,24 +5,38 @@ import { CardGroup } from "../NativeClassWrap/CardGroup.js";
 import { HandCardSelectScreen } from "../NativeClassWrap/HandCardSelectScreen.js";
 import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
 
+interface ElixirOfImmortalityActionVars {
+    targetNumber: number;
+};
+
+const actionVarMap = new Map<number, ElixirOfImmortalityActionVars>();
+
 const vfuncs: NewGameActionVFuncType = {
     update: (thisPtr: NativePointer) => {
+        let targetNumber = 1;
         const wrapAction = new AbstractGameAction(thisPtr);
+        let varMap = actionVarMap.get(thisPtr.toUInt32());
+        if (varMap === undefined) {
+            wrapAction.isDone = true;
+            return;
+        }
+        targetNumber = varMap.targetNumber;
+
         const dungeonInstance = AbstractDungeon.getInstance();
         const currentPlayer = dungeonInstance.player;
         const selectScreen = new HandCardSelectScreen(dungeonInstance.handCardSelectScreen);
         if (Math.abs(wrapAction.duration - 0.1) <= 1e-5) {
-            if (currentPlayer.hand.size() < 3) {
+            if (currentPlayer.hand.size() < targetNumber) {
                 wrapAction.isDone = true;
                 return;
             }
-            selectScreen.open2("灌注永生琼浆", 1, false, false);
+            selectScreen.open2("灌注永生琼浆", targetNumber, false, false);
             wrapAction.tickDuration();
             return;
         }
         if (!selectScreen.wereCardsRetrieved) {
             const selectCards = new CardGroup(selectScreen.selectedCards);
-            if (selectCards.size() != 1) {
+            if (selectCards.size() != targetNumber) {
                 wrapAction.isDone = true;
                 return;
             }
@@ -39,11 +53,11 @@ const vfuncs: NewGameActionVFuncType = {
     }
 };
 
-export const ElixirOfImmortalityAction = () => {
+export const ElixirOfImmortalityAction = (targetNumber: number = 1) => {
     const actionObj = AbstractGameAction.NewActionCtor(vfuncs);
+    actionVarMap.set(actionObj.toUInt32(), { targetNumber: targetNumber });
 
     const wrapAction = new AbstractGameAction(actionObj);
-
     wrapAction.duration = 0.1;
     return actionObj;
 }

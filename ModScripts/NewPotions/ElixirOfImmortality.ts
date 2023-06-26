@@ -11,13 +11,13 @@ const vfunc: NewPotionVFuncType = {
         const currentRoom = new AbstractRoom(NativeAbstractDungeon.getCurrRoom());
         if (currentRoom.phase === RoomPhase.COMBAT) {
             const wrapPotion = new AbstractPotion(thisPtr);
-            wrapPotion.addToBot(ElixirOfImmortalityAction());
+            wrapPotion.addToBot(ElixirOfImmortalityAction(wrapPotion.potency));
         }
     },
     initializeData: (thisPtr: NativePointer) => {
         let wrapPotion = new AbstractPotion(thisPtr);
-        wrapPotion.potency = 0;
-        const abilityStr = "选择一张手牌，其失去消耗。";
+        wrapPotion.potency = wrapPotion.getPotency2();
+        const abilityStr = "选择" + wrapPotion.potency + "张手牌，其失去消耗。";
         wrapPotion.description = abilityStr;
         let potionTips = wrapPotion.tips;
         NativeSTDLib.ArrayList.PowerTip.clear(potionTips);
@@ -25,7 +25,7 @@ const vfunc: NewPotionVFuncType = {
         NativeSTDLib.ArrayList.PowerTip.add(potionTips, newTip);
     },
     getPotency: (thisPtr: NativePointer, ascensionLevel: number) => {
-        return 0;
+        return 1;
     },
 };
 
