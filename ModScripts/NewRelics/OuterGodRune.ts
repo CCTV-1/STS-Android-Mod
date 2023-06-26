@@ -7,7 +7,7 @@ import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
 import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
 import { NativeVFX } from "../NativeFuncWrap/NativeVFX.js";
-import { CardRarity, LandingSound, RelicTier } from "../enums.js";
+import { CardRarity, CardType, LandingSound, RelicTier } from "../enums.js";
 
 const vfuncs: NewRelicVFuncType = {
     onEquip: (thisPtr) => {
@@ -16,28 +16,24 @@ const vfuncs: NewRelicVFuncType = {
     },
     onObtainCard: (thisPtr, cardPtr) => {
         const wrapCard = new AbstractCard(cardPtr);
-        switch (wrapCard.rarity) {
-            case CardRarity.CURSE: {
-                return;
-            }
-            default: {
-                const abstractDungeonInstance = AbstractDungeon.getInstance();
-                const settingInstance = Settings.getInstance();
-                const currentPlayer = abstractDungeonInstance.player;
-                const wrapRelic = new AbstractRelic(thisPtr);
-                if (wrapCard.rarity === CardRarity.RARE) {
-                    wrapRelic.counter++;
-                }
-                const randCardPtr = currentPlayer.masterDeck.getRandomCard(abstractDungeonInstance.miscRng);
-                const purgeCardEffect = NativeVFX.PurgeCardEffect.Ctor2(randCardPtr, settingInstance.WIDTH / 2.0, settingInstance.HEIGHT / 2.0);
-                NativeSTDLib.ArrayList.AbstractGameEffect.Add(abstractDungeonInstance.topLevelEffects, purgeCardEffect);
-                currentPlayer.masterDeck.removeCard(randCardPtr);
-                NativeAbstractDungeon.transformCard3(randCardPtr, false, abstractDungeonInstance.miscRng);
-                currentPlayer.masterDeck.addToTop(abstractDungeonInstance.transformedCard);
-                wrapRelic.flash();
-                return;
-            }
+        if (wrapCard.type === CardType.CURSE) {
+            return;
         }
+
+        const abstractDungeonInstance = AbstractDungeon.getInstance();
+        const settingInstance = Settings.getInstance();
+        const currentPlayer = abstractDungeonInstance.player;
+        const wrapRelic = new AbstractRelic(thisPtr);
+        if (wrapCard.rarity === CardRarity.RARE) {
+            wrapRelic.counter++;
+        }
+        const randCardPtr = currentPlayer.masterDeck.getRandomCard(abstractDungeonInstance.miscRng);
+        const purgeCardEffect = NativeVFX.PurgeCardEffect.Ctor2(randCardPtr, settingInstance.WIDTH / 2.0, settingInstance.HEIGHT / 2.0);
+        NativeSTDLib.ArrayList.AbstractGameEffect.Add(abstractDungeonInstance.topLevelEffects, purgeCardEffect);
+        currentPlayer.masterDeck.removeCard(randCardPtr);
+        NativeAbstractDungeon.transformCard3(randCardPtr, false, abstractDungeonInstance.miscRng);
+        currentPlayer.masterDeck.addToTop(abstractDungeonInstance.transformedCard);
+        wrapRelic.flash();
     },
     atBattleStart: (thisPtr) => {
         const wrapRelic = new AbstractRelic(thisPtr);
