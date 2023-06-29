@@ -20,8 +20,8 @@ const vfuncs: NewCardVFuncType = {
                 return;
             }
             const wrapCard = new AbstractCard(thisPtr);
-            const dexterityPower = NativePowers.Common.Dexterity.Ctor(playerPtr, wrapCard.magicNumber);
-            const applyPowerAction = NativeActions.common.ApplyPower.Ctor2(playerPtr, playerPtr, dexterityPower, wrapCard.magicNumber);
+            const intangiblePlayer = NativePowers.Common.IntangiblePlayer.Ctor(playerPtr, wrapCard.magicNumber);
+            const applyPowerAction = NativeActions.common.ApplyPower.Ctor2(playerPtr, playerPtr, intangiblePlayer, wrapCard.magicNumber);
             wrapCard.addToBot(applyPowerAction);
         }
     },
@@ -39,9 +39,11 @@ const vfuncs: NewCardVFuncType = {
 };
 
 export const SeeEvething = (thisPtr: NativePointer): NativePointer => {
-    const wrapCard = AbstractCard.NewCardCtor("SeeEvething", "洞若观火", "green/skill/SeeEvething", 1, "如果一名敌人的意图是攻击，你获得 !M! 点 敏捷 。", CardType.SKILL, CardColor.GREEN, CardRarity.UNCOMMON, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
+    const wrapCard = AbstractCard.NewCardCtor("SeeEvething", "洞若观火", "green/skill/SeeEvething", 1, " 虚无 。 NL 如果一名敌人的意图是攻击，你获得 !M! 层无实体 。 NL 消耗 。", CardType.SKILL, CardColor.GREEN, CardRarity.UNCOMMON, CardTarget.ENEMY, DamageType.NORMAL, vfuncs);
+
     wrapCard.baseMagicNumber = 1;
     wrapCard.magicNumber = 1;
-
+    wrapCard.exhaust = true;
+    wrapCard.isEthereal = true;
     return wrapCard.rawPtr;
 }
