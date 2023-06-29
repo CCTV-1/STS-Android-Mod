@@ -29,7 +29,7 @@ const vfuncs: NewCardVFuncType = {
 
 export const CompilePrinciples: STSCardCtor = (thisPtr: NativePointer) => {
     const wrapCard = AbstractCard.NewCardCtor("CompilePrinciples", "编译原理", "blue/skill/CompilePrinciples", 1,
-        "可升级三次。 NL 将手牌中的所有牌的基础数值提高 !M! 。 NL 消耗。", CardType.SKILL, CardColor.BLUE, CardRarity.UNCOMMON, CardTarget.NONE, DamageType.NORMAL, vfuncs);
+        "可升级三次。 NL 将手牌中的所有牌的基础数值提高 !M! 。 NL 消耗 。", CardType.SKILL, CardColor.BLUE, CardRarity.UNCOMMON, CardTarget.NONE, DamageType.NORMAL, vfuncs);
 
     wrapCard.baseMagicNumber = 1;
     wrapCard.magicNumber = 1;
