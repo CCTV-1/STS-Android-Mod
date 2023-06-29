@@ -51,6 +51,9 @@ export class ModUtility {
         const width = gameSettings.WIDTH;
         const height = gameSettings.HEIGHT;
 
+        if (canUpgradeCards.length == 0) {
+            return ;
+        }
         if ((canUpgradeCards.length < upgradeNumber) || (upgradeNumber <= 0)) {
             upgradeNumber = canUpgradeCards.length;
         }
