@@ -450,6 +450,57 @@ export class AbstractDungeon extends NativeClassWrapper {
         return this.readOffsetPointer(0x118);
     }
 
+    /** CardRewardScreen* */
+    get cardRewardScreen() {
+        return this.readOffsetPointer(0x138);
+    }
+
+    /** CombatRewardScreen* */
+    get combatRewardScreen() {
+        return this.readOffsetPointer(0x13C);
+    }
+
+    /** BossRelicSelectScreen* */
+    get bossRelicScreen() {
+        return this.readOffsetPointer(0x140);
+    }
+
+    /** MasterDeckViewScreen* */
+    get deckViewScreen() {
+        return this.readOffsetPointer(0x144);
+    }
+
+    /** DiscardPileViewScreen* */
+    get discardPileViewScreen() {
+        return this.readOffsetPointer(0x148);
+    }
+
+    /** DrawPileViewScreen* */
+    get gameDeckViewScreen() {
+        return this.readOffsetPointer(0x14C);
+    }
+
+    /** ExhaustPileViewScreen* */
+    get exhaustPileViewScreen() {
+        return this.readOffsetPointer(0x150);
+    }
+
+    /** SettingsScreen* */
+    get settingsScreen() {
+        return this.readOffsetPointer(0x154);
+    }
+
+    /** InputSettingsScreen* */
+    get inputSettingsScreen() {
+        return this.readOffsetPointer(0x158);
+    }
+
+    /** DungeonMapScreen* */
+    get dungeonMapScreen() {
+        return this.readOffsetPointer(0x15C);
+    }
+
+
     /** GridCardSelectScreen* */
     get gridSelectScreen() {
         return this.readOffsetPointer(0x160);

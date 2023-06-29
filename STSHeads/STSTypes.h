@@ -2431,6 +2431,89 @@ namespace STS
         uint8_t gap47;
     } __attribute__((aligned(4)));
 
+    struct CardRewardScreenVFuncMap
+    {
+        void *baseClassPtr;
+        void *vFuncMap;
+        uint8_t unk[24];
+        dummyFunc_t update;
+        bool byte24;
+        uint8_t gap25[3];
+        dummyFunc_t completeVoting;
+        bool byte2C;
+        uint8_t gap2D[3];
+        dummyFunc_t render;
+        uint8_t byte34;
+        bool gap35[3];
+        dummyFunc_t reopen;
+        uint8_t byte3C;
+        bool gap3D[3];
+        dummyFunc_t open;
+        uint8_t byte44;
+        bool gap45[3];
+        dummyFunc_t customCombatOpen;
+        uint8_t byte4C;
+        bool gap4D[3];
+        dummyFunc_t chooseOneOpen;
+        uint8_t byte54;
+        bool gap55[3];
+        dummyFunc_t draftOpen;
+        uint8_t byte5C;
+        bool gap5D[3];
+        dummyFunc_t onClose;
+        uint8_t byte64;
+        bool gap65[3];
+        dummyFunc_t reset;
+        uint8_t byte6C;
+        bool gap6D[11];
+        dummyFunc_t closeFromBowlButton;
+        uint8_t byte7C;
+        bool gap7D[3];
+        dummyFunc_t scrolledUsingBar;
+        uint8_t byte84;
+        bool gap85[51];
+        dummyFunc_t scrolledUsingBar;
+        bool byteBC;
+        uint8_t gapBD[3];
+    }__attribute__((aligned(4)));
+
+
+    struct CardRewardScreen
+    {
+        CardRewardScreen *thisPtr;
+        CardRewardScreenVFuncMap *vfuncMap;
+        bool unkFlag;
+        uint8_t pad9[3];
+        ArrayList<AbstractCard> *rewardGroup;
+        AbstractCard *discoveryCard;
+        bool hasTakenAll;
+        bool cardOnly;
+        uint8_t pad16[2];
+        void *rItem;
+        bool draft;
+        bool discovery;
+        bool chooseOne;
+        bool skippable;
+        void *header;
+        void *skipButton;
+        void *bowlButton;
+        void *peekButton;
+        int32_t SKIP_BUTTON_IDX;
+        int32_t BOWL_BUTTON_IDX;
+        int32_t draftCount;
+        bool grabbedScreen;
+        uint8_t padDC[3];
+        float grabStartX;
+        float scrollX;
+        float targetX;
+        float scrollLowerBound;
+        float scrollUpperBound;
+        void *scrollBar;
+        void *confirmButton;
+        AbstractCard *touchCard;
+    } __attribute__((aligned(4)));
+
+
     struct HandCardSelectScreenVFuncMap
     {
         void *baseClassPtr;
