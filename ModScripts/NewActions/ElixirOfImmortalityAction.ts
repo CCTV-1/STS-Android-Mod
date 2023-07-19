@@ -40,14 +40,18 @@ const vfuncs: NewGameActionVFuncType = {
                 wrapAction.isDone = true;
                 return;
             }
-            const selectCard = NativeSTDLib.ArrayList.AbstractCard.get(selectCards.group, 0);
+
+            const selectNumber = selectCards.size()
+            for (let index = 0; index < selectNumber; index++) {
+                const selectCard = NativeSTDLib.ArrayList.AbstractCard.get(selectCards.group, index);
+                const wrapCard = new AbstractCard(selectCard);
+                wrapCard.exhaust = false;
+                wrapCard.rawDescription += " NL 失去消耗。";
+                wrapCard.initializeDescription();
+                currentPlayer.hand.addToTop(selectCard);
+            }
             selectCards.clear();
             selectScreen.wereCardsRetrieved = true;
-            const wrapCard = new AbstractCard(selectCard);
-            wrapCard.exhaust = false;
-            wrapCard.rawDescription += " NL 失去消耗。";
-            wrapCard.initializeDescription();
-            currentPlayer.hand.addToTop(selectCard);
         }
         wrapAction.tickDuration();
     }
