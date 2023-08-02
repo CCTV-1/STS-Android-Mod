@@ -1,4 +1,3 @@
-import { AbstractDungeon } from "../NativeClassWrap/AbstractDungeon.js";
 import { AbstractPotion, NewPotionVFuncType } from "../NativeClassWrap/AbstractPotion.js";
 import { AbstractRoom } from "../NativeClassWrap/AbstractRoom.js";
 import { NativeAbstractDungeon } from "../NativeFuncWrap/NativeAbstractDungeon.js";
@@ -12,20 +11,21 @@ const vfunc: NewPotionVFuncType = {
         const currentRoom = new AbstractRoom(NativeAbstractDungeon.getCurrRoom());
         if (currentRoom.phase === RoomPhase.COMBAT) {
             const wrapPotion = new AbstractPotion(thisPtr);
-            wrapPotion.addToBot(MutationPotionAction());
+            wrapPotion.addToBot(MutationPotionAction(wrapPotion.potency));
         }
     },
     initializeData: (thisPtr: NativePointer) => {
         const wrapPotion = new AbstractPotion(thisPtr);
-        wrapPotion.potency = 0;
-        wrapPotion.description = "将手牌中的一张牌的数值变为随机值。"
+        wrapPotion.potency = wrapPotion.getPotency2();
+        let descStr = "将手牌中" + wrapPotion.potency + "张牌的数值变为随机值。";
+        wrapPotion.description = descStr;
         let potionTips = wrapPotion.tips;
         NativeSTDLib.ArrayList.PowerTip.clear(potionTips);
-        let newTip = NativeHelpers.PowerTip.Ctor("突变药剂", "将手牌中的一张牌的数值变为随机值。");
+        let newTip = NativeHelpers.PowerTip.Ctor("突变药剂", descStr);
         NativeSTDLib.ArrayList.PowerTip.add(potionTips, newTip);
     },
     getPotency: (thisPtr: NativePointer, ascensionLevel: number) => {
-        return 0;
+        return 1;
     },
 };
 
