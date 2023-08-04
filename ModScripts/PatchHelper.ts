@@ -151,6 +151,9 @@ export class PatchHelper {
         I32_PPI32_Func(funcName: string) {
             return "int " + funcName + "(void * arg1, void * arg2, int arg3) { return 0; }";
         },
+        F_PFI32_Func(funcName: string) {
+            return "float " + funcName + "(void * arg1, float arg2, int arg3) { return 0; }";
+        },
         F_PFP_Func(funcName: string) {
             return "float " + funcName + "(void * arg1, float arg2, void * arg3) { return 0; }";
         },

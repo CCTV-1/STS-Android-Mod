@@ -1,4 +1,4 @@
-import { PowerType } from "../enums.js";
+import { DamageType, PowerType } from "../enums.js";
 import { NativeFunctionInfo } from "../NativeFuncWrap/NativeFunctionInfo.js";
 import { NativePowers } from "../NativeFuncWrap/NativePowers.js";
 import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
@@ -10,6 +10,7 @@ import { NativeClassWrapper } from "./NativeClassWrapper.js";
 export interface NewPowerVFuncType {
     updateParticles?: (thisPtr: NativePointer) => void,
     updateDescription?: (thisPtr: NativePointer) => void,
+    atDamageFinalReceive?: (thisPtr: NativePointer, damage: number, dmgType: number) => number,
     atStartOfTurn?: (thisPtr: NativePointer) => void,
     duringTurn?: (thisPtr: NativePointer) => void,
     atStartOfTurnPostDraw?: (thisPtr: NativePointer) => void,
@@ -94,6 +95,17 @@ export class AbstractPower extends NativeClassWrapper {
                     Func(thisPtr);
                 }
             }
+        },
+        atDamageFinalReceive: (thisPtr: NativePointer, damage: number, dmgType: DamageType) => {
+            let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
+            if (cardVFuncMap !== undefined) {
+                const Func = cardVFuncMap.atDamageFinalReceive;
+                if (Func !== undefined) {
+                    return Func(thisPtr, dmgType, Number(DamageType));
+                }
+            }
+
+            return damage;
         },
         atStartOfTurn: (thisPtr: NativePointer) => {
             let cardVFuncMap = AbstractPower.#rewriteVFuncMap.get(thisPtr.toUInt32());
@@ -880,6 +892,8 @@ export class AbstractPower extends NativeClassWrapper {
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.updateDescription, VFuncProxys.updateDescription);
             funcName = "AbstractPowerVFuncProxy_updateParticles";
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.updateParticles, VFuncProxys.updateParticles);
+            funcName = "AbstractPowerVFuncProxy_atDamageFinalReceive";
+            wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.F_PFI32_Func(funcName), VFuncMap.atDamageFinalReceive, VFuncProxys.atDamageFinalReceive);
             funcName = "AbstractPowerVFuncProxy_atStartOfTurn";
             wrapPower.setVirtualFunction(funcName, PatchHelper.fakeCodeGen.V_P_Func(funcName), VFuncMap.atStartOfTurn, VFuncProxys.atStartOfTurn);
             funcName = "AbstractPowerVFuncProxy_duringTurn";
