@@ -38,7 +38,7 @@ const vfuncs: NewRelicVFuncType = {
             const deadStrikeCard = DeadlyStrike(NULL);
             masterDeck.addToTop(deadStrikeCard);
         }
-        for (let index = 0; index < strikeNumber; index++) {
+        for (let index = 0; index < defendNumber; index++) {
             const absoluteDefendCard = AbsoluteDefend(NULL);
             masterDeck.addToTop(absoluteDefendCard);
         }
