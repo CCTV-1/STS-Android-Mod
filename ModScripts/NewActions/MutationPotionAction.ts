@@ -65,6 +65,6 @@ export const MutationPotionAction = (amount: number = 1) => {
     const wrapAction = new AbstractGameAction(actionObj);
 
     wrapAction.duration = 0.1;
-    wrapAction.amount = 2;
+    wrapAction.amount = amount;
     return actionObj;
 }
