@@ -8,7 +8,7 @@ import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { NativeCards } from "../NativeFuncWrap/NativeCards.js";
 import { NativeHelpers } from "../NativeFuncWrap/NativeHelpers.js";
 import { NativeSTDLib } from "../NativeFuncWrap/NativeSTDLib.js";
-import { CardGroupType, LibraryType } from "../enums.js";
+import { CardGroupType, CardRarity, LibraryType } from "../enums.js";
 
 interface TutorExhaustCopyCardActionVars {
     libraryType: LibraryType;
@@ -37,7 +37,7 @@ const vfuncs: NewGameActionVFuncType = {
             for (let index = 0; index < wrapCardList.size; index++) {
                 let cardRef = NativeSTDLib.ArrayList.AbstractCard.get(wrapCardList, index);
                 let wrapCard = new AbstractCard(cardRef);
-                if ((wrapCard.cost > -2) && (wrapCard.cost <= varMap.maxCost)) {
+                if ((wrapCard.cost > -2) && (wrapCard.cost <= varMap.maxCost) && (wrapCard.rarity != CardRarity.SPECIAL)) {
                     wrapCardGroup.addToTop(cardRef);
                 }
             }
