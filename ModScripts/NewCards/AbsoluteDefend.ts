@@ -17,7 +17,7 @@ const vfuncs: NewCardVFuncType = {
         wrapCard.name = "绝对防御+" + wrapCard.timesUpgraded;
         wrapCard.upgraded = true;
         wrapCard.initializeTitle();
-        wrapCard.upgradeBlock(2*wrapCard.timesUpgraded + 1);
+        wrapCard.upgradeBlock(wrapCard.timesUpgraded);
     },
     makeCopy: (thisPtr: NativePointer) => {
         const copyObj = AbsoluteDefend(thisPtr);

@@ -20,7 +20,7 @@ const vfuncs: NewCardVFuncType = {
         wrapCard.name = "致命一击+" + wrapCard.timesUpgraded;
         wrapCard.upgraded = true;
         wrapCard.initializeTitle();
-        wrapCard.upgradeDamage(2 * wrapCard.timesUpgraded + 1);
+        wrapCard.upgradeDamage(wrapCard.timesUpgraded);
     },
     makeCopy: (thisPtr: NativePointer) => {
         const copyObj = DeadlyStrike(thisPtr);
