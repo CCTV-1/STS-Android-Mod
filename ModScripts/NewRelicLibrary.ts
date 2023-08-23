@@ -3,6 +3,7 @@ import { GeneralKnowledgeRune } from "./NewRelics/GeneralKnowledgeRune.js";
 import { JohnnyRune } from "./NewRelics/JohnnyRune.js";
 import { Mechanization } from "./NewRelics/Mechanization.js";
 import { OuterGodRune } from "./NewRelics/OuterGodRune.js";
+import { SenseiDiviningTop } from "./NewRelics/SenseiDiviningTop.js";
 import { TheArcaneRing } from "./NewRelics/TheArcaneRing.js";
 import { TheChaosRing } from "./NewRelics/TheChaosRing.js";
 import { TheHistoryBook } from "./NewRelics/TheHistoryBook.js";
@@ -16,6 +17,7 @@ export const newRelicLibrary: STSRelicCtor[] = [
     JohnnyRune,
     Mechanization,
     OuterGodRune,
+    SenseiDiviningTop,
     TheArcaneRing,
     TheChaosRing,
     TheHistoryBook,
