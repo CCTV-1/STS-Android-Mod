@@ -31,6 +31,20 @@ const VFX = {
          */
         Ctor2: new NativeFunctionInfo(0x1B58B0D, 'pointer', ['pointer', 'pointer', 'float', 'float']),
     },
+    ShowCardAndAddToHandEffect: {
+        /**
+         * ```c
+         * STS::AbstractGameEffect * VFX::ShowCardAndAddToHandEffect::Ctor(STS::AbstractGameEffect * thisPtr, STS::AbstractCard * cardPtr)
+         * ```
+         */
+        Ctor: new NativeFunctionInfo(0x1B569AD, 'pointer', ['pointer', 'pointer']),
+        /**
+         * ```c
+         * STS::AbstractGameEffect * VFX::ShowCardAndAddToHandEffect::Ctor(STS::AbstractGameEffect * thisPtr, STS::AbstractCard * cardPtr, float x, float y)
+         * ```
+         */
+        Ctor2: new NativeFunctionInfo(0x1B563CD, 'pointer', ['pointer', 'pointer', 'float', 'float']),
+    },
     ShowCardAndObtainEffect: {
         /**
          * ```c
@@ -80,6 +94,14 @@ export const NativeVFX = {
         },
         Ctor2(cardPtr: NativePointer, x: number, y: number): NativePointer {
             return PatchHelper.GetNativeFunction(VFX.ShowCardBrieflyEffect.Ctor2)(NULL, cardPtr, x, y);
+        },
+    },
+    ShowCardAndAddToHandEffect: {
+        Ctor(cardPtr: NativePointer): NativePointer {
+            return PatchHelper.GetNativeFunction(VFX.ShowCardAndAddToHandEffect.Ctor)(NULL, cardPtr);
+        },
+        Ctor2(cardPtr: NativePointer, x: number, y: number): NativePointer {
+            return PatchHelper.GetNativeFunction(VFX.ShowCardAndAddToHandEffect.Ctor2)(NULL, cardPtr, x, y);
         },
     },
     ShowCardAndObtainEffect: {

@@ -1,5 +1,5 @@
 import { PatchHelper } from "../PatchHelper.js";
-import { CardType, PotionRarity, RelicTier } from "../enums.js";
+import { CardRarity, CardType, PotionRarity, RelicTier } from "../enums.js";
 import { NativeFunctionInfo } from "./NativeFunctionInfo.js";
 
 const AbstractDungeonFuncInfo = {
@@ -74,7 +74,20 @@ const AbstractDungeonFuncInfo = {
      * void AbstractDungeon::transformCard(AbstractCard* transformCardPtr, bool autoUpgrade, STS::Random* rngPtr)
      * ```
      */
-    transformCard3: new NativeFunctionInfo(0x17B7669, 'void', ['pointer', 'bool', 'pointer'])
+    transformCard3: new NativeFunctionInfo(0x17B7669, 'void', ['pointer', 'bool', 'pointer']),
+    /**
+     * ```c
+     * AbstractCard* AbstractDungeon::getCard(CardRarity rarity)
+     * ```
+     */
+    getCard: new NativeFunctionInfo(0x17BEF19, 'pointer', ['uint32']),
+    /**
+     * ```c
+     * AbstractCard* AbstractDungeon::getCard(CardRarity rarity, Random * rngPtr)
+     * ```
+     */
+    getCard2: new NativeFunctionInfo(0x17BF03D, 'pointer', ['uint32', 'pointer'])
+    
 };
 
 export const NativeAbstractDungeon = {
@@ -115,5 +128,12 @@ export const NativeAbstractDungeon = {
     },
     transformCard3(targetCard: NativePointer, autoUpgrade: boolean, STSRngPtr: NativePointer) {
         PatchHelper.GetNativeFunction(AbstractDungeonFuncInfo.transformCard3)(targetCard, Number(autoUpgrade), STSRngPtr);
+    },
+    getCard(cardRarity: CardRarity): NativePointer {
+        return PatchHelper.GetNativeFunction(AbstractDungeonFuncInfo.getCard)(Number(cardRarity));
+    },
+    /** Random * rngPtr */
+    getCard2(cardRarity: CardRarity, rngPtr: NativePointer): NativePointer {
+        return PatchHelper.GetNativeFunction(AbstractDungeonFuncInfo.getCard2)(Number(cardRarity), rngPtr);
     },
 };

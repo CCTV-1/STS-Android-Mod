@@ -1,24 +1,17 @@
 import { AbstractCard, NewCardVFuncType } from "../NativeClassWrap/AbstractCard.js";
+import { OneWithTheMultiverseAction } from "../NewActions/OneWithTheMultiverseAction.js";
 import { CardColor, CardRarity, CardTarget, CardType, DamageType } from "../enums.js";
-import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
-import { AbstractDungeon } from "../NativeClassWrap/AbstractDungeon.js";
-import { OmniscientPotion } from "../NewPotions/OmniscientPotion.js";
 
 const vfuncs: NewCardVFuncType = {
     use: (thisPtr: NativePointer, playerPtr: NativePointer, monsterPtr: NativePointer) => {
         const wrapCard = new AbstractCard(thisPtr);
-        let currentPlayer = AbstractDungeon.getInstance().player;
-        if (currentPlayer.gold >= wrapCard.magicNumber) {
-            currentPlayer.loseGold(wrapCard.magicNumber);
-            let addPotionAction = NativeActions.common.ObtainPotion.Ctor(OmniscientPotion());
-            wrapCard.addToBot(addPotionAction);
-        }
+        wrapCard.addToBot(OneWithTheMultiverseAction(wrapCard.magicNumber));
     },
     upgrade: (thisPtr: NativePointer) => {
         let wrapCard = new AbstractCard(thisPtr);
         if (!wrapCard.upgraded) {
+            wrapCard.upgradeMagicNumber(2);
             wrapCard.upgradeName();
-            wrapCard.upgradeMagicNumber(-30);
         }
     },
     makeCopy: (thisPtr: NativePointer) => {
@@ -28,11 +21,11 @@ const vfuncs: NewCardVFuncType = {
 };
 
 export const OneWithTheMultiverse = (thisPtr: NativePointer): NativePointer => {
-    let wrapCard = AbstractCard.NewCardCtor("OneWithTheMultiverse", "多重宇宙加身", "colorless/skill/OneWithTheMultiverse", 1, "消耗 !M! 金币，生成全知全能药水。 NL 消耗。", CardType.SKILL,
-        CardColor.COLORLESS, CardRarity.UNCOMMON, CardTarget.NONE, DamageType.NORMAL, vfuncs);
+    let wrapCard = AbstractCard.NewCardCtor("OneWithTheMultiverse", "多重宇宙加身", "colorless/skill/OneWithTheMultiverse", 1, "从 !M! 张随机金牌中选择1张加入你的手牌。这张牌在本回合耗能变为0。 NL 消耗 。", CardType.SKILL,
+        CardColor.COLORLESS, CardRarity.RARE, CardTarget.NONE, DamageType.NORMAL, vfuncs);
 
-    wrapCard.baseMagicNumber = 100;
-    wrapCard.magicNumber = 100;
+    wrapCard.baseMagicNumber = 3;
+    wrapCard.magicNumber = 3;
     wrapCard.exhaust = true;
 
     return wrapCard.rawPtr;

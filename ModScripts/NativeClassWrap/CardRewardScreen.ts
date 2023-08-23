@@ -61,6 +61,9 @@ export class CardRewardScreen extends NativeClassWrapper {
     get discoveryCard() {
         return this.readOffsetPointer(0x10);
     }
+    set discoveryCard(value) {
+        this.writeOffsetPointer(0x10, value);
+    }
     
     get hasTakenAll() {
         return this.readOffsetBool(0x14);
