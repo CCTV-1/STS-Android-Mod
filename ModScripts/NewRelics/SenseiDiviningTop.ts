@@ -4,14 +4,14 @@ import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { AbstractDungeon } from "../NativeClassWrap/AbstractDungeon.js";
 
 const vfuncs: NewRelicVFuncType = {
-    atTurnStart: (thisPtr: NativePointer) => {
+    atTurnStartPostDraw: (thisPtr: NativePointer) => {
         let wrapRelic = new AbstractRelic(thisPtr);
         wrapRelic.flash();
         let currentPlayer = AbstractDungeon.getInstance().player;
-        let drawAction = NativeActions.common.DrawCard.Ctor(currentPlayer.rawPtr, 1, false);
-        wrapRelic.addToTop(drawAction);
         let putOnDeckAction = NativeActions.common.PutOnDeck.Ctor(currentPlayer.rawPtr, currentPlayer.rawPtr, 1, false);
         wrapRelic.addToTop(putOnDeckAction);
+        let drawAction = NativeActions.common.DrawCard.Ctor(currentPlayer.rawPtr, 1, false);
+        wrapRelic.addToTop(drawAction);
     },
     makeCopy: (thisPtr: NativePointer) => {
         let copyObj = SenseiDiviningTop(thisPtr);
