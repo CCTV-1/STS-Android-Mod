@@ -22,6 +22,7 @@ import { AbsoluteDefend } from "./NewCards/AbsoluteDefend.js";
 import { DeadlyStrike } from "./NewCards/DeadlyStrike.js";
 import { HappyTime } from "./NewCards/HappyTime.js";
 import { AngelGrace } from "./NewCards/AngelGrace.js";
+import { IronStomach } from "./NewCards/IronStomach.js";
 
 /**
  * if you plan register a new card, add a function property to NewCardLibrary,the function code like follow:
@@ -83,4 +84,5 @@ export const newCardLibrary: STSCardCtor[] = [
     AbsoluteDefend,
     DeadlyStrike,
     HappyTime,
+    IronStomach,
 ];
