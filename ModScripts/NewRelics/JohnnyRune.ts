@@ -5,39 +5,28 @@ import { NativeActions } from "../NativeFuncWrap/NativeActions.js";
 import { LandingSound, RelicTier } from "../enums.js";
 
 const vfuncs: NewRelicVFuncType = {
-    atBattleStart: (thisPtr) => {
+    atTurnStart: (thisPtr) => {
         const wrapRelic = new AbstractRelic(thisPtr);
-        wrapRelic.counter = 0;
-    },
-    canPlay: (thisPtr, cardPtr) => {
-        const wrapCard = new AbstractCard(cardPtr);
-        switch (wrapCard.costForTurn) {
-            case 0:
-            case 1: {
-                return Number(true);
-            }
-            default: {
-                return Number(false);
-            }
-        }
+        wrapRelic.counter = 3;
     },
     onPlayCard: (thisPtr, cardPtr, monsterPtr) => {
         const wrapRelic = new AbstractRelic(thisPtr);
+        const wrapCard = new AbstractCard(cardPtr);
         const abstractDungeon = AbstractDungeon.getInstance();
         const currentPlayer = abstractDungeon.player;
-        const wrapCard = new AbstractCard(cardPtr);
-        if (wrapCard.costForTurn == 0) {
+
+        if (wrapRelic.counter >= wrapCard.costForTurn) {
             wrapRelic.counter++;
         } else {
-            wrapRelic.counter = 0;
-            return ;
+            wrapRelic.counter--;
         }
 
-        if (wrapRelic.counter >= 4) {
-            wrapRelic.addToBot(NativeActions.common.GainEnergy.Ctor(1));
-            wrapRelic.addToBot(NativeActions.common.DrawCard.Ctor(currentPlayer.rawPtr, 1, false));
+        if (wrapRelic.counter == 0) {
+            wrapRelic.addToBot(NativeActions.common.GainEnergy.Ctor(3));
+            wrapRelic.addToBot(NativeActions.common.Heal.Ctor(currentPlayer.rawPtr, currentPlayer.rawPtr, 5));
+            wrapRelic.addToBot(NativeActions.common.DrawCard.Ctor(currentPlayer.rawPtr, 2, false));
             wrapRelic.flash();
-            wrapRelic.counter = 0;
+            wrapRelic.counter = 3;
         }
     },
     onVictory: (thisPtr) => {
@@ -51,7 +40,7 @@ const vfuncs: NewRelicVFuncType = {
 };
 
 export const JohnnyRune = (thisPtr: NativePointer): NativePointer => {
-    let relicObj = AbstractRelic.NewRelicCtor("JohnnyRune", "组合技符文", "只能打出0费和1费牌。 NL 每当连续打出4张0费牌，获得 [E] 并抓一张。", "这个符文上充斥着上古先民对组合技的执念。", "JohnnyRune.png", RelicTier.UNCOMMON, LandingSound.HEAVY, vfuncs);
+    let relicObj = AbstractRelic.NewRelicCtor("JohnnyRune", "组合技符文", "每个回合开始时，指示物重置为3。 NL 每当打出一张费用大于等于遗物上指示物数量的牌，指示物减一，反之加一。 NL 每当遗物的指示物变为0，指示物重置并获得 [E][E][E] 和6点生命值并抓三张。", "这个符文上充斥着上古先民对组合技的执念。", "JohnnyRune.png", RelicTier.UNCOMMON, LandingSound.HEAVY, vfuncs);
 
     return relicObj;
 };
