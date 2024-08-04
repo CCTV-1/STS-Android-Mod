@@ -34,7 +34,7 @@
 # 修改/添加图片
 1. 解压(ZIP)`/storage/emulated/0/Android/obb/com.humble.SlayTheSpire/main.2.com.humble.SlayTheSpire.obb`。
 2. `npm install texture-compressor`。
-3. `node .\node_modules\texture-compressor\bin\texture-compressor.js -i .\input.png -t etc -c ETC2_RGBA -q etcfastperceptual -o .\output.ktx -y -m -vb`。
+3. `node .\node_modules\texture-compressor\bin\texture-compressor.js -i .\input.png -t etc -c ETC2_RGBA -q etcfastperceptual -o .\output.ktx -y -m -vb`（2.2.8版本的obb文件中，通过十六进制编辑器可以确定，图片的实际格式是[KTX1.0](https://registry.khronos.org/KTX/specs/1.0/ktxspec.v1.html)）。
 4. 将`ktx`后缀改为`png`放于解压后的obb的文件夹对应路径里。
 5. 压缩(ZIP)`/storage/emulated/0/Android/obb/com.humble.SlayTheSpire/main.2.com.humble.SlayTheSpire.obb`，替换原文件。
 
