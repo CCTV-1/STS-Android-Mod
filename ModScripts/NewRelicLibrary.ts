@@ -1,4 +1,5 @@
 import { STSRelicCtor } from "./NativeClassWrap/AbstractRelic.js";
+import { ChaoticTransformer } from "./NewRelics/ChaoticTransformer.js";
 import { GeneralKnowledgeRune } from "./NewRelics/GeneralKnowledgeRune.js";
 import { JohnnyRune } from "./NewRelics/JohnnyRune.js";
 import { Mechanization } from "./NewRelics/Mechanization.js";
@@ -13,6 +14,7 @@ import { TheStrengthRing } from "./NewRelics/TheStrengthRing.js";
 import { TimmyRune } from "./NewRelics/TimmyRune.js";
 
 export const newRelicLibrary: STSRelicCtor[] = [
+    ChaoticTransformer,
     GeneralKnowledgeRune,
     JohnnyRune,
     Mechanization,

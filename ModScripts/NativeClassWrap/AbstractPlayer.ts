@@ -175,6 +175,9 @@ export class AbstractPlayer extends AbstractCreature {
     get chosenClass(): PlayerClass {
         return this.readOffsetS32(0x104);
     }
+    set chosenClass(value) {
+        this.writeOffsetS32(0x104, value);
+    }
 
     get gameHandSize() {
         return this.readOffsetS32(0x108);
