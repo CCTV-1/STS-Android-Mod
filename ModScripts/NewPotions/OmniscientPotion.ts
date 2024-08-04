@@ -18,6 +18,7 @@ const vfunc: NewPotionVFuncType = {
                 let wrapCard = new AbstractCard(handCard);
                 if (wrapCard.cost > 0) {
                     wrapCard.costForTurn = 0;
+                    wrapCard.cost = 0;
                     wrapCard.isCostModified = true;
                 }
             }
@@ -26,10 +27,10 @@ const vfunc: NewPotionVFuncType = {
     initializeData: (thisPtr: NativePointer) => {
         let wrapPotion = new AbstractPotion(thisPtr);
         wrapPotion.potency = 0;
-        wrapPotion.description = "将你手牌中所有非X费的牌本回合费用变为0。"
+        wrapPotion.description = "将你手牌中所有非X费的牌的费用变为0。"
         let potionTips = wrapPotion.tips;
         NativeSTDLib.ArrayList.PowerTip.clear(potionTips);
-        let newTip = NativeHelpers.PowerTip.Ctor("全知全能药水", "将你手牌中所有非X费的牌本回合费用变为0。");
+        let newTip = NativeHelpers.PowerTip.Ctor("全知全能药水", "将你手牌中所有非X费的牌的费用变为0。");
         NativeSTDLib.ArrayList.PowerTip.add(potionTips, newTip);
     },
     getPotency: (thisPtr: NativePointer, ascensionLevel: number) => {
